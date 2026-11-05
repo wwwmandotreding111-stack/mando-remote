@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MANDO REMOTE | شركة مندو التجارية</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#090909;color:#fff;
+ font-family:Tahoma,Arial,sans-serif;
+}
+header{
+ background:linear-gradient(145deg,#171717,#080808);
+ border-bottom:1px solid #b58b32;
+ padding:28px 15px;text-align:center;
+}
+.logo{
+ width:85px;height:85px;border:2px solid #d5a83f;
+ border-radius:50%;display:flex;align-items:center;
+ justify-content:center;margin:auto;
+ font-size:48px;color:#e5bd58;
+}
+h1{color:#e5bd58;letter-spacing:2px;margin:12px 0 5px}
+.sub{color:#aaa;font-size:13px}
+.container{max-width:900px;margin:auto;padding:20px}
+.welcome{text-align:center;margin:25px 0}
+.welcome h2{color:#e5bd58}
+.search{
+ width:100%;padding:16px;border-radius:12px;
+ background:#181818;border:1px solid #806326;
+ color:white;font-size:16px;outline:none;
+}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
+.filters button{
+ background:#191919;color:#dcb34d;
+ border:1px solid #806326;border-radius:20px;
+ padding:9px 15px;cursor:pointer
+}
+.filters button.active{background:#bd9135;color:#090909}
+.count{color:#aaa;font-size:13px;margin:15px 0}
+.products{
+ display:grid;grid-template-columns:repeat(2,1fr);
+ gap:14px;
+}
+.card{
+ background:#151515;border:1px solid #383026;
+ border-radius:14px;padding:14px;text-align:center;
+}
+.remote{
+ height:145px;background:#202020;border-radius:10px;
+ display:flex;align-items:center;justify-content:center;
+ color:#d9ae49;font-size:48px;
+}
+.card h3{color:#e5bd58;margin:12px 0 7px}
+.card p{font-size:12px;color:#aaa}
+.number{color:#d5a83f;font-size:13px}
+.status{color:#72ce91;font-size:12px}
+footer{
+ text-align:center;padding:30px;color:#aaa;
+ border-top:1px solid #40331d;margin-top:30px;
+ font-size:12px
+}
+.empty{grid-column:1/-1;text-align:center;color:#aaa;padding:30px}
+@media(max-width:420px){
+ .products{grid-template-columns:1fr 1fr}
+ .container{padding:12px}
+}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="logo">🦅</div>
+ <h1>MANDO REMOTE</h1>
+ <div class="sub">شركة مندو التجارية</div>
+ <div class="sub">مكتبة الريموتات البديلة للشاشات</div>
+</header>
+
+<main class="container">
+ <section class="welcome">
+  <h2>أهلاً بكم في مكتبة مندو</h2>
+  <p class="sub">ابحث عن ريموت شاشتك بسهولة</p>
+ </section>
+
+ <input id="search" class="search"
+ placeholder="ابحث عن ماركة الشاشة أو رقم الريموت..."
+ oninput="render()">
+
+ <div class="filters" id="filters">
+  <button class="active" onclick="choose('الكل',this)">الكل</button>
+  <button onclick="choose('Samsung',this)">Samsung</button>
+  <button onclick="choose('LG',this)">LG</button>
+  <button onclick="choose('TCL',this)">TCL</button>
+  <button onclick="choose('Hisense',this)">Hisense</button>
+ </div>
+
+ <div class="count" id="count"></div>
+ <div class="products" id="products"></div>
+</main>
+
+<footer>
+ <div style="color:#d5a83f;font-size:17px">MANDO TRADING COMPANY</div>
+ <p>جميع الحقوق محفوظة © شركة مندو التجارية</p>
+</footer>
+
+<script>
+const remotes=[
+ {name:"Samsung",number:"RM-001",models:"شاشات Samsung"},
+ {name:"LG",number:"RM-002",models:"شاشات LG"},
+ {name:"TCL",number:"RM-003",models:"شاشات TCL"},
+ {name:"Hisense",number:"RM-004",models:"شاشات Hisense"},
+ {name:"Samsung Smart",number:"RM-005",models:"Samsung Smart TV"},
+ {name:"TCL Smart",number:"RM-006",models:"TCL Smart TV"}
+];
+
+let selected="الكل";
+
+function choose(name,button){
+ selected=name;
+ document.querySelectorAll(".filters button")
+ .forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
+ render();
+}
+
+function render(){
+ const q=document.getElementById("search").value.toLowerCase();
+ const list=remotes.filter(r=>
+  (selected==="الكل" || r.name.includes(selected)) &&
+  (r.name.toLowerCase().includes(q) ||
+   r.number.toLowerCase().includes(q) ||
+   r.models.toLowerCase().includes(q))
+ );
+
+ document.getElementById("count").textContent=
+ "عدد النتائج: "+list.length;
+
+ document.getElementById("products").innerHTML=
+ list.length ? list.map(r=>`
+ <div class="card">
+  <div class="remote">📺</div>
+  <h3>${r.name}</h3>
+  <div class="number">${r.number}</div>
+  <p>${r.models}</p>
+  <div class="status">دليل تجريبي</div>
+ </div>
+ `).join("") :
+ '<div class="empty">لم نجد ريموتاً مطابقاً لبحثك</div>';
+}
+render();
+</script>
+</body>
+</html>
