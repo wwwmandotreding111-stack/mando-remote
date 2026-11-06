@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -6,150 +5,114 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MANDO REMOTE | شركة مندو التجارية</title>
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;background:#090909;color:#fff;
- font-family:Tahoma,Arial,sans-serif;
-}
-header{
- background:linear-gradient(145deg,#171717,#080808);
- border-bottom:1px solid #b58b32;
- padding:28px 15px;text-align:center;
-}
-.logo{
- width:85px;height:85px;border:2px solid #d5a83f;
- border-radius:50%;display:flex;align-items:center;
- justify-content:center;margin:auto;
- font-size:48px;color:#e5bd58;
-}
-h1{color:#e5bd58;letter-spacing:2px;margin:12px 0 5px}
-.sub{color:#aaa;font-size:13px}
-.container{max-width:900px;margin:auto;padding:20px}
-.welcome{text-align:center;margin:25px 0}
-.welcome h2{color:#e5bd58}
-.search{
- width:100%;padding:16px;border-radius:12px;
- background:#181818;border:1px solid #806326;
- color:white;font-size:16px;outline:none;
-}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
-.filters button{
- background:#191919;color:#dcb34d;
- border:1px solid #806326;border-radius:20px;
- padding:9px 15px;cursor:pointer
-}
-.filters button.active{background:#bd9135;color:#090909}
-.count{color:#aaa;font-size:13px;margin:15px 0}
-.products{
- display:grid;grid-template-columns:repeat(2,1fr);
- gap:14px;
-}
-.card{
- background:#151515;border:1px solid #383026;
- border-radius:14px;padding:14px;text-align:center;
-}
-.remote{
- height:145px;background:#202020;border-radius:10px;
- display:flex;align-items:center;justify-content:center;
- color:#d9ae49;font-size:48px;
-}
-.card h3{color:#e5bd58;margin:12px 0 7px}
-.card p{font-size:12px;color:#aaa}
-.number{color:#d5a83f;font-size:13px}
-.status{color:#72ce91;font-size:12px}
-footer{
- text-align:center;padding:30px;color:#aaa;
- border-top:1px solid #40331d;margin-top:30px;
- font-size:12px
-}
-.empty{grid-column:1/-1;text-align:center;color:#aaa;padding:30px}
-@media(max-width:420px){
- .products{grid-template-columns:1fr 1fr}
- .container{padding:12px}
-}
+*{box-sizing:border-box}body{margin:0;background:#090909;color:#fff;font-family:Tahoma,Arial,sans-serif}
+header{background:linear-gradient(145deg,#171717,#080808);border-bottom:1px solid #b58b32;padding:25px 15px;text-align:center}
+.logo{width:78px;height:78px;border:2px solid #d5a83f;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:auto;font-size:43px;color:#e5bd58}
+h1{color:#e5bd58;letter-spacing:2px;margin:12px 0 5px}.sub{color:#aaa;font-size:13px}
+.container{max-width:950px;margin:auto;padding:20px}.welcome{text-align:center;margin:25px 0}.welcome h2{color:#e5bd58}
+input,textarea{width:100%;padding:13px;margin:6px 0 12px;border-radius:10px;background:#181818;border:1px solid #806326;color:#fff;font-size:15px}
+button,.btn{background:#191919;color:#e5bd58;border:1px solid #806326;border-radius:10px;padding:10px 15px;cursor:pointer}
+button.primary{background:#bd9135;color:#090909;font-weight:bold}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.filters button{border-radius:20px}.filters button.active{background:#bd9135;color:#090909}
+.count{color:#aaa;font-size:13px;margin:15px 0}.products{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card{background:#151515;border:1px solid #383026;border-radius:14px;padding:14px;text-align:center;min-width:0}
+.remote{height:145px;background:#202020;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#d9ae49;font-size:48px;overflow:hidden}
+.remote img{width:100%;height:100%;object-fit:contain}.card h3{color:#e5bd58;margin:12px 0 7px}.card p{font-size:12px;color:#aaa;overflow-wrap:anywhere}
+.number{color:#d5a83f;font-size:13px}.status{color:#72ce91;font-size:12px}.empty{grid-column:1/-1;text-align:center;color:#aaa;padding:30px}
+.panel{display:none;background:#141414;border:1px solid #bd9135;border-radius:14px;padding:16px;margin:20px 0}.panel h3{color:#e5bd58;margin-top:0}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}
+.admin-actions{display:flex;gap:6px;justify-content:center;margin-top:10px}.admin-actions button{font-size:12px;padding:7px}
+#authBox{display:none;background:#141414;border:1px solid #55421f;border-radius:14px;padding:16px;margin:20px 0}
+.notice{font-size:13px;color:#bbb;margin:8px 0}.danger{color:#ff8d8d;border-color:#8b3333}
+footer{text-align:center;padding:30px;color:#aaa;border-top:1px solid #40331d;margin-top:30px;font-size:12px}
+.whatsapp{position:fixed;bottom:18px;left:18px;background:#168b50;color:white;border:0;border-radius:30px;padding:13px 18px;text-decoration:none;font-weight:bold;box-shadow:0 4px 18px #0009}
+@media(max-width:420px){.products{grid-template-columns:1fr 1fr}.container{padding:12px}.remote{height:120px}}
 </style>
 </head>
 <body>
-
-<header>
- <div class="logo">🦅</div>
- <h1>MANDO REMOTE</h1>
- <div class="sub">شركة مندو التجارية</div>
- <div class="sub">مكتبة الريموتات البديلة للشاشات</div>
-</header>
-
+<header><div class="logo">🦅</div><h1>MANDO REMOTE</h1><div class="sub">شركة مندو التجارية</div><div class="sub">مكتبة الريموتات البديلة للشاشات</div></header>
 <main class="container">
- <section class="welcome">
-  <h2>أهلاً بكم في مكتبة مندو</h2>
-  <p class="sub">ابحث عن ريموت شاشتك بسهولة</p>
- </section>
-
- <input id="search" class="search"
- placeholder="ابحث عن ماركة الشاشة أو رقم الريموت..."
- oninput="render()">
-
- <div class="filters" id="filters">
-  <button class="active" onclick="choose('الكل',this)">الكل</button>
-  <button onclick="choose('Samsung',this)">Samsung</button>
-  <button onclick="choose('LG',this)">LG</button>
-  <button onclick="choose('TCL',this)">TCL</button>
-  <button onclick="choose('Hisense',this)">Hisense</button>
- </div>
-
- <div class="count" id="count"></div>
- <div class="products" id="products"></div>
+<section class="welcome"><h2>أهلاً بكم في مكتبة مندو</h2><p class="sub">ابحث عن ريموت شاشتك بسهولة</p></section>
+<input id="search" placeholder="ابحث عن ماركة الشاشة أو رقم الريموت..." oninput="render()">
+<div class="filters" id="filters"><button class="active" onclick="choose('الكل',this)">الكل</button><button onclick="choose('Samsung',this)">Samsung</button><button onclick="choose('LG',this)">LG</button><button onclick="choose('TCL',this)">TCL</button><button onclick="choose('Hisense',this)">Hisense</button></div>
+<div class="count" id="count">جارٍ تحميل الريموتات...</div><div class="products" id="products"></div>
+<div id="authBox"><h3>دخول الإدارة</h3><input id="email" type="email" placeholder="البريد الإلكتروني"><input id="password" type="password" placeholder="كلمة المرور"><button class="primary" onclick="login()">تسجيل الدخول</button><p class="notice" id="authMsg"></p></div>
+<section class="panel" id="adminPanel">
+<div class="row" style="align-items:center"><h3>لوحة إدارة الريموتات</h3><button onclick="logout()">تسجيل الخروج</button></div>
+<p class="notice">أضف بيانات الريموت. رابط الصورة اختياري حالياً.</p>
+<input id="rName" placeholder="اسم الماركة (مثلاً Samsung)">
+<input id="rNumber" placeholder="رقم الريموت / الموديل">
+<input id="rModels" placeholder="الشاشات أو الموديلات المتوافقة">
+<input id="rImage" placeholder="رابط صورة الريموت (اختياري)">
+<textarea id="rNotes" rows="2" placeholder="ملاحظات (اختياري)"></textarea>
+<button class="primary" onclick="addRemote()">حفظ الريموت</button><p class="notice" id="adminMsg"></p>
+</section>
 </main>
-
-<footer>
- <div style="color:#d5a83f;font-size:17px">MANDO TRADING COMPANY</div>
- <p>جميع الحقوق محفوظة © شركة مندو التجارية</p>
-</footer>
-
+<footer><div style="color:#d5a83f;font-size:17px">MANDO TRADING COMPANY</div><p>جميع الحقوق محفوظة © شركة مندو التجارية</p></footer>
+<a class="whatsapp" href="https://wa.me/963991936353" target="_blank" rel="noopener">تواصل واتساب</a>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const remotes=[
- {name:"Samsung",number:"RM-001",models:"شاشات Samsung"},
- {name:"LG",number:"RM-002",models:"شاشات LG"},
- {name:"TCL",number:"RM-003",models:"شاشات TCL"},
- {name:"Hisense",number:"RM-004",models:"شاشات Hisense"},
- {name:"Samsung Smart",number:"RM-005",models:"Samsung Smart TV"},
- {name:"TCL Smart",number:"RM-006",models:"TCL Smart TV"}
-];
-
-let selected="الكل";
-
-function choose(name,button){
- selected=name;
- document.querySelectorAll(".filters button")
- .forEach(b=>b.classList.remove("active"));
- button.classList.add("active");
- render();
+const SUPABASE_URL = "https://lhghepwcvlqazmpouidu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_EgAQZYow05AZT_pQqHkI2w_kxJff9B5";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let remotes=[], selected="الكل", isAdmin=false;
+const el=id=>document.getElementById(id);
+function safe(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function choose(name,button){selected=name;document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));button.classList.add("active");render();}
+async function loadRemotes(){
+ el("count").textContent="جارٍ تحميل الريموتات...";
+ const {data,error}=await db.from("remotes").select("*").order("created_at",{ascending:false});
+ if(error){el("count").textContent="تعذر تحميل البيانات. تأكد من إعدادات قاعدة البيانات والاتصال بالإنترنت.";console.error(error);return;}
+ remotes=data||[];render();
 }
-
 function render(){
- const q=document.getElementById("search").value.toLowerCase();
- const list=remotes.filter(r=>
-  (selected==="الكل" || r.name.includes(selected)) &&
-  (r.name.toLowerCase().includes(q) ||
-   r.number.toLowerCase().includes(q) ||
-   r.models.toLowerCase().includes(q))
- );
-
- document.getElementById("count").textContent=
- "عدد النتائج: "+list.length;
-
- document.getElementById("products").innerHTML=
- list.length ? list.map(r=>`
- <div class="card">
-  <div class="remote">📺</div>
-  <h3>${r.name}</h3>
-  <div class="number">${r.number}</div>
-  <p>${r.models}</p>
-  <div class="status">دليل تجريبي</div>
- </div>
- `).join("") :
- '<div class="empty">لم نجد ريموتاً مطابقاً لبحثك</div>';
+ const q=el("search").value.trim().toLowerCase();
+ const list=remotes.filter(r=>(selected==="الكل"||String(r.brand||r.name||"").toLowerCase().includes(selected.toLowerCase())) &&
+ [r.name,r.brand,r.model_number,r.compatible_models,r.notes].some(v=>String(v||"").toLowerCase().includes(q)));
+ el("count").textContent="عدد النتائج: "+list.length;
+ el("products").innerHTML=list.length?list.map(r=>`<article class="card">
+ <div class="remote">${r.image_front?'<img src="'+safe(r.image_front)+'" alt="صورة الريموت" loading="lazy">':'📺'}</div>
+ <h3>${safe(r.name||r.brand||"ريموت")}</h3><div class="number">${safe(r.model_number||"")}</div>
+ <p>${safe(r.compatible_models||"")}</p><p>${safe(r.notes||"")}</p>
+ <div class="status">${r.available===false?"غير متوفر":"متوفر"}</div>
+ ${isAdmin?'<div class="admin-actions"><button onclick="editRemote('+Number(r.id)+')">تعديل</button><button class="danger" onclick="deleteRemote('+Number(r.id)+')">حذف</button></div>':""}
+ </article>`).join(""):'<div class="empty">لا توجد ريموتات مطابقة حالياً</div>';
 }
-render();
+function openLogin(){el("authBox").style.display=el("authBox").style.display==="block"?"none":"block";el("email").focus();}
+async function login(){
+ el("authMsg").textContent="جارٍ التحقق...";
+ const {error}=await db.auth.signInWithPassword({email:el("email").value.trim(),password:el("password").value});
+ if(error){el("authMsg").textContent="تعذر تسجيل الدخول: "+error.message;return;}
+ const {data,error:roleError}=await db.rpc("is_admin");
+ if(roleError||data!==true){await db.auth.signOut();el("authMsg").textContent="هذا الحساب لا يملك صلاحية الإدارة.";return;}
+ isAdmin=true;el("authBox").style.display="none";el("adminPanel").style.display="block";el("adminMsg").textContent="تم تسجيل الدخول بنجاح.";render();
+}
+async function logout(){await db.auth.signOut();isAdmin=false;el("adminPanel").style.display="none";render();}
+async function addRemote(){
+ const name=el("rName").value.trim(), number=el("rNumber").value.trim();
+ if(!name||!number){el("adminMsg").textContent="اكتب اسم الماركة ورقم الريموت أولاً.";return;}
+ const payload={name,brand:name,model_number:number,compatible_models:el("rModels").value.trim(),image_front:el("rImage").value.trim()||null,notes:el("rNotes").value.trim(),available:true};
+ const {error}=await db.from("remotes").insert(payload);
+ if(error){el("adminMsg").textContent="لم يتم الحفظ: "+error.message;return;}
+ ["rName","rNumber","rModels","rImage","rNotes"].forEach(id=>el(id).value="");
+ el("adminMsg").textContent="تمت إضافة الريموت بنجاح.";await loadRemotes();
+}
+async function editRemote(id){
+ const r=remotes.find(x=>Number(x.id)===id);if(!r)return;
+ const name=prompt("اسم الماركة:",r.name||r.brand||"");if(name===null)return;
+ const number=prompt("رقم الريموت:",r.model_number||"");if(number===null)return;
+ const models=prompt("الموديلات المتوافقة:",r.compatible_models||"");if(models===null)return;
+ const {error}=await db.from("remotes").update({name,brand:name,model_number:number,compatible_models:models}).eq("id",id);
+ if(error){alert("تعذر التعديل: "+error.message);return;}await loadRemotes();
+}
+async function deleteRemote(id){
+ if(!confirm("متأكد من حذف هذا الريموت؟"))return;
+ const {error}=await db.from("remotes").delete().eq("id",id);
+ if(error){alert("تعذر الحذف: "+error.message);return;}await loadRemotes();
+}
+document.addEventListener("DOMContentLoaded",async()=>{
+ const {data}=await db.auth.getSession();
+ if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){isAdmin=true;el("adminPanel").style.display="block";}}
+ await loadRemotes();
+});
 </script>
-</body>
-</html>
+<div style="text-align:center;padding:0 0 16px"><button onclick="openLogin()" style="font-size:11px;opacity:.7">دخول الإدارة</button></div>
+</body></html>
