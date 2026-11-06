@@ -35,14 +35,14 @@ footer{text-align:center;padding:30px;color:#aaa;border-top:1px solid #40331d;ma
 <input id="search" placeholder="ابحث عن ماركة الشاشة أو رقم الريموت..." oninput="render()">
 <div class="filters" id="filters"><button class="active" onclick="choose('الكل',this)">الكل</button><button onclick="choose('Samsung',this)">Samsung</button><button onclick="choose('LG',this)">LG</button><button onclick="choose('TCL',this)">TCL</button><button onclick="choose('Hisense',this)">Hisense</button></div>
 <div class="count" id="count">جارٍ تحميل الريموتات...</div><div class="products" id="products"></div>
-<div id="authBox"><h3>دخول الإدارة</h3><input id="email" type="email" placeholder="البريد الإلكتروني"><input id="password" type="password" placeholder="كلمة المرور"><button class="primary" onclick="login()">تسجيل الدخول</button><p class="notice" id="authMsg"></p></div>
+<div id="authBox"><h3>دخول الإدارة</h3><input id="email" type="text" placeholder="اسم المستخدم أو بريد المدير"><input id="password" type="password" placeholder="كلمة المرور"><button class="primary" onclick="login()">تسجيل الدخول</button><p class="notice" id="authMsg"></p></div>
 <section class="panel" id="adminPanel">
 <div class="row" style="align-items:center"><h3>لوحة إدارة الريموتات</h3><button onclick="logout()">تسجيل الخروج</button></div>
 <div class="row"><button onclick="showCustomerPanel()">👥 إدارة الزبائن</button></div><section class="panel" id="customerPanel">
 <h3>👥 إدارة الزبائن</h3>
 <p class="notice">إضافة الحسابات ومتابعة حالة الاتصال والصلاحيات.</p>
 <input id="cName" placeholder="اسم الزبون">
-<input id="cEmail" type="email" placeholder="البريد الإلكتروني">
+<input id="cUsername" type="text" placeholder="اسم المستخدم (مثلاً mando123)">
 <input id="cPassword" type="password" placeholder="كلمة مرور مؤقتة (6 أحرف على الأقل)">
 <button class="primary" onclick="createCustomer()">➕ إضافة زبون</button>
 <p class="notice" id="customerMsg"></p>
@@ -90,7 +90,9 @@ function render(){
 function openLogin(){el("authBox").style.display=el("authBox").style.display==="block"?"none":"block";el("email").focus();}
 async function login(){
  el("authMsg").textContent="جارٍ التحقق...";
- const {error}=await db.auth.signInWithPassword({email:el("email").value.trim(),password:el("password").value});
+ const loginValue=el("email").value.trim().toLowerCase();
+ const loginEmail=loginValue.includes("@")?loginValue:`${loginValue}@users.mando.local`;
+ const {error}=await db.auth.signInWithPassword({email:loginEmail,password:el("password").value});
  if(error){el("authMsg").textContent="تعذر تسجيل الدخول: "+error.message;return;}
  const {data,error:roleError}=await db.rpc("is_admin");
  if(roleError||data!==true){await db.auth.signOut();el("authMsg").textContent="هذا الحساب لا يملك صلاحية الإدارة.";return;}
@@ -129,8 +131,8 @@ async function adminRequest(action,body={}) {
 function showCustomerPanel(){el("customerPanel").style.display="block";loadCustomers();}
 async function createCustomer(){
  el("customerMsg").textContent="جارٍ إنشاء الحساب...";
- try{await adminRequest("create",{email:el("cEmail").value.trim(),password:el("cPassword").value,display_name:el("cName").value.trim()});
- el("customerMsg").textContent="تم إنشاء حساب الزبون بنجاح.";["cName","cEmail","cPassword"].forEach(x=>el(x).value="");await loadCustomers();}
+ try{await adminRequest("create",{username:el("cUsername").value.trim(),password:el("cPassword").value,display_name:el("cName").value.trim()});
+ el("customerMsg").textContent="تم إنشاء حساب الزبون بنجاح.";["cName","cUsername","cPassword"].forEach(x=>el(x).value="");await loadCustomers();}
  catch(e){el("customerMsg").textContent="تعذر الإضافة: "+e.message;}
 }
 async function loadCustomers(){
