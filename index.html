@@ -41,7 +41,7 @@ footer{text-align:center;padding:32px 18px;color:var(--muted);border-top:1px sol
 <div id="authBox"><h3>دخول الإدارة</h3><input id="email" type="text" placeholder="اسم المستخدم أو بريد المدير"><input id="password" type="password" placeholder="كلمة المرور"><button class="primary" onclick="login()">تسجيل الدخول</button><p class="notice" id="authMsg"></p></div>
 <section class="panel" id="adminPanel">
 <div class="row" style="align-items:center"><h3>لوحة إدارة الريموتات</h3><button onclick="logout()">تسجيل الخروج</button></div>
-<div class="row"><button onclick="showCustomerPanel()">👥 إدارة الزبائن</button></div><section class="panel" id="customerPanel">
+<div class="row"><button onclick="showCustomerPanel()">👥 إدارة الزبائن</button><button onclick="showAdsPanel()">📢 إدارة الإعلانات</button><button onclick="showSettingsPanel()">⚙️ معلومات الشركة</button></div><section class="panel" id="customerPanel">
 <h3>👥 إدارة الزبائن</h3>
 <p class="notice">إضافة الحسابات ومتابعة حالة الاتصال والصلاحيات.</p>
 <input id="cName" placeholder="اسم الزبون">
@@ -50,7 +50,27 @@ footer{text-align:center;padding:32px 18px;color:var(--muted);border-top:1px sol
 <button class="primary" onclick="createCustomer()">➕ إضافة زبون</button>
 <p class="notice" id="customerMsg"></p>
 <div id="customersList" class="notice">جارٍ تحميل الزبائن...</div>
-</section><p class="notice">أضف بيانات الريموت. رابط الصورة اختياري حالياً.</p>
+</section><section class="panel" id="adsPanel">
+<h3>📢 إدارة الإعلانات</h3>
+<input id="adEditId" type="hidden"><input id="adAdminTitle" placeholder="عنوان الإعلان">
+<textarea id="adAdminText" rows="2" placeholder="وصف الإعلان"></textarea>
+<label class="notice">صورة الإعلان</label><input id="adAdminImage" type="file" accept="image/*">
+<input id="adAdminLink" placeholder="رابط الإعلان عند الضغط (اختياري)">
+<input id="adAdminOrder" type="number" value="0" placeholder="ترتيب الإعلان">
+<label class="notice"><input id="adAdminEnabled" type="checkbox" checked style="width:auto"> الإعلان ظاهر للزوار</label>
+<button class="primary" onclick="saveAd()">حفظ الإعلان</button><button onclick="resetAdForm()">تفريغ</button>
+<p class="notice" id="adsMsg"></p><div id="adsList"></div>
+</section>
+<section class="panel" id="settingsPanel">
+<h3>⚙️ معلومات الشركة</h3>
+<input id="setAddress" placeholder="عنوان الشركة">
+<input id="setGps" placeholder="رابط موقع الشركة على خرائط Google">
+<input id="setWhatsapp" placeholder="رقم واتساب مع رمز الدولة">
+<input id="setFacebook" placeholder="رابط Facebook">
+<input id="setInstagram" placeholder="رابط Instagram">
+<button class="primary" onclick="saveSettings()">حفظ معلومات الشركة</button><p class="notice" id="settingsMsg"></p>
+</section>
+<p class="notice">أضف بيانات الريموت. رابط الصورة اختياري حالياً.</p>
 <input id="rName" placeholder="1. اسم الجهاز (مثلاً Samsung Smart TV)">
 <label class="notice" for="rImageFile">2. رفع صورة الريموت</label><input id="rImageFile" type="file" accept="image/*">
 <input id="rNumber" placeholder="3. اسم البديل (مثلاً RM-123)">
@@ -58,7 +78,7 @@ footer{text-align:center;padding:32px 18px;color:var(--muted);border-top:1px sol
 <button class="primary" onclick="addRemote()">حفظ الريموت</button><p class="notice" id="adminMsg"></p>
 </section>
 </main>
-<footer><strong>🦅 MANDO TRADING COMPANY</strong><p>شركة مندو التجارية — مكتبة الريموتات البديلة للشاشات</p><div class="footer-links"><a href="https://wa.me/963991936353" target="_blank" rel="noopener">واتساب الشركة</a><a href="#" onclick="alert('يمكن إضافة موقع الشركة من إعدادات الموقع لاحقاً');return false">موقع الشركة</a></div><p>جميع الحقوق محفوظة © شركة مندو التجارية</p></footer>
+<footer><strong>🦅 MANDO TRADING COMPANY</strong><p>شركة مندو التجارية — مكتبة الريموتات البديلة للشاشات</p><p id="footerAddress"></p><div class="footer-links"><a id="footerWhatsapp" href="https://wa.me/963991936353" target="_blank" rel="noopener">واتساب الشركة</a><a id="footerGps" href="#" target="_blank" rel="noopener" style="display:none">📍 موقع الشركة</a><a id="footerFacebook" href="#" target="_blank" rel="noopener" style="display:none">Facebook</a><a id="footerInstagram" href="#" target="_blank" rel="noopener" style="display:none">Instagram</a></div><p>جميع الحقوق محفوظة © شركة مندو التجارية</p></footer>
 <a class="whatsapp" href="https://wa.me/963991936353" target="_blank" rel="noopener">تواصل واتساب</a>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -66,10 +86,9 @@ const SUPABASE_URL = "https://lhghepwcvlqazmpouidu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_EgAQZYow05AZT_pQqHkI2w_kxJff9B5";
 const ADMIN_FUNCTION_URL = SUPABASE_URL + "/functions/v1/swift-processor";
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let remotes=[], selected="الكل", isAdmin=false, adIndex=0;
-const demoAds=[{title:"عروض شركة مندو التجارية",text:"أفضل الخيارات والريموتات البديلة لشاشتك",image:""},{title:"ابحث عن ريموت شاشتك بسهولة",text:"مكتبة مندو تجمع لك البدائل في مكان واحد",image:""}];
-function showAd(){const a=demoAds[adIndex%demoAds.length];el("adTitle").textContent=a.title;el("adText").textContent=a.text;const im=el("adImage");if(a.image){im.src=a.image;im.style.display="block";}else{im.style.display="none";}el("adDots").innerHTML=demoAds.map((_,i)=>'<span class="'+(i===adIndex?'active':'')+'"></span>').join("");}
-function openAd(e){e.preventDefault();return false;}
+let remotes=[], selected="الكل", isAdmin=false, adIndex=0, siteAds=[], siteSettings={};
+function showAd(){if(!siteAds.length){el("adTitle").textContent="عروض شركة مندو التجارية";el("adText").textContent="أفضل الخيارات والريموتات البديلة لشاشتك";el("adImage").style.display="none";el("adDots").innerHTML="";el("adLink").href="#";return;}const a=siteAds[adIndex%siteAds.length];el("adTitle").textContent=a.title||"";el("adText").textContent=a.description||"";const im=el("adImage");if(a.image_url){im.src=a.image_url;im.style.display="block";}else im.style.display="none";el("adLink").href=a.target_url||"#";el("adDots").innerHTML=siteAds.map((_,i)=>'<span class="'+(i===adIndex?'active':'')+'"></span>').join("");}
+function openAd(e){if(!siteAds[adIndex]?.target_url){e.preventDefault();return false;}return true;}
 const el=id=>document.getElementById(id);
 function safe(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function choose(name,button){selected=name;document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));button.classList.add("active");render();}
@@ -101,7 +120,7 @@ async function login(){
  if(error){el("authMsg").textContent="تعذر تسجيل الدخول: "+error.message;return;}
  const {data,error:roleError}=await db.rpc("is_admin");
  if(roleError||data!==true){await db.auth.signOut();el("authMsg").textContent="هذا الحساب لا يملك صلاحية الإدارة.";return;}
- isAdmin=true;el("authBox").style.display="none";el("adminPanel").style.display="block";el("adminMsg").textContent="تم تسجيل الدخول بنجاح.";render();loadCustomers();
+ isAdmin=true;el("authBox").style.display="none";el("adminPanel").style.display="block";el("adminMsg").textContent="تم تسجيل الدخول بنجاح.";render();loadCustomers();loadAds(true);loadSettings(true);
 }
 async function logout(){await db.auth.signOut();isAdmin=false;el("adminPanel").style.display="none";el("customerPanel").style.display="none";render();}
 async function addRemote(){
@@ -164,6 +183,19 @@ async function customerAction(id,kind,value){
  try{await adminRequest("update",{user_id:id,[kind]:value});await loadCustomers();}
  catch(e){alert("تعذر تنفيذ العملية: "+e.message);}
 }
+
+async function loadAds(admin=false){const {data,error}=await db.from("site_ads").select("*").order("sort_order",{ascending:true}).order("created_at",{ascending:false});if(error){console.warn(error.message);siteAds=[];showAd();return;}siteAds=(data||[]).filter(a=>admin||a.enabled);adIndex=0;showAd();if(admin)renderAdsAdmin(data||[]);}
+function renderAdsAdmin(rows){const box=el("adsList");if(!box)return;box.innerHTML=rows.length?rows.map(a=>'<div class="card" style="margin:8px 0;text-align:right"><b>'+safe(a.title)+'</b><p>'+safe(a.description)+'</p><small>'+(a.enabled?'🟢 ظاهر':'⚪ مخفي')+' · الترتيب '+a.sort_order+'</small><div class="admin-actions"><button onclick="editAd('+a.id+')">تعديل</button><button onclick="toggleAd('+a.id+','+(!a.enabled)+')">'+(a.enabled?'إخفاء':'إظهار')+'</button><button class="danger" onclick="deleteAd('+a.id+')">حذف</button></div></div>').join(""):"ما في إعلانات مضافة.";}
+function showAdsPanel(){el("adsPanel").style.display="block";loadAds(true);}
+function resetAdForm(){["adEditId","adAdminTitle","adAdminText","adAdminLink"].forEach(id=>el(id).value="");el("adAdminImage").value="";el("adAdminOrder").value="0";el("adAdminEnabled").checked=true;}
+function editAd(id){const a=siteAds.find(x=>Number(x.id)===Number(id));if(!a)return;el("adEditId").value=a.id;el("adAdminTitle").value=a.title||"";el("adAdminText").value=a.description||"";el("adAdminLink").value=a.target_url||"";el("adAdminOrder").value=a.sort_order||0;el("adAdminEnabled").checked=!!a.enabled;}
+async function saveAd(){try{const title=el("adAdminTitle").value.trim();if(!title)throw new Error("اكتب عنوان الإعلان");let imageUrl=siteAds.find(a=>String(a.id)===el("adEditId").value)?.image_url||null;const file=el("adAdminImage").files[0];if(file){if(file.size>7*1024*1024)throw new Error("حجم الصورة يجب أن يكون أقل من 7 ميغابايت");const path="ads/"+Date.now()+"-"+file.name.replace(/[^a-zA-Z0-9._-]/g,"_");const up=await db.storage.from("site-media").upload(path,file,{upsert:true});if(up.error)throw up.error;imageUrl=db.storage.from("site-media").getPublicUrl(path).data.publicUrl;}const payload={title,description:el("adAdminText").value.trim(),image_url:imageUrl,target_url:el("adAdminLink").value.trim()||null,sort_order:Number(el("adAdminOrder").value)||0,enabled:el("adAdminEnabled").checked};const id=el("adEditId").value;const result=id?await db.from("site_ads").update(payload).eq("id",id):await db.from("site_ads").insert(payload);if(result.error)throw result.error;el("adsMsg").textContent="تم حفظ الإعلان";resetAdForm();await loadAds(true);}catch(e){el("adsMsg").textContent="تعذر الحفظ: "+e.message;}}
+async function toggleAd(id,enabled){const {error}=await db.from("site_ads").update({enabled}).eq("id",id);if(error){alert(error.message);return;}await loadAds(true);}
+async function deleteAd(id){if(!confirm("حذف الإعلان؟"))return;const {error}=await db.from("site_ads").delete().eq("id",id);if(error){alert(error.message);return;}await loadAds(true);}
+async function loadSettings(admin=false){const {data,error}=await db.from("site_settings").select("*").eq("id",1).maybeSingle();if(error){console.warn(error.message);return;}siteSettings=data||{};const fields={setAddress:"company_address",setGps:"gps_url",setWhatsapp:"whatsapp",setFacebook:"facebook_url",setInstagram:"instagram_url"};if(admin)Object.entries(fields).forEach(([id,key])=>{el(id).value=siteSettings[key]||"";});el("footerAddress").textContent=siteSettings.company_address||"";el("footerWhatsapp").href="https://wa.me/"+String(siteSettings.whatsapp||"963991936353").replace(/[^0-9]/g,"");for(const [id,key] of [["footerGps","gps_url"],["footerFacebook","facebook_url"],["footerInstagram","instagram_url"]]){const a=el(id);if(siteSettings[key]){a.href=siteSettings[key];a.style.display="inline";}else a.style.display="none";}}
+function showSettingsPanel(){el("settingsPanel").style.display="block";loadSettings(true);}
+async function saveSettings(){const payload={id:1,company_address:el("setAddress").value.trim(),gps_url:el("setGps").value.trim(),whatsapp:el("setWhatsapp").value.trim(),facebook_url:el("setFacebook").value.trim(),instagram_url:el("setInstagram").value.trim(),updated_at:new Date().toISOString()};const {error}=await db.from("site_settings").upsert(payload,{onConflict:"id"});el("settingsMsg").textContent=error?"تعذر الحفظ: "+error.message:"تم حفظ معلومات الشركة";if(!error)await loadSettings(false);}
+
 async function heartbeat(){
  const {data:{session}}=await db.auth.getSession();if(!session)return;
  await db.rpc("touch_my_presence").catch(()=>{});
@@ -172,8 +204,8 @@ setInterval(heartbeat,30000);
 
 document.addEventListener("DOMContentLoaded",async()=>{
  const {data}=await db.auth.getSession();
- if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){isAdmin=true;el("adminPanel").style.display="block";loadCustomers();}}
- await loadRemotes();heartbeat();showAd();setInterval(()=>{adIndex=(adIndex+1)%demoAds.length;showAd();},6000);
+ if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){isAdmin=true;el("adminPanel").style.display="block";loadCustomers();loadAds(true);loadSettings(true);}}
+ await loadRemotes();heartbeat();await loadAds(false);await loadSettings(false);setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
 });
 </script>
 <div style="text-align:center;padding:0 0 16px"><button onclick="openLogin()" style="font-size:11px;opacity:.7">دخول الإدارة</button></div>
