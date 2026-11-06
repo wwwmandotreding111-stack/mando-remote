@@ -4,7 +4,7 @@ Deno.serve(async (req) => {
  if(req.method==="OPTIONS") return new Response("ok",{headers:cors});
  const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{...cors,"Content-Type":"application/json"}});
  try {
-  const token=(req.headers.get("Authorization")||"").replace(/^Bearer\\s+/i,"");
+  const token=(req.headers.get("Authorization")||"").replace(/^Bearer\s+/i,"");
   if(!token) return json({error:"يلزم تسجيل الدخول"},401);
   const url=Deno.env.get("SUPABASE_URL")!, key=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const admin=createClient(url,key);
