@@ -123,10 +123,16 @@ async function deleteRemote(id){
 }
 
 async function adminRequest(action,body={}) {
- const {data:{session}}=await db.auth.getSession();
- if(!session)throw new Error("سجّل دخول المدير أولاً");
+ let {data:{session},error:sessionError}=await db.auth.getSession();
+ if(sessionError) throw new Error("تعذر قراءة جلسة الدخول: "+sessionError.message);
+ if(!session) throw new Error("انتهت جلسة المدير. سجّل الدخول من جديد.");
+ const refreshed=await db.auth.refreshSession();
+ if(refreshed.error) throw new Error("تعذر تجديد جلسة الدخول. سجّل خروجك وادخل مجدداً.");
+ session=refreshed.data.session||session;
  const res=await fetch(ADMIN_FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+session.access_token,"apikey":SUPABASE_KEY},body:JSON.stringify({action,...body})});
- const out=await res.json();if(!res.ok)throw new Error(out.error||"تعذر تنفيذ العملية");return out;
+ let out={}; try{out=await res.json();}catch(_){}
+ if(!res.ok) throw new Error(out.error||("فشل الطلب (HTTP "+res.status+")"));
+ return out;
 }
 function showCustomerPanel(){el("customerPanel").style.display="block";loadCustomers();}
 async function createCustomer(){
