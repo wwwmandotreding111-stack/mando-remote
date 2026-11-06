@@ -21,7 +21,7 @@ button.primary{background:#bd9135;color:#090909;font-weight:bold}.filters{displa
 .panel{display:none;background:#141414;border:1px solid #bd9135;border-radius:14px;padding:16px;margin:20px 0}.panel h3{color:#e5bd58;margin-top:0}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}
 .admin-actions{display:flex;gap:6px;justify-content:center;margin-top:10px}.admin-actions button{font-size:12px;padding:7px}
 #authBox{display:none;background:#141414;border:1px solid #55421f;border-radius:14px;padding:16px;margin:20px 0}
-.notice{font-size:13px;color:#bbb;margin:8px 0}.danger{color:#ff8d8d;border-color:#8b3333}
+.admin-entry{background:linear-gradient(135deg,#d5a83f,#8c641b);color:#111;border:0;border-radius:10px;padding:12px 26px;font-weight:800;font-size:15px;box-shadow:0 3px 14px #0008}.notice{font-size:13px;color:#bbb;margin:8px 0}.danger{color:#ff8d8d;border-color:#8b3333}
 footer{text-align:center;padding:30px;color:#aaa;border-top:1px solid #40331d;margin-top:30px;font-size:12px}
 .whatsapp{position:fixed;bottom:18px;left:18px;background:#168b50;color:white;border:0;border-radius:30px;padding:13px 18px;text-decoration:none;font-weight:bold;box-shadow:0 4px 18px #0009}
 @media(max-width:420px){.products{grid-template-columns:1fr 1fr}.container{padding:12px}.remote{height:120px}}
@@ -29,6 +29,7 @@ footer{text-align:center;padding:30px;color:#aaa;border-top:1px solid #40331d;ma
 </head>
 <body>
 <header><div class="logo">🦅</div><h1>MANDO REMOTE</h1><div class="sub">شركة مندو التجارية</div><div class="sub">مكتبة الريموتات البديلة للشاشات</div></header>
+<div style="text-align:center;padding:14px"><button class="admin-entry" onclick="openLogin()">🔐 دخول المدير</button></div>
 <main class="container">
 <section class="welcome"><h2>أهلاً بكم في مكتبة مندو</h2><p class="sub">ابحث عن ريموت شاشتك بسهولة</p></section>
 <input id="search" placeholder="ابحث عن ماركة الشاشة أو رقم الريموت..." oninput="render()">
