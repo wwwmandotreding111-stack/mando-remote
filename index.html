@@ -32,7 +32,7 @@ footer{text-align:center;padding:32px 18px;color:var(--muted);border-top:1px sol
 <body>
 <header><div class="logo">🦅</div><h1>MANDO REMOTE</h1><div class="sub">شركة مندو التجارية</div><div class="sub">مكتبة الريموتات البديلة للشاشات</div></header>
 <div class="ad-wrap"><a id="adLink" href="#" style="text-decoration:none;color:inherit" onclick="return openAd(event)"><div class="ad-banner"><img id="adImage" alt="" style="display:none"><div class="ad-copy"><h2 id="adTitle">عروض شركة مندو التجارية</h2><p id="adText">أفضل الخيارات والريموتات البديلة لشاشتك</p></div></div></a><div class="ad-dots" id="adDots"></div></div>
-<div style="text-align:center;padding:14px;display:flex;gap:9px;justify-content:center;flex-wrap:wrap"><button class="admin-entry" onclick="openCustomerLogin()">👤 دخول الزبائن</button><button onclick="openLogin()">🔐 دخول المدير</button></div>
+<div style="text-align:center;padding:14px;display:flex;gap:9px;justify-content:center;flex-wrap:wrap"><button class="admin-entry" onclick="openCustomerLogin()">👤 دخول الزبائن</button></div>
 <section id="customerLoginBox" style="display:none;max-width:440px;margin:12px auto;padding:18px;background:#111d2c;border:1px solid #65502c;border-radius:16px">
 <h3 style="color:var(--gold);margin-top:0">دخول الزبائن</h3><input id="customerLoginName" placeholder="اسم الزبون"><input id="customerLoginCode" placeholder="كود الدخول" autocomplete="one-time-code"><button class="primary" onclick="customerLogin()">دخول</button><p class="notice" id="customerLoginMsg"></p></section>
 <main class="container">
@@ -163,10 +163,11 @@ async function adminRequest(action,body={}) {
  return out;
 }
 function showCustomerPanel(){el("customerPanel").style.display="block";loadCustomers();}
+function getDeviceId(){let id=localStorage.getItem("mando_device_id");if(!id){id=(crypto.randomUUID?crypto.randomUUID()+crypto.randomUUID():"mando-"+Date.now()+"-"+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2));localStorage.setItem("mando_device_id",id);}return id;}
 async function customerLogin(){
  el("customerLoginMsg").textContent="جارٍ التحقق من الاسم والكود...";
  try{
-  const response=await fetch(ADMIN_FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify({action:"customer_login",display_name:el("customerLoginName").value.trim(),code:el("customerLoginCode").value.trim()})});
+  const response=await fetch(ADMIN_FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify({action:"customer_login",display_name:el("customerLoginName").value.trim(),code:el("customerLoginCode").value.trim(),device_id:getDeviceId()})});
   const result=await response.json();
   if(!response.ok)throw new Error(result.error||"تعذر تسجيل الدخول");
   const {error}=await db.auth.verifyOtp({email:result.email,token:result.token_hash,type:result.type});
@@ -243,5 +244,5 @@ document.addEventListener("DOMContentLoaded",async()=>{
  await loadRemotes();heartbeat();await loadAds(false);await loadSettings(false);setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
 });
 </script>
-<div style="text-align:center;padding:0 0 16px"><button onclick="openLogin()" style="font-size:11px;opacity:.7">دخول الإدارة</button></div>
+
 </body></html>
