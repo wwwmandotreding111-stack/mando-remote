@@ -38,7 +38,16 @@ footer{text-align:center;padding:30px;color:#aaa;border-top:1px solid #40331d;ma
 <div id="authBox"><h3>دخول الإدارة</h3><input id="email" type="email" placeholder="البريد الإلكتروني"><input id="password" type="password" placeholder="كلمة المرور"><button class="primary" onclick="login()">تسجيل الدخول</button><p class="notice" id="authMsg"></p></div>
 <section class="panel" id="adminPanel">
 <div class="row" style="align-items:center"><h3>لوحة إدارة الريموتات</h3><button onclick="logout()">تسجيل الخروج</button></div>
-<p class="notice">أضف بيانات الريموت. رابط الصورة اختياري حالياً.</p>
+<div class="row"><button onclick="showCustomerPanel()">👥 إدارة الزبائن</button></div><section class="panel" id="customerPanel">
+<h3>👥 إدارة الزبائن</h3>
+<p class="notice">إضافة الحسابات ومتابعة حالة الاتصال والصلاحيات.</p>
+<input id="cName" placeholder="اسم الزبون">
+<input id="cEmail" type="email" placeholder="البريد الإلكتروني">
+<input id="cPassword" type="password" placeholder="كلمة مرور مؤقتة (6 أحرف على الأقل)">
+<button class="primary" onclick="createCustomer()">➕ إضافة زبون</button>
+<p class="notice" id="customerMsg"></p>
+<div id="customersList" class="notice">جارٍ تحميل الزبائن...</div>
+</section><p class="notice">أضف بيانات الريموت. رابط الصورة اختياري حالياً.</p>
 <input id="rName" placeholder="اسم الماركة (مثلاً Samsung)">
 <input id="rNumber" placeholder="رقم الريموت / الموديل">
 <input id="rModels" placeholder="الشاشات أو الموديلات المتوافقة">
@@ -53,6 +62,7 @@ footer{text-align:center;padding:30px;color:#aaa;border-top:1px solid #40331d;ma
 <script>
 const SUPABASE_URL = "https://lhghepwcvlqazmpouidu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_EgAQZYow05AZT_pQqHkI2w_kxJff9B5";
+const ADMIN_FUNCTION_URL = SUPABASE_URL + "/functions/v1/admin-users";
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let remotes=[], selected="الكل", isAdmin=false;
 const el=id=>document.getElementById(id);
@@ -84,9 +94,9 @@ async function login(){
  if(error){el("authMsg").textContent="تعذر تسجيل الدخول: "+error.message;return;}
  const {data,error:roleError}=await db.rpc("is_admin");
  if(roleError||data!==true){await db.auth.signOut();el("authMsg").textContent="هذا الحساب لا يملك صلاحية الإدارة.";return;}
- isAdmin=true;el("authBox").style.display="none";el("adminPanel").style.display="block";el("adminMsg").textContent="تم تسجيل الدخول بنجاح.";render();
+ isAdmin=true;el("authBox").style.display="none";el("adminPanel").style.display="block";el("adminMsg").textContent="تم تسجيل الدخول بنجاح.";render();loadCustomers();
 }
-async function logout(){await db.auth.signOut();isAdmin=false;el("adminPanel").style.display="none";render();}
+async function logout(){await db.auth.signOut();isAdmin=false;el("adminPanel").style.display="none";el("customerPanel").style.display="none";render();}
 async function addRemote(){
  const name=el("rName").value.trim(), number=el("rNumber").value.trim();
  if(!name||!number){el("adminMsg").textContent="اكتب اسم الماركة ورقم الريموت أولاً.";return;}
@@ -109,10 +119,46 @@ async function deleteRemote(id){
  const {error}=await db.from("remotes").delete().eq("id",id);
  if(error){alert("تعذر الحذف: "+error.message);return;}await loadRemotes();
 }
+
+async function adminRequest(action,body={}) {
+ const {data:{session}}=await db.auth.getSession();
+ if(!session)throw new Error("سجّل دخول المدير أولاً");
+ const res=await fetch(ADMIN_FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+session.access_token,"apikey":SUPABASE_KEY},body:JSON.stringify({action,...body})});
+ const out=await res.json();if(!res.ok)throw new Error(out.error||"تعذر تنفيذ العملية");return out;
+}
+function showCustomerPanel(){el("customerPanel").style.display="block";loadCustomers();}
+async function createCustomer(){
+ el("customerMsg").textContent="جارٍ إنشاء الحساب...";
+ try{await adminRequest("create",{email:el("cEmail").value.trim(),password:el("cPassword").value,display_name:el("cName").value.trim()});
+ el("customerMsg").textContent="تم إنشاء حساب الزبون بنجاح.";["cName","cEmail","cPassword"].forEach(x=>el(x).value="");await loadCustomers();}
+ catch(e){el("customerMsg").textContent="تعذر الإضافة: "+e.message;}
+}
+async function loadCustomers(){
+ if(!isAdmin)return;
+ const box=el("customersList");box.textContent="جارٍ تحميل الزبائن...";
+ try{
+ const {data,error}=await db.from("customer_profiles").select("id,display_name,active,role,last_seen_at").order("display_name");
+ if(error)throw error;
+ if(!data?.length){box.textContent="ما في زبائن مسجلين حالياً.";return;}
+ box.innerHTML=data.map(u=>{const online=u.last_seen_at && (Date.now()-new Date(u.last_seen_at).getTime()<90000);return '<div class="card" style="margin:8px 0;text-align:right"><b>'+safe(u.display_name||"بدون اسم")+'</b><div>'+safe(u.role) +' · '+(u.active?"مفعّل":"موقوف")+' · '+(online?"🟢 متصل الآن":"⚪ غير متصل")+'</div><small>آخر ظهور: '+(u.last_seen_at?new Date(u.last_seen_at).toLocaleString("ar"):"غير معروف")+'</small><div class="admin-actions"><button onclick="customerAction(\''+u.id+'\',\'active\','+(!u.active)+')">'+(u.active?"إيقاف":"تفعيل")+'</button><button onclick="customerAction(\''+u.id+'\',\'role\',\''+(u.role==="admin"?"customer":"admin")+'\')">'+(u.role==="admin"?"إزالة الأدمن":"جعله أدمن")+'</button></div></div>';}).join("");
+ }catch(e){box.textContent="تعذر تحميل القائمة. تأكد من تطبيق إعدادات قاعدة البيانات: "+e.message;}
+}
+async function customerAction(id,kind,value){
+ const msg=kind==="active"?(value?"تفعيل هذا الحساب؟":"إيقاف هذا الحساب؟"):(value==="admin"?"منح صلاحية الأدمن؟":"إزالة صلاحية الأدمن؟");
+ if(!confirm(msg))return;
+ try{await adminRequest("update",{user_id:id,[kind]:value});await loadCustomers();}
+ catch(e){alert("تعذر تنفيذ العملية: "+e.message);}
+}
+async function heartbeat(){
+ const {data:{session}}=await db.auth.getSession();if(!session)return;
+ await db.rpc("touch_my_presence").catch(()=>{});
+}
+setInterval(heartbeat,30000);
+
 document.addEventListener("DOMContentLoaded",async()=>{
  const {data}=await db.auth.getSession();
- if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){isAdmin=true;el("adminPanel").style.display="block";}}
- await loadRemotes();
+ if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){isAdmin=true;el("adminPanel").style.display="block";loadCustomers();}}
+ await loadRemotes();heartbeat();
 });
 </script>
 <div style="text-align:center;padding:0 0 16px"><button onclick="openLogin()" style="font-size:11px;opacity:.7">دخول الإدارة</button></div>
