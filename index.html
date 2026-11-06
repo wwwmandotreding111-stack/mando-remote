@@ -32,7 +32,9 @@ footer{text-align:center;padding:32px 18px;color:var(--muted);border-top:1px sol
 <body>
 <header><div class="logo">🦅</div><h1>MANDO REMOTE</h1><div class="sub">شركة مندو التجارية</div><div class="sub">مكتبة الريموتات البديلة للشاشات</div></header>
 <div class="ad-wrap"><a id="adLink" href="#" style="text-decoration:none;color:inherit" onclick="return openAd(event)"><div class="ad-banner"><img id="adImage" alt="" style="display:none"><div class="ad-copy"><h2 id="adTitle">عروض شركة مندو التجارية</h2><p id="adText">أفضل الخيارات والريموتات البديلة لشاشتك</p></div></div></a><div class="ad-dots" id="adDots"></div></div>
-<div style="text-align:center;padding:14px"><button class="admin-entry" onclick="openLogin()">🔐 دخول المدير</button></div>
+<div style="text-align:center;padding:14px;display:flex;gap:9px;justify-content:center;flex-wrap:wrap"><button class="admin-entry" onclick="openCustomerLogin()">👤 دخول الزبائن</button><button onclick="openLogin()">🔐 دخول المدير</button></div>
+<section id="customerLoginBox" style="display:none;max-width:440px;margin:12px auto;padding:18px;background:#111d2c;border:1px solid #65502c;border-radius:16px">
+<h3 style="color:var(--gold);margin-top:0">دخول الزبائن</h3><input id="customerLoginName" placeholder="اسم الزبون"><input id="customerLoginCode" placeholder="كود الدخول" autocomplete="one-time-code"><button class="primary" onclick="customerLogin()">دخول</button><p class="notice" id="customerLoginMsg"></p></section>
 <main class="container">
 <section class="welcome"><h2>أهلاً بكم في مكتبة مندو</h2><p class="sub">ابحث عن ريموت شاشتك بسهولة</p></section>
 <input id="search" placeholder="ابحث عن ماركة الشاشة أو رقم الريموت..." oninput="render()">
@@ -45,9 +47,9 @@ footer{text-align:center;padding:32px 18px;color:var(--muted);border-top:1px sol
 <h3>👥 إدارة الزبائن</h3>
 <p class="notice">إضافة الحسابات ومتابعة حالة الاتصال والصلاحيات.</p>
 <input id="cName" placeholder="اسم الزبون">
-<input id="cUsername" type="text" placeholder="اسم المستخدم (مثلاً mando123)">
-<input id="cPassword" type="password" placeholder="كلمة مرور مؤقتة (6 أحرف على الأقل)">
-<button class="primary" onclick="createCustomer()">➕ إضافة زبون</button>
+<input id="cCode" type="text" placeholder="كود يدوي (اتركه فارغاً لإنشاء كود تلقائي)">
+<button class="primary" onclick="createCustomer()">➕ إضافة زبون بالكود</button>
+<p class="notice">سيظهر الكود مرة واحدة بعد إنشاء الزبون؛ انسخه واحتفظ فيه وأرسله للزبون.</p>
 <p class="notice" id="customerMsg"></p>
 <div id="customersList" class="notice">جارٍ تحميل الزبائن...</div>
 </section><section class="panel" id="adsPanel">
@@ -161,27 +163,60 @@ async function adminRequest(action,body={}) {
  return out;
 }
 function showCustomerPanel(){el("customerPanel").style.display="block";loadCustomers();}
-async function createCustomer(){
- el("customerMsg").textContent="جارٍ إنشاء الحساب...";
- try{await adminRequest("create",{username:el("cUsername").value.trim(),password:el("cPassword").value,display_name:el("cName").value.trim()});
- el("customerMsg").textContent="تم إنشاء حساب الزبون بنجاح.";["cName","cUsername","cPassword"].forEach(x=>el(x).value="");await loadCustomers();}
- catch(e){el("customerMsg").textContent="تعذر الإضافة: "+e.message;}
+async function customerLogin(){
+ el("customerLoginMsg").textContent="جارٍ التحقق من الاسم والكود...";
+ try{
+  const response=await fetch(ADMIN_FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify({action:"customer_login",display_name:el("customerLoginName").value.trim(),code:el("customerLoginCode").value.trim()})});
+  const result=await response.json();
+  if(!response.ok)throw new Error(result.error||"تعذر تسجيل الدخول");
+  const {error}=await db.auth.verifyOtp({email:result.email,token:result.token_hash,type:result.type});
+  if(error)throw error;
+  el("customerLoginMsg").textContent="تم تسجيل الدخول بنجاح.";
+  el("customerLoginBox").style.display="none";
+  await loadRemotes();heartbeat();
+ }catch(e){el("customerLoginMsg").textContent="تعذر الدخول: "+e.message;}
 }
+function openCustomerLogin(){const box=el("customerLoginBox");box.style.display=box.style.display==="block"?"none":"block";el("customerLoginName").focus();}
+async function createCustomer(){
+ el("customerMsg").textContent="جارٍ إنشاء الزبون...";
+ try{
+  const result=await adminRequest("create_code_customer",{display_name:el("cName").value.trim(),code:el("cCode").value.trim()||undefined});
+  el("customerMsg").innerHTML="تم إنشاء الزبون. كود الدخول: <b style='color:#f1d18b'>"+safe(result.code)+"</b> <button onclick='copyCustomerCode("+JSON.stringify(result.code)+")'>نسخ الكود</button><p>احتفظ بالكود؛ لن يظهر مرة ثانية.</p>";
+  ["cName","cCode"].forEach(x=>el(x).value="");await loadCustomers();
+ }catch(e){el("customerMsg").textContent="تعذر الإضافة: "+e.message;}
+}
+async function copyCustomerCode(code){try{await navigator.clipboard.writeText(code);alert("تم نسخ الكود");}catch(_){prompt("انسخ الكود:",code);}}
 async function loadCustomers(){
  if(!isAdmin)return;
  const box=el("customersList");box.textContent="جارٍ تحميل الزبائن...";
  try{
- const {data,error}=await db.from("customer_profiles").select("id,display_name,active,role,last_seen_at").order("display_name");
+ const {data,error}=await db.from("customer_profiles").select("id,display_name,active,role,last_seen_at,code_enabled,blocked").eq("role","customer").order("display_name");
  if(error)throw error;
  if(!data?.length){box.textContent="ما في زبائن مسجلين حالياً.";return;}
- box.innerHTML=data.map(u=>{const online=u.last_seen_at && (Date.now()-new Date(u.last_seen_at).getTime()<90000);return '<div class="card" style="margin:8px 0;text-align:right"><b>'+safe(u.display_name||"بدون اسم")+'</b><div>'+safe(u.role) +' · '+(u.active?"مفعّل":"موقوف")+' · '+(online?"🟢 متصل الآن":"⚪ غير متصل")+'</div><small>آخر ظهور: '+(u.last_seen_at?new Date(u.last_seen_at).toLocaleString("ar"):"غير معروف")+'</small><div class="admin-actions"><button onclick="customerAction(\''+u.id+'\',\'active\','+(!u.active)+')">'+(u.active?"إيقاف":"تفعيل")+'</button><button onclick="customerAction(\''+u.id+'\',\'role\',\''+(u.role==="admin"?"customer":"admin")+'\')">'+(u.role==="admin"?"إزالة الأدمن":"جعله أدمن")+'</button></div></div>';}).join("");
- }catch(e){box.textContent="تعذر تحميل القائمة. تأكد من تطبيق إعدادات قاعدة البيانات: "+e.message;}
+ box.innerHTML=data.map(u=>{
+  const online=u.last_seen_at && (Date.now()-new Date(u.last_seen_at).getTime()<90000);
+  return '<div class="card" style="margin:8px 0;text-align:right"><b>'+safe(u.display_name||"بدون اسم")+'</b><div>'+(u.active?"🟢 مفعّل":"⚪ موقوف")+' · '+(u.blocked?"🚫 محظور":"غير محظور")+' · '+(u.code_enabled?"الكود فعّال":"الكود معطّل")+' · '+(online?"🟢 متصل الآن":"⚪ غير متصل")+'</div><small>آخر ظهور: '+(u.last_seen_at?new Date(u.last_seen_at).toLocaleString("ar"):"غير معروف")+'</small><div class="admin-actions"><button onclick="editCustomer(\''+u.id+'\',\''+safe(u.display_name||"").replace(/'/g,"\\'")+'\')">تعديل الاسم/الكود</button><button onclick="customerAction(\''+u.id+'\',\'active\','+(!u.active)+')">'+(u.active?"إيقاف":"تفعيل")+'</button><button onclick="customerAction(\''+u.id+'\',\'blocked\','+(!u.blocked)+')">'+(u.blocked?"إلغاء الحظر":"حظر")+'</button><button onclick="customerAction(\''+u.id+'\',\'code_enabled\','+(!u.code_enabled)+')">'+(u.code_enabled?"تعطيل الكود":"تفعيل الكود")+'</button><button class="danger" onclick="deleteCustomer(\''+u.id+'\')">حذف</button></div></div>';
+ }).join("");
+ }catch(e){box.textContent="تعذر تحميل القائمة: "+e.message;}
+}
+async function editCustomer(id,currentName){
+ const name=prompt("اسم الزبون:",currentName);if(name===null)return;
+ const code=prompt("كود جديد (اتركه فارغاً دون تغيير الكود):","");
+ const body={user_id:id,display_name:name.trim()};
+ if(code&&code.trim())body.code=code.trim();
+ try{await adminRequest("update_customer",body);alert("تم تحديث بيانات الزبون");await loadCustomers();}
+ catch(e){alert("تعذر التعديل: "+e.message);}
 }
 async function customerAction(id,kind,value){
- const msg=kind==="active"?(value?"تفعيل هذا الحساب؟":"إيقاف هذا الحساب؟"):(value==="admin"?"منح صلاحية الأدمن؟":"إزالة صلاحية الأدمن؟");
- if(!confirm(msg))return;
- try{await adminRequest("update",{user_id:id,[kind]:value});await loadCustomers();}
+ const labels={active:value?"تفعيل الحساب؟":"إيقاف الحساب؟",blocked:value?"حظر الزبون؟":"إلغاء حظر الزبون؟",code_enabled:value?"تفعيل الكود؟":"تعطيل الكود؟"};
+ if(!confirm(labels[kind]))return;
+ try{await adminRequest("update_customer",{user_id:id,[kind]:value});await loadCustomers();}
  catch(e){alert("تعذر تنفيذ العملية: "+e.message);}
+}
+async function deleteCustomer(id){
+ if(!confirm("حذف الزبون نهائياً؟"))return;
+ try{await adminRequest("delete_customer",{user_id:id});await loadCustomers();}
+ catch(e){alert("تعذر الحذف: "+e.message);}
 }
 
 async function loadAds(admin=false){const {data,error}=await db.from("site_ads").select("*").order("sort_order",{ascending:true}).order("created_at",{ascending:false});if(error){console.warn(error.message);siteAds=[];showAd();return;}siteAds=(data||[]).filter(a=>admin||a.enabled);adIndex=0;showAd();if(admin)renderAdsAdmin(data||[]);}
