@@ -441,8 +441,8 @@ setInterval(heartbeat,30000);
 
 document.addEventListener("DOMContentLoaded",async()=>{
  document.body.classList.add("login-screen");
- const {data}=await db.auth.getSession();
- if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){document.body.classList.remove("login-screen");isAdmin=true;el("adminPanel").style.display="block";loadCustomers();loadAds(true);loadSettings(true);}else{const {data:profile}=await db.from("customer_profiles").select("display_name,role,active,blocked,code_enabled").eq("id",data.session.user.id).maybeSingle();if(profile&&profile.role==="customer"&&profile.active&&!profile.blocked&&profile.code_enabled){showCustomerSession(profile.display_name,"••••••");await loadRemotes();heartbeat();}}}
+ // Always show the customer code gate on this public page.
+ // A customer enters the catalogue only after submitting their code.
  await loadAds(false);await loadSettings(false);setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
 });
 </script>
