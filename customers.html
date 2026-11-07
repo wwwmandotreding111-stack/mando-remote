@@ -198,6 +198,16 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 .mando-app-icon img{width:100%;height:100%;object-fit:cover}
 .mando-app-info{min-width:0;flex:1}.mando-app-info b{display:block;color:#f1d18b}.mando-app-info small{color:#aab4c2;font-size:11px}
 .mando-app-download{display:inline-block;margin-top:7px;padding:7px 12px;border-radius:8px;background:linear-gradient(90deg,#a77b2d,#e4c477);color:#151109;text-decoration:none;font-size:12px;font-weight:bold}
+
+/* MANDO APPS is embedded inside the customer login card */
+.mando-apps-side,.mando-apps-panel{display:none!important}
+#customerGate.mando-entry .mando-apps-inline{width:100%;margin-top:18px;padding-top:14px;border-top:1px solid rgba(226,190,119,.35)}
+#customerGate.mando-entry .mando-apps-inline-toggle{width:100%!important;height:46px!important;border:1px solid #b99455!important;border-radius:12px!important;background:linear-gradient(145deg,#243b54,#14263a)!important;color:#f2d18a!important;font-size:15px!important;font-weight:800!important;box-shadow:none!important}
+#customerGate.mando-entry .mando-apps-inline-toggle span{float:left;font-size:20px}
+#customerGate.mando-entry .mando-apps-inline-list{display:grid;gap:9px;margin-top:10px;max-height:220px;overflow:auto;text-align:right}
+#customerGate.mando-entry .mando-apps-inline-list[hidden]{display:none!important}
+#customerGate.mando-entry .mando-apps-inline-list .mando-app-card{background:#0c1929;border-color:#52677e}
+#customerGate.mando-entry .mando-apps-inline-list .mando-app-download{display:inline-block;width:auto!important;height:auto!important;padding:7px 12px!important;font-size:12px!important}
 </style>
 </head>
 <body class="login-screen">
@@ -227,6 +237,12 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
     <button class="primary" onclick="customerLogin()">دخول　↪</button>
     <button type="button" class="recheck-code" onclick="customerLogin()">⟳ إعادة التحقق من الكود</button>
     <p class="notice" id="customerLoginMsg"></p>
+    <div class="mando-apps-inline">
+      <button type="button" class="mando-apps-inline-toggle" onclick="toggleMandoAppsInline()">📱 تطبيقات مندو <span>＋</span></button>
+      <div id="mandoAppsInlineList" class="mando-apps-inline-list" hidden>
+        <p class="notice">جارٍ تحميل التطبيقات...</p>
+      </div>
+    </div>
   </div>
 </section>
 <section id="customerProfile" style="display:none;max-width:760px;margin:18px auto;padding:16px;background:#142238;border:1px solid #a77a2b;border-radius:16px;text-align:center"><h3 style="color:var(--gold);margin:0 0 8px">مرحباً بك <span id="customerDisplayName"></span></h3><p class="notice">كود الدخول: <b id="customerDisplayCode" style="color:#f1d18b"></b></p><button onclick="customerLogout()">تسجيل الخروج</button></section>
@@ -276,11 +292,7 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 </section>
 </main>
 <footer><strong>🦅 MANDO TRADING COMPANY</strong><p>شركة مندو التجارية — مكتبة الريموتات البديلة للشاشات</p><p id="footerAddress"></p><div class="footer-links"><a id="footerWhatsapp" href="https://wa.me/963991936353" target="_blank" rel="noopener">واتساب الشركة</a><a id="footerGps" href="#" target="_blank" rel="noopener" style="display:none">📍 موقع الشركة</a><a id="footerFacebook" href="#" target="_blank" rel="noopener" style="display:none">Facebook</a><a id="footerInstagram" href="#" target="_blank" rel="noopener" style="display:none">Instagram</a></div><p>جميع الحقوق محفوظة © شركة مندو التجارية</p></footer>
-<button type="button" id="mandoAppsOpen" class="mando-apps-side" onclick="toggleMandoApps(true)">📱<span>تطبيقات مندو</span></button>
-<section id="mandoAppsPanel" class="mando-apps-panel" aria-hidden="true">
- <div class="mando-apps-head"><div><b>📱 تطبيقات مندو</b><small>MANDO APPS</small></div><button type="button" onclick="toggleMandoApps(false)">✕</button></div>
- <div id="mandoAppsList" class="mando-apps-list"><p>جارٍ تحميل التطبيقات...</p></div>
-</section>
+
 <a class="whatsapp" href="https://wa.me/963991936353" target="_blank" rel="noopener">تواصل واتساب</a>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -474,8 +486,8 @@ document.addEventListener("DOMContentLoaded",async()=>{
  await loadAds(false);await loadSettings(false);setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
 });
  
-function toggleMandoApps(open){const p=el("mandoAppsPanel");p.classList.toggle("open",!!open);p.setAttribute("aria-hidden",String(!open));if(open)loadMandoApps();}
-async function loadMandoApps(){const box=el("mandoAppsList");box.innerHTML="<p>جارٍ تحميل التطبيقات...</p>";const {data,error}=await db.from("mando_apps").select("name,version,description,icon_url,download_url,size_label").eq("is_active",true).order("created_at",{ascending:false});if(error){box.innerHTML='<p style="color:#e7c77d;line-height:1.8">قسم التطبيقات قيد الإعداد. سيتم عرض التطبيقات بعد تفعيل القسم.</p>';return;}if(!data?.length){box.innerHTML='<p style="color:#aab4c2">لا توجد تطبيقات مضافة حالياً.</p>';return;}box.innerHTML=data.map(a=>'<article class="mando-app-card"><div class="mando-app-icon">'+(a.icon_url?'<img src="'+safe(a.icon_url)+'" alt="">':'📦')+'</div><div class="mando-app-info"><b>'+safe(a.name)+'</b><small>الإصدار '+safe(a.version||"—")+' · '+safe(a.size_label||"APK")+'</small><div style="color:#c4cbd5;font-size:12px;margin-top:5px">'+safe(a.description||"")+'</div><a class="mando-app-download" href="'+safe(a.download_url)+'" download>تحميل التطبيق</a></div></article>').join("");}
+function toggleMandoAppsInline(){const box=el("mandoAppsInlineList");box.hidden=!box.hidden;if(!box.hidden)loadMandoApps();}
+async function loadMandoApps(){const box=el("mandoAppsInlineList");box.innerHTML="<p>جارٍ تحميل التطبيقات...</p>";const {data,error}=await db.from("mando_apps").select("name,version,description,icon_url,download_url,size_label").eq("is_active",true).order("created_at",{ascending:false});if(error){box.innerHTML='<p style="color:#e7c77d;line-height:1.8">قسم التطبيقات قيد الإعداد. سيتم عرض التطبيقات بعد تفعيل القسم.</p>';return;}if(!data?.length){box.innerHTML='<p style="color:#aab4c2">لا توجد تطبيقات مضافة حالياً.</p>';return;}box.innerHTML=data.map(a=>'<article class="mando-app-card"><div class="mando-app-icon">'+(a.icon_url?'<img src="'+safe(a.icon_url)+'" alt="">':'📦')+'</div><div class="mando-app-info"><b>'+safe(a.name)+'</b><small>الإصدار '+safe(a.version||"—")+' · '+safe(a.size_label||"APK")+'</small><div style="color:#c4cbd5;font-size:12px;margin-top:5px">'+safe(a.description||"")+'</div><a class="mando-app-download" href="'+safe(a.download_url)+'" download>تحميل التطبيق</a></div></article>').join("");}
 </script>
 
 </body></html>
