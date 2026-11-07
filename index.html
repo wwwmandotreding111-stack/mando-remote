@@ -5,28 +5,56 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MANDO REMOTE | شركة مندو التجارية</title>
 <style>
-:root{--bg:#080d16;--panel:#111b2b;--panel2:#172438;--gold:#e6b957;--gold2:#a77a2b;--text:#f5f7fb;--muted:#a8b3c5;--line:#26364c;--blue:#3c75a8}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#1d3048 0,#0a1220 45%,#070b12 100%);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}
-header{position:relative;overflow:hidden;background:linear-gradient(120deg,#0b1422ed,#15243aee),radial-gradient(circle at 80% 20%,#80602a55,transparent 35%);border-bottom:1px solid #9e7a39;padding:22px 16px 26px;text-align:center}
-header:after{content:"";position:absolute;inset:auto -10% -70% -10%;height:150px;background:radial-gradient(ellipse,#c99b4540,transparent 65%);pointer-events:none}
-.logo{width:70px;height:70px;border:1px solid var(--gold);border-radius:22px;display:flex;align-items:center;justify-content:center;margin:auto;font-size:39px;color:var(--gold);background:linear-gradient(145deg,#1b2b40,#0a111c);box-shadow:0 8px 30px #0008}
-h1{color:var(--gold);letter-spacing:2px;margin:12px 0 5px;font-size:clamp(25px,5vw,36px)}.sub{color:var(--muted);font-size:13px}
-.container{max-width:1120px;margin:auto;padding:20px}.welcome{text-align:center;margin:24px 0 18px}.welcome h2{color:#f1d18b;font-size:24px;margin-bottom:8px}
-input,textarea{width:100%;padding:14px;margin:6px 0 12px;border-radius:12px;background:#0b1421;border:1px solid #31445d;color:#fff;font-size:15px;outline:none}input:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px #d5a83f1c}
-button,.btn{background:#17263a;color:#f1cf86;border:1px solid #6e572d;border-radius:12px;padding:11px 16px;cursor:pointer;transition:.2s}button:hover{transform:translateY(-1px);border-color:var(--gold)}button.primary{background:linear-gradient(135deg,#f0cd7d,#b78532);color:#101722;border:0;font-weight:bold}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.filters button{border-radius:30px;padding:9px 16px}.filters button.active{background:var(--gold);color:#101722}
-.count{color:var(--muted);font-size:13px;margin:15px 0}.products{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
-.card{background:linear-gradient(155deg,#17263a,#0e1827);border:1px solid var(--line);border-radius:18px;padding:14px;text-align:center;min-width:0;box-shadow:0 10px 28px #0003}
-.remote{height:180px;background:linear-gradient(145deg,#0a1421,#1c2a3c);border:1px solid #263a52;border-radius:13px;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:48px;overflow:hidden}
-.remote img{width:100%;height:100%;object-fit:contain}.card h3{color:#f1d18b;margin:13px 0 7px;font-size:17px}.card p{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
-.number{color:var(--gold);font-size:13px}.status{color:#78d6a0;font-size:12px}.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:35px;background:#101b2a;border:1px dashed #354760;border-radius:16px}
-.panel{display:none;background:linear-gradient(145deg,#152338,#0d1725);border:1px solid #8c6a32;border-radius:18px;padding:18px;margin:20px 0;box-shadow:0 15px 40px #0005}.panel h3{color:var(--gold);margin-top:0}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>*{flex:1}
+:root{--bg:#070b12;--panel:#101a29;--panel2:#17263a;--gold:#e8c477;--gold2:#a8782b;--text:#f7f4ed;--muted:#aeb8c7;--line:#34445a;--green:#83d7a5}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--text);font-family:"Tajawal",Tahoma,Arial,sans-serif;background:radial-gradient(ellipse at 50% -12%,#35445a 0%,#111d2d 33%,#080e18 72%,#05080e 100%);background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.14;background-image:linear-gradient(135deg,transparent 49.7%,#d9b66b 50%,transparent 50.3%);background-size:52px 52px;mask-image:linear-gradient(to bottom,black,transparent 65%)}
+header{position:relative;isolation:isolate;overflow:hidden;text-align:center;padding:34px 16px 32px;background:linear-gradient(120deg,#080d16f5,#17263bf2 55%,#0a111df5);border-bottom:1px solid #98763d;box-shadow:0 18px 55px #0008}
+header:before,header:after{content:"";position:absolute;z-index:-1;border-radius:50%;filter:blur(2px);pointer-events:none}
+header:before{width:360px;height:260px;top:-180px;left:calc(50% - 180px);background:#d4a84b30}
+header:after{width:80%;height:1px;bottom:0;left:10%;background:linear-gradient(90deg,transparent,#e8c477,transparent)}
+.logo{width:82px;height:82px;margin:auto;border:1px solid #e6c477;border-radius:26px;display:flex;align-items:center;justify-content:center;font-size:43px;color:var(--gold);background:linear-gradient(145deg,#27374b,#0b121d);box-shadow:0 0 0 7px #d7b15b0d,0 12px 35px #0009,inset 0 1px #ffffff24}
+h1{font-size:clamp(27px,5vw,40px);letter-spacing:2px;color:#f0d18e;margin:15px 0 5px;text-shadow:0 3px 22px #d5a64b44}
+.sub{font-size:13px;color:#c2cbd7;line-height:1.8}
+.ad-wrap{max-width:1120px;margin:24px auto 0;padding:0 20px}
+.ad-banner{min-height:165px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;border:1px solid #9d7a3d;border-radius:22px;background:radial-gradient(ellipse at 85% 10%,#c69b4b30,transparent 42%),linear-gradient(115deg,#1a2b40,#0b1421 75%);box-shadow:0 16px 40px #0006,inset 0 1px #ffffff12}
+.ad-banner:after{content:"";position:absolute;inset:8px;border:1px solid #e6c47722;border-radius:16px;pointer-events:none}
+.ad-banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.38}
+.ad-copy{position:relative;z-index:1}.ad-copy h2{color:#f3d795;font-size:clamp(21px,4vw,31px);margin:0 0 9px}.ad-copy p{color:#f5f0e6;margin:0;line-height:1.8}
+.ad-dots{display:flex;justify-content:center;gap:7px;margin-top:11px}.ad-dots span{width:7px;height:7px;border-radius:9px;background:#637083}.ad-dots span.active{width:22px;background:var(--gold)}
+#customerGate{position:relative!important;overflow:hidden;max-width:510px!important;margin:30px auto 38px!important;padding:34px 26px!important;text-align:center;background:radial-gradient(ellipse at 50% 0%,#b78a3b20,transparent 48%),linear-gradient(150deg,#1a2a40,#0b1421 70%)!important;border:1px solid #b18a48!important;border-radius:26px!important;box-shadow:0 25px 70px #0009,inset 0 1px #ffffff17!important}
+#customerGate:before{content:"";position:absolute;inset:9px;border:1px solid #e8c47727;border-radius:19px;pointer-events:none}
+#customerGate>div:first-child{width:76px;height:76px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;border:1px solid #d8b56e;border-radius:24px;background:linear-gradient(145deg,#293a50,#0c1522);font-size:42px!important;box-shadow:0 0 30px #c49a4a24}
+#customerGate h2{font-size:25px;letter-spacing:.2px}
+#customerGate h3{font-size:17px;margin:18px 0 7px}
+#customerGate input{margin:8px 0 14px!important}
+input,textarea{width:100%;padding:14px 15px;margin:6px 0 12px;border-radius:13px;background:#091321;border:1px solid #394b62;color:#fff;font-size:15px;outline:none;transition:.2s}
+input:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px #d5a83f20}
+button,.btn{background:linear-gradient(145deg,#1b2b40,#101b2a);color:#f1d18b;border:1px solid #766039;border-radius:13px;padding:11px 16px;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
+button:hover{transform:translateY(-2px);border-color:var(--gold);box-shadow:0 7px 20px #0005}
+button.primary{background:linear-gradient(120deg,#f4dda1,#d4a94f 58%,#a8782b);color:#15120b;border:1px solid #ffe7ae;font-weight:800;box-shadow:0 8px 25px #c7973b35}
+.container{max-width:1120px;margin:auto;padding:22px}
+.welcome{text-align:center;margin:24px 0 20px}.welcome h2{color:#f1d18b;font-size:26px;margin-bottom:8px}
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0}.filters button{border-radius:30px;padding:9px 17px}.filters button.active{background:linear-gradient(120deg,#f2d894,#bd8c3b);color:#111;border-color:#f5d995}
+.count{color:var(--muted);font-size:13px;margin:15px 0}
+.products{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:17px}
+.card{background:linear-gradient(155deg,#1b2b40,#0d1725);border:1px solid #34465e;border-radius:19px;padding:14px;text-align:center;min-width:0;box-shadow:0 12px 30px #0005,inset 0 1px #ffffff0b;transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-4px);border-color:#987a45}
+.remote{height:180px;background:radial-gradient(ellipse at 50% 20%,#263951,#0a1421 75%);border:1px solid #354963;border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:48px;overflow:hidden}
+.remote img{width:100%;height:100%;object-fit:contain}
+.card h3{color:#f1d18b;margin:13px 0 7px;font-size:17px}.card p{font-size:12px;color:var(--muted);overflow-wrap:anywhere}.number{color:var(--gold);font-size:13px}.status{color:var(--green);font-size:12px}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:35px;background:#101b2a;border:1px dashed #52627a;border-radius:16px}
+.panel{display:none;background:linear-gradient(145deg,#17283d,#0c1624);border:1px solid #8c6a32;border-radius:19px;padding:18px;margin:20px 0;box-shadow:0 15px 40px #0007}
+.panel h3{color:var(--gold);margin-top:0}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>*{flex:1}
 .admin-actions{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}.admin-actions button{font-size:12px;padding:8px}
-#authBox{display:none;background:#111d2c;border:1px solid #65502c;border-radius:16px;padding:18px;margin:20px 0}
-.admin-entry{background:linear-gradient(135deg,#f0cd7d,#b78532);color:#101722;border:0;border-radius:12px;padding:12px 26px;font-weight:800;font-size:15px;box-shadow:0 7px 24px #0006}.notice{font-size:13px;color:var(--muted);margin:8px 0}.danger{color:#ffaaaa;border-color:#873f4b}
-.ad-wrap{max-width:1120px;margin:18px auto 0;padding:0 20px}.ad-banner{min-height:150px;border:1px solid #85652f;border-radius:20px;overflow:hidden;position:relative;background:linear-gradient(115deg,#172a42,#0a111d 70%);display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;box-shadow:0 14px 35px #0005}.ad-banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.43}.ad-copy{position:relative;z-index:1}.ad-copy h2{color:#f2d18b;margin:0 0 8px;font-size:clamp(20px,4vw,30px)}.ad-copy p{color:#f4f5f8;margin:0}.ad-dots{display:flex;justify-content:center;gap:7px;margin-top:10px}.ad-dots span{width:7px;height:7px;border-radius:50%;background:#59677b}.ad-dots span.active{background:var(--gold);width:20px;border-radius:8px}
-footer{text-align:center;padding:32px 18px;color:var(--muted);border-top:1px solid #26364c;margin-top:38px;font-size:13px;background:#080e18}footer strong{color:var(--gold);font-size:19px}.footer-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:12px}footer a{color:#e7c477;text-decoration:none}
-.whatsapp{position:fixed;bottom:18px;left:18px;background:#168b50;color:white;border:0;border-radius:30px;padding:13px 18px;text-decoration:none;font-weight:bold;box-shadow:0 4px 18px #0009;z-index:5}
-@media(max-width:520px){.container{padding:13px}.ad-wrap{padding:0 13px}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{padding:9px}.remote{height:140px}.card h3{font-size:14px}.welcome h2{font-size:21px}}
+#authBox{display:none;background:#111d2c;border:1px solid #9b793e;border-radius:18px;padding:18px;margin:20px 0}
+.notice{font-size:13px;color:var(--muted);margin:8px 0}.danger{color:#ffb5b5;border-color:#873f4b}
+#customerProfile{background:linear-gradient(135deg,#1b2b40,#0d1725)!important;border:1px solid #b18a48!important;border-radius:18px!important;box-shadow:0 14px 38px #0006}
+footer{text-align:center;padding:34px 18px;color:var(--muted);border-top:1px solid #35445a;margin-top:42px;font-size:13px;background:linear-gradient(180deg,#0b1421,#070b12)}
+footer strong{color:var(--gold);font-size:19px}.footer-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:12px}footer a{color:#e7c477;text-decoration:none}
+.whatsapp{position:fixed;bottom:18px;left:18px;background:linear-gradient(135deg,#1aaf65,#087c43);color:white;border:1px solid #74d8a3;border-radius:30px;padding:13px 18px;text-decoration:none;font-weight:bold;box-shadow:0 6px 24px #0009;z-index:5}
+@media(max-width:600px){.container{padding:14px}.ad-wrap{padding:0 13px}.ad-banner{min-height:145px;border-radius:17px;padding:22px 16px}#customerGate{margin:22px 13px 30px!important;padding:27px 18px!important}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{padding:9px}.remote{height:140px}.card h3{font-size:14px}.welcome h2{font-size:22px}.logo{width:74px;height:74px}}
 </style>
 </head>
 <body>
