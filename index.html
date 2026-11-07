@@ -170,6 +170,12 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
  #customerGate.mando-entry button{height:56px!important}
 }
 
+
+#customerGate .admin-entry-link{display:block!important;width:auto!important;height:auto!important;margin:18px auto 0!important;padding:8px 18px!important;background:transparent!important;border:1px solid rgba(232,199,127,.55)!important;border-radius:10px!important;color:#f2d18a!important;font-size:14px!important;font-weight:600!important;box-shadow:none!important}
+#authBox{max-width:440px;margin:24px auto;padding:22px!important;background:linear-gradient(145deg,#243b54,#172a40)!important;border:1px solid #d9b66f!important;border-radius:18px;color:#fff}
+#authBox input{width:100%;margin:8px 0;padding:14px;border:1px solid #71869b;border-radius:10px;background:#102237;color:#fff}
+#authBox button{margin:8px 4px;padding:12px 16px;border-radius:10px}
+
 </style>
 </head>
 <body>
@@ -194,6 +200,7 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
     </div>
     <button class="primary" onclick="customerLogin()">دخول　↪</button>
     <p class="notice" id="customerLoginMsg"></p>
+    <button type="button" class="admin-entry-link" onclick="openLogin()">دخول الإدارة</button>
   </div>
 </section>
 <section id="customerProfile" style="display:none;max-width:760px;margin:18px auto;padding:16px;background:#142238;border:1px solid #a77a2b;border-radius:16px;text-align:center"><h3 style="color:var(--gold);margin:0 0 8px">مرحباً بك <span id="customerDisplayName"></span></h3><p class="notice">كود الدخول: <b id="customerDisplayCode" style="color:#f1d18b"></b></p><button onclick="customerLogout()">تسجيل الخروج</button></section>
@@ -277,7 +284,7 @@ function render(){
  ${isAdmin?'<div class="admin-actions"><button onclick="editRemote('+Number(r.id)+')">تعديل</button><button class="danger" onclick="deleteRemote('+Number(r.id)+')">حذف</button></div>':""}
  </article>`).join(""):'<div class="empty">لا توجد ريموتات مطابقة حالياً</div>';
 }
-function openLogin(){el("authBox").style.display=el("authBox").style.display==="block"?"none":"block";el("email").focus();}
+function openLogin(){el("authBox").style.display="block";el("authBox").scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>el("email").focus(),350);}
 async function sendPasswordRecovery(){
  const raw=el("email").value.trim();
  if(!raw || !raw.includes("@")){el("authMsg").textContent="اكتب البريد الإلكتروني الكامل للحساب أولاً.";return;}
