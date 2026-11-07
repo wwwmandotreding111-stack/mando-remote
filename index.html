@@ -130,7 +130,7 @@ body:not(.login-screen) #customerGate{display:none!important}
 <input id="search" placeholder="ابحث عن ماركة الشاشة أو رقم الريموت..." oninput="render()">
 <div class="filters" id="filters"><button class="active" onclick="choose('الكل',this)">الكل</button><button onclick="choose('Samsung',this)">Samsung</button><button onclick="choose('LG',this)">LG</button><button onclick="choose('TCL',this)">TCL</button><button onclick="choose('Hisense',this)">Hisense</button></div>
 <div class="count" id="count">سجّل الدخول لعرض المكتبة</div><div class="products" id="products"></div></section>
-<div id="authBox"><h3>دخول الإدارة</h3><input id="email" type="text" placeholder="اسم المستخدم أو بريد المدير"><input id="password" type="password" placeholder="كلمة المرور"><button class="primary" onclick="login()">تسجيل الدخول</button><p class="notice" id="authMsg"></p></div>
+<div id="authBox"><h3>دخول الإدارة</h3><input id="email" type="text" placeholder="اسم المستخدم أو بريد المدير"><input id="password" type="password" placeholder="كلمة المرور"><button class="primary" onclick="login()">تسجيل الدخول</button><button type="button" onclick="sendPasswordRecovery()">نسيت كلمة المرور؟ إرسال رابط استعادة</button><p class="notice" id="authMsg"></p></div>
 <section class="panel" id="adminPanel">
 <div class="row" style="align-items:center"><h3>لوحة إدارة الريموتات</h3><button onclick="logout()">تسجيل الخروج</button></div>
 <div class="row"><button onclick="showCustomerPanel()">👥 إدارة الزبائن</button><button onclick="showAdsPanel()">📢 إدارة الإعلانات</button><button onclick="showSettingsPanel()">⚙️ معلومات الشركة</button></div><section class="panel" id="customerPanel">
@@ -206,6 +206,13 @@ function render(){
  </article>`).join(""):'<div class="empty">لا توجد ريموتات مطابقة حالياً</div>';
 }
 function openLogin(){el("authBox").style.display=el("authBox").style.display==="block"?"none":"block";el("email").focus();}
+async function sendPasswordRecovery(){
+ const raw=el("email").value.trim();
+ if(!raw || !raw.includes("@")){el("authMsg").textContent="اكتب البريد الإلكتروني الكامل للحساب أولاً.";return;}
+ el("authMsg").textContent="جارٍ إرسال رابط الاستعادة...";
+ const {error}=await db.auth.resetPasswordForEmail(raw,{redirectTo:"https://wwwmandotreding111-stack.github.io/mando-remote/reset-password.html"});
+ el("authMsg").textContent=error?"تعذر إرسال الرابط: "+error.message:"تم إرسال رابط الاستعادة إلى بريدك الإلكتروني. افحص الوارد والرسائل غير المرغوبة.";
+}
 async function login(){
  el("authMsg").textContent="جارٍ التحقق...";
  const loginValue=el("email").value.trim().toLowerCase();
