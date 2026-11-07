@@ -138,7 +138,7 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 #customerGate.mando-entry:after{display:none!important}
 #customerGate.mando-entry .entry-room{display:none!important}
 #customerGate.mando-entry .entry-center{
- position:relative!important;inset:auto!important;left:auto!important;top:auto!important;transform:none!important;
+ position:relative!important;z-index:5!important;isolation:isolate!important;inset:auto!important;left:auto!important;top:auto!important;transform:none!important;
  width:min(100%,430px)!important;margin:0!important;padding:34px 28px 28px!important;
  display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important;
  background:linear-gradient(155deg,#243b54,#172a40)!important;
@@ -155,7 +155,7 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
  border:1px solid #71869b!important;border-radius:14px!important;box-shadow:inset 0 2px 6px #0004!important
 }
 #customerGate.mando-entry .entry-lock{flex:0 0 auto!important;color:#e8c77f!important;font-size:22px!important;padding:0 0 0 12px!important;border-right:1px solid #52677e!important}
-#customerGate.mando-entry input{flex:1!important;min-width:0!important;width:100%!important;height:100%!important;padding:0 8px!important;
+#customerGate.mando-entry input{position:relative!important;z-index:6!important;display:block!important;visibility:visible!important;opacity:1!important;flex:1 1 auto!important;min-width:0!important;width:100%!important;height:100%!important;padding:0 8px!important;
  margin:0!important;border:0!important;background:transparent!important;box-shadow:none!important;
  color:#fff!important;text-align:right!important;font-size:17px!important;line-height:normal!important}
 #customerGate.mando-entry input::placeholder{color:#c2cfdd!important;opacity:1!important}
