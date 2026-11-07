@@ -313,7 +313,7 @@ const SUPABASE_URL = "https://lhghepwcvlqazmpouidu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_EgAQZYow05AZT_pQqHkI2w_kxJff9B5";
 const ADMIN_FUNCTION_URL = SUPABASE_URL + "/functions/v1/super-handler";
 const CUSTOMER_LOGIN_URL = SUPABASE_URL + "/functions/v1/super-handler";
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storage: window.localStorage } });
 let remotes=[], selected="الكل", isAdmin=false, adIndex=0, siteAds=[], siteSettings={};
 function showAd(){if(!siteAds.length){el("adTitle").textContent="عروض شركة مندو التجارية";el("adText").textContent="أفضل الخيارات والريموتات البديلة لشاشتك";el("adImage").style.display="none";el("adDots").innerHTML="";el("adLink").href="#";return;}const a=siteAds[adIndex%siteAds.length];el("adTitle").textContent=a.title||"";el("adText").textContent=a.description||"";const im=el("adImage");if(a.image_url){im.src=a.image_url;im.style.display="block";}else im.style.display="none";el("adLink").href=a.target_url||"#";el("adDots").innerHTML=siteAds.map((_,i)=>'<span class="'+(i===adIndex?'active':'')+'"></span>').join("");}
 function openAd(e){if(!siteAds[adIndex]?.target_url){e.preventDefault();return false;}return true;}
@@ -409,7 +409,8 @@ async function customerLogin(){
   if(!response.ok)throw new Error(result.error||"تعذر تسجيل الدخول");
   const {error}=await db.auth.verifyOtp({token_hash:result.token_hash,type:result.type});
   if(error)throw error;
-  showCustomerSession(display_name,code);
+  localStorage.setItem("mando_customer_name",display_name);
+  showCustomerSession(display_name);
   el("customerLoginMsg").textContent="";
   await loadRemotes();heartbeat();
  }catch(e){el("customerLoginMsg").textContent="تعذر الدخول: "+e.message;}
@@ -494,10 +495,23 @@ setInterval(heartbeat,30000);
 
 document.addEventListener("DOMContentLoaded",async()=>{
  document.body.classList.add("login-screen");
- // Always show the customer code gate on this public page.
- // A customer enters the catalogue only after submitting their code.
  await loadAds(false);await loadSettings(false);
- // لا تستعد دخول الزبون تلقائياً؛ يجب إدخال كود الدخول في كل زيارة.
+ // استعادة جلسة الزبون المحفوظة بعد تحديث الصفحة، دون حفظ أو إعادة طلب كود الدخول.
+ try{
+  const {data:{session},error}=await db.auth.getSession();
+  const savedName=localStorage.getItem("mando_customer_name");
+  if(!error && session && savedName){
+   const {data:userData,error:userError}=await db.auth.getUser();
+   if(!userError && userData?.user){
+    const {data:isAdminUser}=await db.rpc("is_admin");
+    if(isAdminUser!==true){
+     showCustomerSession(savedName);
+     await loadRemotes();
+     heartbeat();
+    }
+   }
+  }
+ }catch(e){console.warn("تعذرت استعادة جلسة الزبون:",e);}
  setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
 });
  
