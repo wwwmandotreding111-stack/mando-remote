@@ -201,7 +201,8 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 
 /* MANDO APPS: vertical side tab, visible only inside the signed-in catalogue */
 .catalog-apps{position:fixed;right:0;top:38%;z-index:9999;width:auto;margin:0;padding:0;background:transparent;border:0;box-shadow:none}
-.mando-menu-trigger{width:48px;height:145px;padding:12px 8px;border:1px solid #b99455;border-right:0;border-radius:13px 0 0 13px;background:linear-gradient(160deg,#2b2110,#090909);color:#f2d18a;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 5px 20px #0008;writing-mode:vertical-rl;transform:rotate(180deg)}
+.mando-side-menu{position:fixed;top:14px;right:12px;z-index:9999}
+.mando-menu-trigger{width:82px;height:38px;padding:6px 9px;border:1px solid #b99455;border-radius:9px;background:linear-gradient(160deg,#2b2110,#090909);color:#f2d18a;font-size:12px;font-weight:800;cursor:pointer;box-shadow:0 3px 12px #0008;writing-mode:horizontal-tb;transform:none}
 .mando-menu-panel{position:fixed;right:0;top:0;height:100vh;width:min(330px,86vw);z-index:10000;padding:20px;background:linear-gradient(160deg,#17283d,#080e17);border-left:2px solid #b99455;box-shadow:-12px 0 35px #000a;transform:translateX(105%);transition:transform .25s ease;overflow:auto}
 .mando-menu-panel.open{transform:translateX(0)}
 .mando-menu-head{display:flex;justify-content:space-between;align-items:center;color:#f2d18a;border-bottom:1px solid #8b6b35;padding-bottom:14px;margin-bottom:16px}
