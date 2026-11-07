@@ -218,6 +218,46 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 #customerGate.mando-entry .mando-apps-inline-list[hidden]{display:none!important}
 #customerGate.mando-entry .mando-apps-inline-list .mando-app-card{background:#0c1929;border-color:#52677e}
 #customerGate.mando-entry .mando-apps-inline-list .mando-app-download{display:inline-block;width:auto!important;height:auto!important;padding:7px 12px!important;font-size:12px!important}
+
+/* Approved MANDO REMOTE entrance: product display + clean login */
+@media(min-width:760px){
+ #customerGate.mando-entry{min-height:100svh!important;display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr)!important;gap:4vw!important;padding:7vh 7vw 10vh!important;background:radial-gradient(ellipse at 25% 45%,#263c56 0%,#101d2e 48%,#070c14 100%)!important}
+ #customerGate.mando-entry .entry-room{display:block!important;position:relative!important;inset:auto!important;width:100%!important;height:min(70vh,650px)!important;grid-column:1;grid-row:1;order:0}
+ #customerGate.mando-entry .entry-center{position:relative!important;inset:auto!important;transform:none!important;width:100%!important;max-width:520px!important;grid-column:2;grid-row:1;align-self:center!important;justify-self:center!important;padding:38px!important;border:1px solid #a98548!important;border-radius:28px!important;background:linear-gradient(145deg,#142338ed,#080f1bed)!important;box-shadow:0 25px 65px #0009,inset 0 1px #ffffff18!important}
+}
+#customerGate.mando-entry .entry-room{display:block!important;position:absolute;inset:0;pointer-events:none}
+#customerGate.mando-entry .entry-tv{position:absolute!important;display:block!important;overflow:hidden;border:7px solid #172438!important;border-radius:13px!important;background:#05080d!important;box-shadow:0 18px 45px #000b,0 0 0 1px #c6a15c!important}
+#customerGate.mando-entry .entry-tv-left{width:62%!important;height:47%!important;left:5%!important;top:12%!important}
+#customerGate.mando-entry .entry-tv-right{width:43%!important;height:32%!important;right:5%!important;top:43%!important}
+#customerGate.mando-entry .entry-tv img{width:100%;height:100%;object-fit:cover;display:block;opacity:.95}
+#customerGate.mando-entry .entry-console{display:block!important;position:absolute;left:7%;top:63%;width:62%;height:5%;border-radius:5px;background:linear-gradient(#29384b,#080e17);box-shadow:0 15px 22px #0009}
+#customerGate.mando-entry .entry-box{display:block!important;position:absolute;left:30%;top:70%;width:18%;height:6%;border-radius:5px;background:linear-gradient(120deg,#34445a,#090e16);border:1px solid #92713e}
+#customerGate.mando-entry .entry-remotes{display:flex!important;position:absolute;left:18%;bottom:8%;gap:20px;transform:rotate(-8deg)}
+#customerGate.mando-entry .entry-remotes i{display:block;width:19px;height:85px;border-radius:12px;background:linear-gradient(90deg,#080b10,#344052,#090c12);border:1px solid #bd9854;box-shadow:0 10px 20px #0009}
+#customerGate.mando-entry .entry-eagle{display:flex!important;align-items:center;justify-content:center;width:76px;height:76px;margin:0 auto 12px;border:1px solid #d8b56e;border-radius:24px;background:linear-gradient(145deg,#293a50,#0c1522);font-size:43px!important;box-shadow:0 0 30px #c49a4a24}
+#customerGate.mando-entry .entry-center h2{height:auto!important;font-size:clamp(28px,4vw,40px)!important;letter-spacing:2px!important;color:#f0d18e!important;margin:8px 0!important;text-shadow:0 3px 22px #d5a64b44}
+#customerGate.mando-entry .entry-en{display:block!important;color:#e2d3b4!important;font-size:16px!important;margin:5px 0 13px!important}
+#customerGate.mando-entry .entry-line{display:block!important;width:90px;height:2px;margin:0 auto 24px;background:linear-gradient(90deg,transparent,#e8c477,transparent)}
+#customerGate.mando-entry .entry-form{height:62px!important;width:100%!important;margin:12px auto!important;padding:0 15px!important;display:flex!important;align-items:center!important}
+#customerGate.mando-entry .entry-form input{height:100%!important}
+#customerGate.mando-entry .entry-center button.primary{height:58px!important;width:100%!important;margin-top:12px!important}
+#customerGate.mando-entry .entry-center .recheck-code{height:auto!important;width:auto!important;margin-top:12px!important;font-size:13px!important;background:transparent!important;border:0!important;box-shadow:none!important}
+#customerGate.mando-entry .notice{color:#f2d99e!important}
+#customerGate.mando-entry:after{content:"جميع الحقوق محفوظة لدى شركة مندو التجارية";display:block!important;position:absolute;z-index:5;bottom:18px;left:0;right:0;text-align:center;color:#b9a57d;font-size:12px;letter-spacing:.2px}
+@media(max-width:759px){
+ #customerGate.mando-entry{min-height:100svh!important;padding:24px 16px 80px!important;background:radial-gradient(ellipse at 50% 20%,#263c56 0%,#101d2e 55%,#070c14 100%)!important}
+ #customerGate.mando-entry .entry-room{position:absolute!important;inset:0!important;opacity:.5!important}
+ #customerGate.mando-entry .entry-tv-left{width:68%!important;height:26%!important;left:2%!important;top:5%!important}
+ #customerGate.mando-entry .entry-tv-right{width:38%!important;height:20%!important;right:2%!important;top:24%!important}
+ #customerGate.mando-entry .entry-console{top:32%!important;width:65%!important}
+ #customerGate.mando-entry .entry-box,#customerGate.mando-entry .entry-remotes{display:none!important}
+ #customerGate.mando-entry .entry-center{position:relative!important;inset:auto!important;transform:none!important;width:100%!important;max-width:470px!important;margin:24vh auto 0!important;padding:25px 19px!important;border:1px solid #a98548!important;border-radius:25px!important;background:linear-gradient(145deg,#142338f2,#080f17f2)!important;box-shadow:0 20px 55px #000b!important}
+ #customerGate.mando-entry .entry-eagle{width:62px;height:62px;font-size:35px!important}
+ #customerGate.mando-entry .entry-center h2{font-size:29px!important}
+ #customerGate.mando-entry .entry-en{font-size:14px!important}
+ #customerGate.mando-entry:after{bottom:14px;font-size:11px}
+}
+
 </style>
 </head>
 <body class="login-screen">
