@@ -204,6 +204,10 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
     <div class="entry-line"></div>
     <div class="entry-form">
       <span class="entry-lock">♙</span>
+      <input id="customerLoginName" placeholder="اكتب اسم الزبون" autocomplete="name">
+    </div>
+    <div class="entry-form">
+      <span class="entry-lock">♙</span>
       <input id="customerLoginCode" placeholder="أدخل كود الزبون" autocomplete="one-time-code">
     </div>
     <button class="primary" onclick="customerLogin()">دخول　↪</button>
@@ -351,16 +355,17 @@ async function adminRequest(action,body={}) {
 function showCustomerPanel(){el("customerPanel").style.display="block";loadCustomers();}
 function getDeviceId(){let id=localStorage.getItem("mando_device_id");if(!id){id=(crypto.randomUUID?crypto.randomUUID()+crypto.randomUUID():"mando-"+Date.now()+"-"+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2));localStorage.setItem("mando_device_id",id);}return id;}
 async function customerLogin(){
+ const display_name=el("customerLoginName").value.trim();
  const code=el("customerLoginCode").value.trim();
- if(!code){el("customerLoginMsg").textContent="اكتب كود الدخول أولاً.";return;}
- el("customerLoginMsg").textContent="جارٍ التحقق من الكود...";
+ if(!display_name||!code){el("customerLoginMsg").textContent="اكتب اسم الزبون وكود الدخول.";return;}
+ el("customerLoginMsg").textContent="جارٍ التحقق من الاسم والكود...";
  try{
-  const response=await fetch(CUSTOMER_LOGIN_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify({code,device_id:getDeviceId()})});
+  const response=await fetch(ADMIN_FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify({action:"customer_login",display_name,code,device_id:getDeviceId()})});
   const result=await response.json();
   if(!response.ok)throw new Error(result.error||"تعذر تسجيل الدخول");
   const {error}=await db.auth.verifyOtp({email:result.email,token_hash:result.token_hash,type:result.type});
   if(error)throw error;
-  showCustomerSession(result.display_name,code);
+  showCustomerSession(display_name,code);
   el("customerLoginMsg").textContent="";
   await loadRemotes();heartbeat();
  }catch(e){el("customerLoginMsg").textContent="تعذر الدخول: "+e.message;}
