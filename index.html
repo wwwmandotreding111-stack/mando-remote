@@ -98,6 +98,34 @@ body:not(.login-screen) #customerGate{display:none!important}
 #customerGate.mando-entry button{width:min(66%,420px);height:clamp(54px,8vh,76px);border-radius:24px;font-size:clamp(22px,3vw,30px);font-weight:900;background:linear-gradient(110deg,#f8dfa0,#d8a94e 55%,#f5d58b)!important;color:#17120a!important;border:1px solid #ffe9b1!important;box-shadow:0 8px 28px #0009}
 #customerGate.mando-entry .notice{color:#ffe2a0;text-shadow:0 1px 4px #000;min-height:18px}
 @media(max-width:700px){#customerGate.mando-entry{background-position:center center!important;padding:8px!important}#customerGate.mando-entry .entry-center{width:84%;top:53%;transform:translate(-50%,-2%);padding:0 6px}#customerGate.mando-entry .entry-form{height:54px;margin-bottom:14px;border-radius:16px;padding:0 10px}#customerGate.mando-entry button{height:52px;width:72%;border-radius:16px;font-size:22px}#customerGate.mando-entry .entry-lock{font-size:22px;padding-right:9px}}
+
+/* Visibility and contrast refresh */
+:root{--bg:#111d2c;--panel:#1b2b40;--panel2:#243850;--gold:#f2d18a;--gold2:#bd8b3e;--text:#fffaf0;--muted:#d1d9e4;--line:#53677f;--green:#9ce6b8}
+body{background:radial-gradient(ellipse at 50% -10%,#526982 0%,#263b53 38%,#152438 78%,#101a29 100%)}
+header{background:linear-gradient(120deg,#142338f7,#2a4059f5 55%,#17283df7)}
+.logo{background:linear-gradient(145deg,#405773,#17283d)}
+.ad-banner,.card,.panel,#authBox{background:linear-gradient(145deg,#263d57,#182a40);border-color:#71869e}
+input,textarea{background:#142338;border-color:#71869e;color:#fff}
+input::placeholder,textarea::placeholder{color:#c3cfdd}
+.notice,.count,.sub,.card p{color:#d4deea}
+#customerGate.mando-entry{background-color:#1a2b40!important}
+#customerGate.mando-entry:after{display:block!important;content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,15,26,.48),rgba(7,15,26,.28),rgba(7,15,26,.48));z-index:1}
+#customerGate.mando-entry .entry-center{top:50%;transform:translate(-50%,-50%);width:min(92%,460px);padding:30px 26px;background:linear-gradient(145deg,rgba(29,48,70,.96),rgba(13,27,43,.96))!important;border:1px solid #e2bd70!important;border-radius:24px;box-shadow:0 20px 60px #0009!important}
+#customerGate.mando-entry .entry-eagle{display:block!important;font-size:42px;margin:0 auto 10px;color:#f2d18a}
+#customerGate.mando-entry .entry-en{display:block!important;color:#f2d18a;font-size:15px;font-weight:bold;letter-spacing:3px;margin:6px 0 15px}
+#customerGate.mando-entry .entry-line{display:block!important;width:76px;height:2px;margin:0 auto 20px;background:linear-gradient(90deg,transparent,#f2d18a,transparent)}
+#customerGate.mando-entry .entry-center h2{display:block!important;height:auto!important;font-size:clamp(23px,5vw,30px)!important;color:#fff3d4;margin:0!important}
+#customerGate.mando-entry .entry-form{background:#0c1929!important;border-color:#e2bd70;box-shadow:0 8px 24px #0006}
+#customerGate.mando-entry input{color:#fff!important}
+#customerGate.mando-entry input::placeholder{color:#d9e1eb!important}
+#customerGate.mando-entry .notice{color:#ffe7b5;text-shadow:none}
+#customerGate.mando-entry button{box-shadow:0 8px 24px #0007}
+@media(max-width:700px){
+ #customerGate.mando-entry .entry-center{top:50%;width:min(92%,420px);padding:26px 18px;transform:translate(-50%,-50%)}
+ #customerGate.mando-entry .entry-form{width:100%;margin-bottom:14px}
+ #customerGate.mando-entry button{width:100%}
+}
+
 </style>
 </head>
 <body>
