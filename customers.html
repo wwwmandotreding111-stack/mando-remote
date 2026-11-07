@@ -363,7 +363,7 @@ async function customerLogin(){
   const response=await fetch(ADMIN_FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify({action:"customer_login",display_name,code,device_id:getDeviceId()})});
   const result=await response.json();
   if(!response.ok)throw new Error(result.error||"تعذر تسجيل الدخول");
-  const {error}=await db.auth.verifyOtp({email:result.email,token_hash:result.token_hash,type:result.type});
+  const {error}=await db.auth.verifyOtp({token_hash:result.token_hash,type:result.type});
   if(error)throw error;
   showCustomerSession(display_name,code);
   el("customerLoginMsg").textContent="";
