@@ -487,16 +487,7 @@ document.addEventListener("DOMContentLoaded",async()=>{
  // Always show the customer code gate on this public page.
  // A customer enters the catalogue only after submitting their code.
  await loadAds(false);await loadSettings(false);
- try{
-  const {data:{session}}=await db.auth.getSession();
-  if(session){
-   const {data:isAdmin}=await db.rpc("is_admin");
-   if(isAdmin!==true){
-    showCustomerSession(localStorage.getItem("mando_customer_name")||"زبون مندو");
-    await loadRemotes();heartbeat();
-   }
-  }
- }catch(e){console.warn("Session restore:",e.message);}
+ // لا تستعد دخول الزبون تلقائياً؛ يجب إدخال كود الدخول في كل زيارة.
  setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
 });
  
