@@ -421,6 +421,7 @@ function showCustomerSession(name){
  el("customerProfile").style.display="block";
  el("customerDisplayName").textContent=name||"زبون مندو";
  el("catalogArea").style.display="block";
+ el("mandoSideMenu").style.display="block";
 }
 async function customerLogout(){
  await db.auth.signOut();
@@ -428,6 +429,8 @@ async function customerLogout(){
  document.body.classList.add("login-screen");
  el("customerProfile").style.display="none";
  el("catalogArea").style.display="none";
+ el("mandoSideMenu").style.display="none";
+ el("mandoMenuPanel").classList.remove("open");
  el("customerGate").style.display="block";
  el("customerLoginCode").value="";
  remotes=[];render();
