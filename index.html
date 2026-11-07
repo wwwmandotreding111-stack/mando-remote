@@ -61,8 +61,8 @@ body.login-screen{background:radial-gradient(ellipse at 50% 38%,#1b2c42 0%,#0b14
 body.login-screen:before{display:none}
 body.login-screen header,body.login-screen .ad-wrap,body.login-screen footer,body.login-screen .whatsapp{display:none}
 #customerGate{position:relative!important;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:100vh;width:100%;max-width:none!important;margin:0!important;padding:36px 18px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;text-align:center}
-#customerGate:before{content:"";position:absolute;inset:0;z-index:-2;border:0;border-radius:0;background:radial-gradient(ellipse at 50% 48%,#263a52 0%,#101c2c 44%,#070d17 78%)}
-#customerGate:after{content:"";position:absolute;z-index:-1;inset:0;opacity:.55;background:radial-gradient(ellipse at 18% 48%,#bd91432a,transparent 26%),radial-gradient(ellipse at 82% 48%,#bd91432a,transparent 26%)}
+#customerGate:before{content:"";position:absolute;inset:0;z-index:-2;border:0;border-radius:0;background:linear-gradient(90deg,rgba(4,8,15,.82),rgba(5,10,18,.68)),url("https://images.pexels.com/photos/29606737/pexels-photo-29606737/free-photo-of-modern-living-room-with-digital-devices-and-tv.jpeg?auto=compress&dpr=1&h=750&w=1260") center/cover no-repeat}
+#customerGate:after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(180deg,#050a13a6,#050a13bd)}
 .gate-content{position:relative;z-index:2;width:min(100%,420px);padding:32px 28px 26px;border:1px solid #9e7a3e;border-radius:23px;background:linear-gradient(150deg,#142238ed,#091321f2);box-shadow:0 24px 70px #0009,inset 0 1px #ffffff13}
 .gate-eagle{font-size:39px;line-height:1;margin:0 auto 14px;filter:drop-shadow(0 4px 12px #c79b4c55)}
 .gate-content h2{font-size:clamp(24px,5vw,31px);font-weight:800;color:#f0d18e;margin:0 0 8px;letter-spacing:0}
@@ -73,7 +73,7 @@ body.login-screen header,body.login-screen .ad-wrap,body.login-screen footer,bod
 #customerGate input:focus{border-color:#e8c477;box-shadow:0 0 0 3px #e8c47720}
 #customerGate button{width:100%;height:52px;border-radius:12px;font-size:16px}
 #customerGate .notice{min-height:18px;margin:10px 0 0}
-.gate-art{position:absolute;z-index:0;inset:0;pointer-events:none;opacity:.58}
+.gate-art{display:none!important}
 .gate-art .screen{position:absolute;width:clamp(120px,22vw,245px);height:clamp(85px,15vw,165px);border:5px solid #68778a;border-radius:9px;background:linear-gradient(135deg,#1b3147,#0a1421 65%,#31465b);box-shadow:0 0 0 2px #d2ad6340,0 18px 45px #0008}
 .gate-art .screen:after{content:"";position:absolute;left:43%;bottom:-15px;width:14%;height:10px;background:#8c7958;border-radius:0 0 5px 5px}
 .gate-art .screen-one{left:7%;top:22%;transform:rotate(-8deg)}
