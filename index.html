@@ -32,14 +32,16 @@ footer{text-align:center;padding:32px 18px;color:var(--muted);border-top:1px sol
 <body>
 <header><div class="logo">🦅</div><h1>MANDO REMOTE</h1><div class="sub">شركة مندو التجارية</div><div class="sub">مكتبة الريموتات البديلة للشاشات</div></header>
 <div class="ad-wrap"><a id="adLink" href="#" style="text-decoration:none;color:inherit" onclick="return openAd(event)"><div class="ad-banner"><img id="adImage" alt="" style="display:none"><div class="ad-copy"><h2 id="adTitle">عروض شركة مندو التجارية</h2><p id="adText">أفضل الخيارات والريموتات البديلة لشاشتك</p></div></div></a><div class="ad-dots" id="adDots"></div></div>
-<div style="text-align:center;padding:14px;display:flex;gap:9px;justify-content:center;flex-wrap:wrap"><button class="admin-entry" onclick="openCustomerLogin()">👤 دخول الزبائن</button></div>
-<section id="customerLoginBox" style="display:none;max-width:440px;margin:12px auto;padding:18px;background:#111d2c;border:1px solid #65502c;border-radius:16px">
-<h3 style="color:var(--gold);margin-top:0">دخول الزبائن</h3><input id="customerLoginName" placeholder="اسم الزبون"><input id="customerLoginCode" placeholder="كود الدخول" autocomplete="one-time-code"><button class="primary" onclick="customerLogin()">دخول</button><p class="notice" id="customerLoginMsg"></p></section>
+<section id="customerGate" style="max-width:480px;margin:28px auto 34px;padding:26px 20px;text-align:center;background:linear-gradient(145deg,#17263a,#0b1421);border:1px solid #b58a3e;border-radius:22px;box-shadow:0 18px 55px #0008">
+<div style="font-size:46px;margin-bottom:8px">🦅</div><h2 style="color:#f1d18b;margin:0 0 8px">شركة مندو التجارية</h2><p class="sub" style="margin:0 0 20px">أهلاً بك في مكتبة MANDO REMOTE</p>
+<div style="display:flex;justify-content:center;align-items:end;gap:12px;margin:12px 0 20px"><div style="font-size:42px">📺</div><div style="font-size:42px">🎛️</div><div style="font-size:42px">📺</div></div>
+<h3 style="color:var(--gold)">أدخل كود الدخول</h3><input id="customerLoginCode" placeholder="اكتب كود الزبون هنا" autocomplete="one-time-code" style="text-align:center;font-size:20px;letter-spacing:2px"><button class="primary" style="width:100%;padding:14px" onclick="customerLogin()">دخول إلى المكتبة</button><p class="notice" id="customerLoginMsg"></p></section>
+<section id="customerProfile" style="display:none;max-width:760px;margin:18px auto;padding:16px;background:#142238;border:1px solid #a77a2b;border-radius:16px;text-align:center"><h3 style="color:var(--gold);margin:0 0 8px">مرحباً بك <span id="customerDisplayName"></span></h3><p class="notice">كود الدخول: <b id="customerDisplayCode" style="color:#f1d18b"></b></p><button onclick="customerLogout()">تسجيل الخروج</button></section>
 <main class="container">
-<section class="welcome"><h2>أهلاً بكم في مكتبة مندو</h2><p class="sub">ابحث عن ريموت شاشتك بسهولة</p></section>
+<section id="catalogArea" style="display:none"><section class="welcome"><h2>أهلاً بكم في مكتبة مندو</h2><p class="sub">ابحث عن ريموت شاشتك بسهولة</p></section>
 <input id="search" placeholder="ابحث عن ماركة الشاشة أو رقم الريموت..." oninput="render()">
 <div class="filters" id="filters"><button class="active" onclick="choose('الكل',this)">الكل</button><button onclick="choose('Samsung',this)">Samsung</button><button onclick="choose('LG',this)">LG</button><button onclick="choose('TCL',this)">TCL</button><button onclick="choose('Hisense',this)">Hisense</button></div>
-<div class="count" id="count">جارٍ تحميل الريموتات...</div><div class="products" id="products"></div>
+<div class="count" id="count">سجّل الدخول لعرض المكتبة</div><div class="products" id="products"></div></section>
 <div id="authBox"><h3>دخول الإدارة</h3><input id="email" type="text" placeholder="اسم المستخدم أو بريد المدير"><input id="password" type="password" placeholder="كلمة المرور"><button class="primary" onclick="login()">تسجيل الدخول</button><p class="notice" id="authMsg"></p></div>
 <section class="panel" id="adminPanel">
 <div class="row" style="align-items:center"><h3>لوحة إدارة الريموتات</h3><button onclick="logout()">تسجيل الخروج</button></div>
@@ -87,6 +89,7 @@ footer{text-align:center;padding:32px 18px;color:var(--muted);border-top:1px sol
 const SUPABASE_URL = "https://lhghepwcvlqazmpouidu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_EgAQZYow05AZT_pQqHkI2w_kxJff9B5";
 const ADMIN_FUNCTION_URL = SUPABASE_URL + "/functions/v1/swift-processor";
+const CUSTOMER_LOGIN_URL = SUPABASE_URL + "/functions/v1/customer-login";
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let remotes=[], selected="الكل", isAdmin=false, adIndex=0, siteAds=[], siteSettings={};
 function showAd(){if(!siteAds.length){el("adTitle").textContent="عروض شركة مندو التجارية";el("adText").textContent="أفضل الخيارات والريموتات البديلة لشاشتك";el("adImage").style.display="none";el("adDots").innerHTML="";el("adLink").href="#";return;}const a=siteAds[adIndex%siteAds.length];el("adTitle").textContent=a.title||"";el("adText").textContent=a.description||"";const im=el("adImage");if(a.image_url){im.src=a.image_url;im.style.display="block";}else im.style.display="none";el("adLink").href=a.target_url||"#";el("adDots").innerHTML=siteAds.map((_,i)=>'<span class="'+(i===adIndex?'active':'')+'"></span>').join("");}
@@ -95,6 +98,7 @@ const el=id=>document.getElementById(id);
 function safe(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function choose(name,button){selected=name;document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));button.classList.add("active");render();}
 async function loadRemotes(){
+ if(!isAdmin && el("catalogArea").style.display!=="block"){return;}
  el("count").textContent="جارٍ تحميل الريموتات...";
  const {data,error}=await db.from("remotes").select("*").order("created_at",{ascending:false});
  if(error){el("count").textContent="تعذر تحميل البيانات. تأكد من إعدادات قاعدة البيانات والاتصال بالإنترنت.";console.error(error);return;}
@@ -165,19 +169,36 @@ async function adminRequest(action,body={}) {
 function showCustomerPanel(){el("customerPanel").style.display="block";loadCustomers();}
 function getDeviceId(){let id=localStorage.getItem("mando_device_id");if(!id){id=(crypto.randomUUID?crypto.randomUUID()+crypto.randomUUID():"mando-"+Date.now()+"-"+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2));localStorage.setItem("mando_device_id",id);}return id;}
 async function customerLogin(){
- el("customerLoginMsg").textContent="جارٍ التحقق من الاسم والكود...";
+ const code=el("customerLoginCode").value.trim();
+ if(!code){el("customerLoginMsg").textContent="اكتب كود الدخول أولاً.";return;}
+ el("customerLoginMsg").textContent="جارٍ التحقق من الكود...";
  try{
-  const response=await fetch(ADMIN_FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify({action:"customer_login",display_name:el("customerLoginName").value.trim(),code:el("customerLoginCode").value.trim(),device_id:getDeviceId()})});
+  const response=await fetch(CUSTOMER_LOGIN_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify({code,device_id:getDeviceId()})});
   const result=await response.json();
   if(!response.ok)throw new Error(result.error||"تعذر تسجيل الدخول");
-  const {error}=await db.auth.verifyOtp({email:result.email,token:result.token_hash,type:result.type});
+  const {error}=await db.auth.verifyOtp({email:result.email,token_hash:result.token_hash,type:result.type});
   if(error)throw error;
-  el("customerLoginMsg").textContent="تم تسجيل الدخول بنجاح.";
-  el("customerLoginBox").style.display="none";
+  showCustomerSession(result.display_name,code);
+  el("customerLoginMsg").textContent="";
   await loadRemotes();heartbeat();
  }catch(e){el("customerLoginMsg").textContent="تعذر الدخول: "+e.message;}
 }
-function openCustomerLogin(){const box=el("customerLoginBox");box.style.display=box.style.display==="block"?"none":"block";el("customerLoginName").focus();}
+function showCustomerSession(name,code){
+ el("customerGate").style.display="none";
+ el("customerProfile").style.display="block";
+ el("customerDisplayName").textContent=name||"زبون مندو";
+ el("customerDisplayCode").textContent=code;
+ el("catalogArea").style.display="block";
+}
+async function customerLogout(){
+ await db.auth.signOut();
+ el("customerProfile").style.display="none";
+ el("catalogArea").style.display="none";
+ el("customerGate").style.display="block";
+ el("customerLoginCode").value="";
+ remotes=[];render();
+}
+function openCustomerLogin(){el("customerLoginCode").focus();}
 async function createCustomer(){
  el("customerMsg").textContent="جارٍ إنشاء الزبون...";
  try{
@@ -240,8 +261,8 @@ setInterval(heartbeat,30000);
 
 document.addEventListener("DOMContentLoaded",async()=>{
  const {data}=await db.auth.getSession();
- if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){isAdmin=true;el("adminPanel").style.display="block";loadCustomers();loadAds(true);loadSettings(true);}}
- await loadRemotes();heartbeat();await loadAds(false);await loadSettings(false);setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
+ if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){isAdmin=true;el("adminPanel").style.display="block";loadCustomers();loadAds(true);loadSettings(true);}else{const {data:profile}=await db.from("customer_profiles").select("display_name,role,active,blocked,code_enabled").eq("id",data.session.user.id).maybeSingle();if(profile&&profile.role==="customer"&&profile.active&&!profile.blocked&&profile.code_enabled){showCustomerSession(profile.display_name,"••••••");await loadRemotes();heartbeat();}}}
+ await loadAds(false);await loadSettings(false);setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
 });
 </script>
 
