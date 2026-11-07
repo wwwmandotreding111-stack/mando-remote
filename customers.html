@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>الزبائن | MANDO REMOTE</title>
+<style>
+:root{--bg:#070b12;--panel:#101a29;--panel2:#17263a;--gold:#e8c477;--gold2:#a8782b;--text:#f7f4ed;--muted:#aeb8c7;--line:#34445a;--green:#83d7a5}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--text);font-family:"Tajawal",Tahoma,Arial,sans-serif;background:radial-gradient(ellipse at 50% -12%,#35445a 0%,#111d2d 33%,#080e18 72%,#05080e 100%);background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.14;background-image:linear-gradient(135deg,transparent 49.7%,#d9b66b 50%,transparent 50.3%);background-size:52px 52px;mask-image:linear-gradient(to bottom,black,transparent 65%)}
+header{position:relative;isolation:isolate;overflow:hidden;text-align:center;padding:34px 16px 32px;background:linear-gradient(120deg,#080d16f5,#17263bf2 55%,#0a111df5);border-bottom:1px solid #98763d;box-shadow:0 18px 55px #0008}
+header:before,header:after{content:"";position:absolute;z-index:-1;border-radius:50%;filter:blur(2px);pointer-events:none}
+header:before{width:360px;height:260px;top:-180px;left:calc(50% - 180px);background:#d4a84b30}
+header:after{width:80%;height:1px;bottom:0;left:10%;background:linear-gradient(90deg,transparent,#e8c477,transparent)}
+.logo{width:82px;height:82px;margin:auto;border:1px solid #e6c477;border-radius:26px;display:flex;align-items:center;justify-content:center;font-size:43px;color:var(--gold);background:linear-gradient(145deg,#27374b,#0b121d);box-shadow:0 0 0 7px #d7b15b0d,0 12px 35px #0009,inset 0 1px #ffffff24}
+h1{font-size:clamp(27px,5vw,40px);letter-spacing:2px;color:#f0d18e;margin:15px 0 5px;text-shadow:0 3px 22px #d5a64b44}
+.sub{font-size:13px;color:#c2cbd7;line-height:1.8}
+.ad-wrap{max-width:1120px;margin:24px auto 0;padding:0 20px}
+.ad-banner{min-height:165px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;border:1px solid #9d7a3d;border-radius:22px;background:radial-gradient(ellipse at 85% 10%,#c69b4b30,transparent 42%),linear-gradient(115deg,#1a2b40,#0b1421 75%);box-shadow:0 16px 40px #0006,inset 0 1px #ffffff12}
+.ad-banner:after{content:"";position:absolute;inset:8px;border:1px solid #e6c47722;border-radius:16px;pointer-events:none}
+.ad-banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.38}
+.ad-copy{position:relative;z-index:1}.ad-copy h2{color:#f3d795;font-size:clamp(21px,4vw,31px);margin:0 0 9px}.ad-copy p{color:#f5f0e6;margin:0;line-height:1.8}
+.ad-dots{display:flex;justify-content:center;gap:7px;margin-top:11px}.ad-dots span{width:7px;height:7px;border-radius:9px;background:#637083}.ad-dots span.active{width:22px;background:var(--gold)}
+#customerGate{position:relative!important;overflow:hidden;max-width:510px!important;margin:30px auto 38px!important;padding:34px 26px!important;text-align:center;background:radial-gradient(ellipse at 50% 0%,#b78a3b20,transparent 48%),linear-gradient(150deg,#1a2a40,#0b1421 70%)!important;border:1px solid #b18a48!important;border-radius:26px!important;box-shadow:0 25px 70px #0009,inset 0 1px #ffffff17!important}
+#customerGate:before{content:"";position:absolute;inset:9px;border:1px solid #e8c47727;border-radius:19px;pointer-events:none}
+#customerGate>div:first-child{width:76px;height:76px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;border:1px solid #d8b56e;border-radius:24px;background:linear-gradient(145deg,#293a50,#0c1522);font-size:42px!important;box-shadow:0 0 30px #c49a4a24}
+#customerGate h2{font-size:25px;letter-spacing:.2px}
+#customerGate h3{font-size:17px;margin:18px 0 7px}
+#customerGate input{margin:8px 0 14px!important}
+input,textarea{width:100%;padding:14px 15px;margin:6px 0 12px;border-radius:13px;background:#091321;border:1px solid #394b62;color:#fff;font-size:15px;outline:none;transition:.2s}
+input:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px #d5a83f20}
+button,.btn{background:linear-gradient(145deg,#1b2b40,#101b2a);color:#f1d18b;border:1px solid #766039;border-radius:13px;padding:11px 16px;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
+button:hover{transform:translateY(-2px);border-color:var(--gold);box-shadow:0 7px 20px #0005}
+button.primary{background:linear-gradient(120deg,#f4dda1,#d4a94f 58%,#a8782b);color:#15120b;border:1px solid #ffe7ae;font-weight:800;box-shadow:0 8px 25px #c7973b35}
+.container{max-width:1120px;margin:auto;padding:22px}
+.welcome{text-align:center;margin:24px 0 20px}.welcome h2{color:#f1d18b;font-size:26px;margin-bottom:8px}
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0}.filters button{border-radius:30px;padding:9px 17px}.filters button.active{background:linear-gradient(120deg,#f2d894,#bd8c3b);color:#111;border-color:#f5d995}
+.count{color:var(--muted);font-size:13px;margin:15px 0}
+.products{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:17px}
+.card{background:linear-gradient(155deg,#1b2b40,#0d1725);border:1px solid #34465e;border-radius:19px;padding:14px;text-align:center;min-width:0;box-shadow:0 12px 30px #0005,inset 0 1px #ffffff0b;transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-4px);border-color:#987a45}
+.remote{height:180px;background:radial-gradient(ellipse at 50% 20%,#263951,#0a1421 75%);border:1px solid #354963;border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:48px;overflow:hidden}
+.remote img{width:100%;height:100%;object-fit:contain}
+.card h3{color:#f1d18b;margin:13px 0 7px;font-size:17px}.card p{font-size:12px;color:var(--muted);overflow-wrap:anywhere}.number{color:var(--gold);font-size:13px}.status{color:var(--green);font-size:12px}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:35px;background:#101b2a;border:1px dashed #52627a;border-radius:16px}
+.panel{display:none;background:linear-gradient(145deg,#17283d,#0c1624);border:1px solid #8c6a32;border-radius:19px;padding:18px;margin:20px 0;box-shadow:0 15px 40px #0007}
+.panel h3{color:var(--gold);margin-top:0}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>*{flex:1}
+.admin-actions{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}.admin-actions button{font-size:12px;padding:8px}
+#authBox{display:none;background:#111d2c;border:1px solid #9b793e;border-radius:18px;padding:18px;margin:20px 0}
+.notice{font-size:13px;color:var(--muted);margin:8px 0}.danger{color:#ffb5b5;border-color:#873f4b}
+#customerProfile{background:linear-gradient(135deg,#1b2b40,#0d1725)!important;border:1px solid #b18a48!important;border-radius:18px!important;box-shadow:0 14px 38px #0006}
+footer{text-align:center;padding:34px 18px;color:var(--muted);border-top:1px solid #35445a;margin-top:42px;font-size:13px;background:linear-gradient(180deg,#0b1421,#070b12)}
+footer strong{color:var(--gold);font-size:19px}.footer-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:12px}footer a{color:#e7c477;text-decoration:none}
+.whatsapp{position:fixed;bottom:18px;left:18px;background:linear-gradient(135deg,#1aaf65,#087c43);color:white;border:1px solid #74d8a3;border-radius:30px;padding:13px 18px;text-decoration:none;font-weight:bold;box-shadow:0 6px 24px #0009;z-index:5}
+@media(max-width:600px){.container{padding:14px}.ad-wrap{padding:0 13px}.ad-banner{min-height:145px;border-radius:17px;padding:22px 16px}#customerGate{margin:22px 13px 30px!important;padding:27px 18px!important}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{padding:9px}.remote{height:140px}.card h3{font-size:14px}.welcome h2{font-size:22px}.logo{width:74px;height:74px}}
+
+/* Minimal premium customer entrance */
+body.login-screen{background:radial-gradient(ellipse at 50% 38%,#1b2c42 0%,#0b1421 48%,#050910 100%);min-height:100vh}
+body.login-screen:before{display:none}
+body.login-screen header,body.login-screen .ad-wrap,body.login-screen footer,body.login-screen .whatsapp{display:none}
+#customerGate{position:relative!important;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:100vh;width:100%;max-width:none!important;margin:0!important;padding:36px 18px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;text-align:center}
+#customerGate:before{content:"";position:absolute;inset:0;z-index:-2;border:0;border-radius:0;background:linear-gradient(90deg,rgba(4,8,15,.82),rgba(5,10,18,.68)),url("https://images.pexels.com/photos/29606737/pexels-photo-29606737/free-photo-of-modern-living-room-with-digital-devices-and-tv.jpeg?auto=compress&dpr=1&h=750&w=1260") center/cover no-repeat}
+#customerGate:after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(180deg,#050a13a6,#050a13bd)}
+.gate-content{position:relative;z-index:2;width:min(100%,420px);padding:32px 28px 26px;border:1px solid #9e7a3e;border-radius:23px;background:linear-gradient(150deg,#142238ed,#091321f2);box-shadow:0 24px 70px #0009,inset 0 1px #ffffff13}
+.gate-eagle{font-size:39px;line-height:1;margin:0 auto 14px;filter:drop-shadow(0 4px 12px #c79b4c55)}
+.gate-content h2{font-size:clamp(24px,5vw,31px);font-weight:800;color:#f0d18e;margin:0 0 8px;letter-spacing:0}
+.gate-sub{font-size:14px;color:#c1cbd8;margin:0 0 22px}
+.gate-rule{height:1px;width:64px;margin:0 auto 23px;background:linear-gradient(90deg,transparent,#d7b15b,transparent)}
+.gate-content label{display:block;color:#f2d795;font-size:15px;font-weight:700;margin-bottom:8px}
+#customerGate input{display:block;width:100%;height:54px;margin:0 0 12px!important;padding:12px 16px;border-radius:12px;background:#070f1b;border:1px solid #526078;color:white;text-align:center;font-size:19px;letter-spacing:2px}
+#customerGate input:focus{border-color:#e8c477;box-shadow:0 0 0 3px #e8c47720}
+#customerGate button{width:100%;height:52px;border-radius:12px;font-size:16px}
+#customerGate .notice{min-height:18px;margin:10px 0 0}
+.gate-art{display:none!important}
+.gate-art .screen{position:absolute;width:clamp(120px,22vw,245px);height:clamp(85px,15vw,165px);border:5px solid #68778a;border-radius:9px;background:linear-gradient(135deg,#1b3147,#0a1421 65%,#31465b);box-shadow:0 0 0 2px #d2ad6340,0 18px 45px #0008}
+.gate-art .screen:after{content:"";position:absolute;left:43%;bottom:-15px;width:14%;height:10px;background:#8c7958;border-radius:0 0 5px 5px}
+.gate-art .screen-one{left:7%;top:22%;transform:rotate(-8deg)}
+.gate-art .screen-two{right:7%;bottom:20%;transform:rotate(8deg)}
+.gate-art .remote-art{position:absolute;right:22%;top:19%;width:30px;height:125px;border:2px solid #b8a47b;border-radius:18px;background:linear-gradient(#27374a,#0b1420);transform:rotate(19deg);box-shadow:0 10px 28px #0008}
+.gate-art .remote-art:before{content:"";position:absolute;top:12px;left:8px;width:10px;height:10px;border-radius:50%;background:#d4b56e;box-shadow:0 18px 0 #8e9aaa,0 36px 0 #8e9aaa,0 54px 0 #8e9aaa,0 72px 0 #8e9aaa}
+body:not(.login-screen) #customerGate{display:none!important}
+@media(max-width:650px){.gate-content{padding:29px 22px 23px}.gate-art .screen-one{left:-42px;top:17%;transform:rotate(-12deg) scale(.8)}.gate-art .screen-two{right:-48px;bottom:14%;transform:rotate(11deg) scale(.8)}.gate-art .remote-art{right:9%;top:12%;transform:rotate(22deg) scale(.82)}}
+
+
+/* Exact approved customer-gate artwork */
+#customerGate.mando-entry{position:relative!important;isolation:isolate;display:flex!important;align-items:center;justify-content:center;min-height:100svh;width:100%;max-width:none!important;margin:0!important;padding:20px!important;overflow:hidden;border:0!important;border-radius:0!important;background:#050505 url("https://raw.githubusercontent.com/wwwmandotreding111-stack/mando-remote/main/mando-login-showroom.png?v=3") center center/cover no-repeat!important;box-shadow:none!important}
+#customerGate.mando-entry:before,#customerGate.mando-entry:after{display:none!important}
+#customerGate.mando-entry .entry-room{display:none!important}
+#customerGate.mando-entry .entry-center{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-3%);width:min(94%,640px);margin:0;padding:0 14px;text-align:center;background:transparent!important;box-shadow:none!important;border:0!important}
+#customerGate.mando-entry .entry-eagle,#customerGate.mando-entry .entry-en,#customerGate.mando-entry .entry-line{display:none!important}
+#customerGate.mando-entry .entry-center h2{font-size:0!important;margin:0!important;height:0!important}
+#customerGate.mando-entry .entry-form{height:clamp(54px,8vh,82px);width:100%;margin:0 auto 3vh;padding:0 20px;border:1px solid #d8a64c;border-radius:22px;background:#050505d9;box-shadow:0 0 18px #e4b45199}
+#customerGate.mando-entry .entry-lock{color:#fff;font-size:26px;border-right:1px solid #8f713e;padding-right:15px}
+#customerGate.mando-entry input{height:100%;margin:0!important;padding:8px 10px;border:0!important;box-shadow:none!important;background:transparent!important;text-align:center;font-size:clamp(18px,2.5vw,25px);color:#fff}
+#customerGate.mando-entry input::placeholder{color:#d8d8d8}
+#customerGate.mando-entry button{width:min(66%,420px);height:clamp(54px,8vh,76px);border-radius:24px;font-size:clamp(22px,3vw,30px);font-weight:900;background:linear-gradient(110deg,#f8dfa0,#d8a94e 55%,#f5d58b)!important;color:#17120a!important;border:1px solid #ffe9b1!important;box-shadow:0 8px 28px #0009}
+#customerGate.mando-entry .notice{color:#ffe2a0;text-shadow:0 1px 4px #000;min-height:18px}
+@media(max-width:700px){#customerGate.mando-entry{background-position:center center!important;padding:8px!important}#customerGate.mando-entry .entry-center{width:84%;top:53%;transform:translate(-50%,-2%);padding:0 6px}#customerGate.mando-entry .entry-form{height:54px;margin-bottom:14px;border-radius:16px;padding:0 10px}#customerGate.mando-entry button{height:52px;width:72%;border-radius:16px;font-size:22px}#customerGate.mando-entry .entry-lock{font-size:22px;padding-right:9px}}
+
+/* Visibility and contrast refresh */
+:root{--bg:#111d2c;--panel:#1b2b40;--panel2:#243850;--gold:#f2d18a;--gold2:#bd8b3e;--text:#fffaf0;--muted:#d1d9e4;--line:#53677f;--green:#9ce6b8}
+body{background:radial-gradient(ellipse at 50% -10%,#526982 0%,#263b53 38%,#152438 78%,#101a29 100%)}
+header{background:linear-gradient(120deg,#142338f7,#2a4059f5 55%,#17283df7)}
+.logo{background:linear-gradient(145deg,#405773,#17283d)}
+.ad-banner,.card,.panel,#authBox{background:linear-gradient(145deg,#263d57,#182a40);border-color:#71869e}
+input,textarea{background:#142338;border-color:#71869e;color:#fff}
+input::placeholder,textarea::placeholder{color:#c3cfdd}
+.notice,.count,.sub,.card p{color:#d4deea}
+#customerGate.mando-entry{background-color:#1a2b40!important}
+#customerGate.mando-entry:after{display:block!important;content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,15,26,.48),rgba(7,15,26,.28),rgba(7,15,26,.48));z-index:1}
+#customerGate.mando-entry .entry-center{top:50%;transform:translate(-50%,-50%);width:min(92%,460px);padding:30px 26px;background:linear-gradient(145deg,rgba(29,48,70,.96),rgba(13,27,43,.96))!important;border:1px solid #e2bd70!important;border-radius:24px;box-shadow:0 20px 60px #0009!important}
+#customerGate.mando-entry .entry-eagle{display:block!important;font-size:42px;margin:0 auto 10px;color:#f2d18a}
+#customerGate.mando-entry .entry-en{display:block!important;color:#f2d18a;font-size:15px;font-weight:bold;letter-spacing:3px;margin:6px 0 15px}
+#customerGate.mando-entry .entry-line{display:block!important;width:76px;height:2px;margin:0 auto 20px;background:linear-gradient(90deg,transparent,#f2d18a,transparent)}
+#customerGate.mando-entry .entry-center h2{display:block!important;height:auto!important;font-size:clamp(23px,5vw,30px)!important;color:#fff3d4;margin:0!important}
+#customerGate.mando-entry .entry-form{background:#0c1929!important;border-color:#e2bd70;box-shadow:0 8px 24px #0006}
+#customerGate.mando-entry input{color:#fff!important}
+#customerGate.mando-entry input::placeholder{color:#d9e1eb!important}
+#customerGate.mando-entry .notice{color:#ffe7b5;text-shadow:none}
+#customerGate.mando-entry button{box-shadow:0 8px 24px #0007}
+@media(max-width:700px){
+ #customerGate.mando-entry .entry-center{top:50%;width:min(92%,420px);padding:26px 18px;transform:translate(-50%,-50%)}
+ #customerGate.mando-entry .entry-form{width:100%;margin-bottom:14px}
+ #customerGate.mando-entry button{width:100%}
+}
+
+
+/* Clean, balanced customer entry screen */
+#customerGate.mando-entry{
+ position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;
+ min-height:calc(100svh - 24px)!important;width:100%!important;padding:28px 18px!important;
+ background:radial-gradient(ellipse at 50% 20%,#29415b 0%,#192d43 48%,#101d2d 100%)!important;
+ overflow:hidden!important
+}
+#customerGate.mando-entry:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.035),transparent 45%,rgba(0,0,0,.12));pointer-events:none}
+#customerGate.mando-entry:after{display:none!important}
+#customerGate.mando-entry .entry-room{display:none!important}
+#customerGate.mando-entry .entry-center{
+ position:relative!important;inset:auto!important;left:auto!important;top:auto!important;transform:none!important;
+ width:min(100%,430px)!important;margin:0!important;padding:34px 28px 28px!important;
+ display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important;
+ background:linear-gradient(155deg,#243b54,#172a40)!important;
+ border:1px solid rgba(226,190,119,.8)!important;border-radius:26px!important;
+ box-shadow:0 22px 55px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.08)!important
+}
+#customerGate.mando-entry .entry-eagle{display:block!important;font-size:48px!important;line-height:1!important;margin:0 0 14px!important;filter:drop-shadow(0 3px 5px #0006)}
+#customerGate.mando-entry .entry-center h2{display:block!important;height:auto!important;font-size:clamp(23px,5vw,29px)!important;line-height:1.5!important;color:#fff4d9!important;margin:0!important}
+#customerGate.mando-entry .entry-en{display:block!important;font-size:12px!important;letter-spacing:3px!important;font-weight:800!important;color:#e8c77f!important;margin:6px 0 14px!important}
+#customerGate.mando-entry .entry-line{display:block!important;width:74px!important;height:2px!important;margin:0 0 24px!important;background:linear-gradient(90deg,transparent,#e8c77f,transparent)!important}
+#customerGate.mando-entry .entry-form{
+ display:flex!important;align-items:center!important;gap:12px!important;width:100%!important;height:62px!important;
+ margin:0 0 18px!important;padding:0 16px!important;background:#102237!important;
+ border:1px solid #71869b!important;border-radius:14px!important;box-shadow:inset 0 2px 6px #0004!important
+}
+#customerGate.mando-entry .entry-lock{flex:0 0 auto!important;color:#e8c77f!important;font-size:22px!important;padding:0 0 0 12px!important;border-right:1px solid #52677e!important}
+#customerGate.mando-entry input{flex:1!important;min-width:0!important;width:100%!important;height:100%!important;padding:0 8px!important;
+ margin:0!important;border:0!important;background:transparent!important;box-shadow:none!important;
+ color:#fff!important;text-align:right!important;font-size:17px!important;line-height:normal!important}
+#customerGate.mando-entry input::placeholder{color:#c2cfdd!important;opacity:1!important}
+#customerGate.mando-entry button{width:100%!important;height:58px!important;margin:0!important;border-radius:14px!important;
+ font-size:20px!important;font-weight:800!important;background:linear-gradient(110deg,#f5dda0,#d5a64c)!important;
+ color:#1b1a16!important;border:1px solid #ffe8b2!important;box-shadow:0 8px 20px #0004!important}
+#customerGate.mando-entry .notice{width:100%!important;min-height:20px!important;margin:12px 0 0!important;color:#ffe7b8!important;font-size:14px!important;text-shadow:none!important}
+@media(max-width:600px){
+ #customerGate.mando-entry{min-height:calc(100svh - 12px)!important;padding:22px 18px!important}
+ #customerGate.mando-entry .entry-center{padding:30px 22px 24px!important;border-radius:22px!important}
+ #customerGate.mando-entry .entry-form{height:58px!important}
+ #customerGate.mando-entry button{height:56px!important}
+}
+
+
+#customerGate .admin-entry-link{display:block!important;width:auto!important;height:auto!important;margin:18px auto 0!important;padding:8px 18px!important;background:transparent!important;border:1px solid rgba(232,199,127,.55)!important;border-radius:10px!important;color:#f2d18a!important;font-size:14px!important;font-weight:600!important;box-shadow:none!important}
+#authBox{max-width:440px;margin:24px auto;padding:22px!important;background:linear-gradient(145deg,#243b54,#172a40)!important;border:1px solid #d9b66f!important;border-radius:18px;color:#fff}
+#authBox input{width:100%;margin:8px 0;padding:14px;border:1px solid #71869b;border-radius:10px;background:#102237;color:#fff}
+#authBox button{margin:8px 4px;padding:12px 16px;border-radius:10px}
+
+
+/* Dedicated customer page */
+#authBox,#adminPanel,.admin-entry-link{display:none!important}
+#customerGate{display:flex!important}
+#catalogArea{display:none}
+</style>
+</head>
+<body>
+<header><div class="logo">🦅</div><h1>MANDO REMOTE</h1><div class="sub">شركة مندو التجارية</div><div class="sub">مكتبة الريموتات البديلة للشاشات</div></header>
+<div class="ad-wrap"><a id="adLink" href="#" style="text-decoration:none;color:inherit" onclick="return openAd(event)"><div class="ad-banner"><img id="adImage" alt="" style="display:none"><div class="ad-copy"><h2 id="adTitle">عروض شركة مندو التجارية</h2><p id="adText">أفضل الخيارات والريموتات البديلة لشاشتك</p></div></div></a><div class="ad-dots" id="adDots"></div></div>
+<section id="customerGate" class="mando-entry">
+  <div class="entry-room" aria-hidden="true">
+    <div class="entry-tv entry-tv-left"><img src="https://images.pexels.com/photos/3137890/pexels-photo-3137890.jpeg?auto=compress&cs=tinysrgb&w=1200" alt=""></div>
+    <div class="entry-tv entry-tv-right"><img src="https://images.pexels.com/photos/1444416/pexels-photo-1444416.jpeg?auto=compress&cs=tinysrgb&w=1000" alt=""></div>
+    <div class="entry-console"></div>
+    <div class="entry-box"></div>
+    <div class="entry-remotes"><i></i><i></i><i></i></div>
+  </div>
+  <div class="entry-center">
+    <div class="entry-eagle" aria-hidden="true">🦅</div>
+    <h2>شركة مندو التجارية</h2>
+    <div class="entry-en">MANDO TRADING</div>
+    <div class="entry-line"></div>
+    <div class="entry-form">
+      <span class="entry-lock">♙</span>
+      <input id="customerLoginCode" placeholder="أدخل كود الزبون" autocomplete="one-time-code">
+    </div>
+    <button class="primary" onclick="customerLogin()">دخول　↪</button>
+    <p class="notice" id="customerLoginMsg"></p>
+    <button type="button" class="admin-entry-link" onclick="openLogin()">دخول الإدارة</button>
+  </div>
+</section>
+<section id="customerProfile" style="display:none;max-width:760px;margin:18px auto;padding:16px;background:#142238;border:1px solid #a77a2b;border-radius:16px;text-align:center"><h3 style="color:var(--gold);margin:0 0 8px">مرحباً بك <span id="customerDisplayName"></span></h3><p class="notice">كود الدخول: <b id="customerDisplayCode" style="color:#f1d18b"></b></p><button onclick="customerLogout()">تسجيل الخروج</button></section>
+<main class="container">
+<section id="catalogArea" style="display:none"><section class="welcome"><h2>أهلاً بكم في مكتبة مندو</h2><p class="sub">ابحث عن ريموت شاشتك بسهولة</p></section>
+<input id="search" placeholder="ابحث عن ماركة الشاشة أو رقم الريموت..." oninput="render()">
+<div class="filters" id="filters"><button class="active" onclick="choose('الكل',this)">الكل</button><button onclick="choose('Samsung',this)">Samsung</button><button onclick="choose('LG',this)">LG</button><button onclick="choose('TCL',this)">TCL</button><button onclick="choose('Hisense',this)">Hisense</button></div>
+<div class="count" id="count">سجّل الدخول لعرض المكتبة</div><div class="products" id="products"></div></section>
+<div id="authBox"><h3>دخول الإدارة</h3><input id="email" type="text" placeholder="اسم المستخدم أو بريد المدير"><input id="password" type="password" placeholder="كلمة المرور"><button class="primary" onclick="login()">تسجيل الدخول</button><button type="button" onclick="sendPasswordRecovery()">نسيت كلمة المرور؟ إرسال رابط استعادة</button><p class="notice" id="authMsg"></p></div>
+<section class="panel" id="adminPanel">
+<div class="row" style="align-items:center"><h3>لوحة إدارة الريموتات</h3><button onclick="logout()">تسجيل الخروج</button></div>
+<div class="row"><button onclick="showCustomerPanel()">👥 إدارة الزبائن</button><button onclick="showAdsPanel()">📢 إدارة الإعلانات</button><button onclick="showSettingsPanel()">⚙️ معلومات الشركة</button></div><section class="panel" id="customerPanel">
+<h3>👥 إدارة الزبائن</h3>
+<p class="notice">إضافة الحسابات ومتابعة حالة الاتصال والصلاحيات.</p>
+<input id="cName" placeholder="اسم الزبون">
+<input id="cCode" type="text" placeholder="كود يدوي (اتركه فارغاً لإنشاء كود تلقائي)">
+<button class="primary" onclick="createCustomer()">➕ إضافة زبون بالكود</button>
+<p class="notice">سيظهر الكود مرة واحدة بعد إنشاء الزبون؛ انسخه واحتفظ فيه وأرسله للزبون.</p>
+<p class="notice" id="customerMsg"></p>
+<div id="customersList" class="notice">جارٍ تحميل الزبائن...</div>
+</section><section class="panel" id="adsPanel">
+<h3>📢 إدارة الإعلانات</h3>
+<input id="adEditId" type="hidden"><input id="adAdminTitle" placeholder="عنوان الإعلان">
+<textarea id="adAdminText" rows="2" placeholder="وصف الإعلان"></textarea>
+<label class="notice">صورة الإعلان</label><input id="adAdminImage" type="file" accept="image/*">
+<input id="adAdminLink" placeholder="رابط الإعلان عند الضغط (اختياري)">
+<input id="adAdminOrder" type="number" value="0" placeholder="ترتيب الإعلان">
+<label class="notice"><input id="adAdminEnabled" type="checkbox" checked style="width:auto"> الإعلان ظاهر للزوار</label>
+<button class="primary" onclick="saveAd()">حفظ الإعلان</button><button onclick="resetAdForm()">تفريغ</button>
+<p class="notice" id="adsMsg"></p><div id="adsList"></div>
+</section>
+<section class="panel" id="settingsPanel">
+<h3>⚙️ معلومات الشركة</h3>
+<input id="setAddress" placeholder="عنوان الشركة">
+<input id="setGps" placeholder="رابط موقع الشركة على خرائط Google">
+<input id="setWhatsapp" placeholder="رقم واتساب مع رمز الدولة">
+<input id="setFacebook" placeholder="رابط Facebook">
+<input id="setInstagram" placeholder="رابط Instagram">
+<button class="primary" onclick="saveSettings()">حفظ معلومات الشركة</button><p class="notice" id="settingsMsg"></p>
+</section>
+<p class="notice">أضف بيانات الريموت. رابط الصورة اختياري حالياً.</p>
+<input id="rName" placeholder="1. اسم الجهاز (مثلاً Samsung Smart TV)">
+<label class="notice" for="rImageFile">2. رفع صورة الريموت</label><input id="rImageFile" type="file" accept="image/*">
+<input id="rNumber" placeholder="3. اسم البديل (مثلاً RM-123)">
+<input id="rImage" type="hidden"><input id="rModels" type="hidden"><textarea id="rNotes" rows="2" style="display:none"></textarea>
+<button class="primary" onclick="addRemote()">حفظ الريموت</button><p class="notice" id="adminMsg"></p>
+</section>
+</main>
+<footer><strong>🦅 MANDO TRADING COMPANY</strong><p>شركة مندو التجارية — مكتبة الريموتات البديلة للشاشات</p><p id="footerAddress"></p><div class="footer-links"><a id="footerWhatsapp" href="https://wa.me/963991936353" target="_blank" rel="noopener">واتساب الشركة</a><a id="footerGps" href="#" target="_blank" rel="noopener" style="display:none">📍 موقع الشركة</a><a id="footerFacebook" href="#" target="_blank" rel="noopener" style="display:none">Facebook</a><a id="footerInstagram" href="#" target="_blank" rel="noopener" style="display:none">Instagram</a></div><p>جميع الحقوق محفوظة © شركة مندو التجارية</p></footer>
+<a class="whatsapp" href="https://wa.me/963991936353" target="_blank" rel="noopener">تواصل واتساب</a>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://lhghepwcvlqazmpouidu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_EgAQZYow05AZT_pQqHkI2w_kxJff9B5";
+const ADMIN_FUNCTION_URL = SUPABASE_URL + "/functions/v1/swift-processor";
+const CUSTOMER_LOGIN_URL = SUPABASE_URL + "/functions/v1/customer-login";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let remotes=[], selected="الكل", isAdmin=false, adIndex=0, siteAds=[], siteSettings={};
+function showAd(){if(!siteAds.length){el("adTitle").textContent="عروض شركة مندو التجارية";el("adText").textContent="أفضل الخيارات والريموتات البديلة لشاشتك";el("adImage").style.display="none";el("adDots").innerHTML="";el("adLink").href="#";return;}const a=siteAds[adIndex%siteAds.length];el("adTitle").textContent=a.title||"";el("adText").textContent=a.description||"";const im=el("adImage");if(a.image_url){im.src=a.image_url;im.style.display="block";}else im.style.display="none";el("adLink").href=a.target_url||"#";el("adDots").innerHTML=siteAds.map((_,i)=>'<span class="'+(i===adIndex?'active':'')+'"></span>').join("");}
+function openAd(e){if(!siteAds[adIndex]?.target_url){e.preventDefault();return false;}return true;}
+const el=id=>document.getElementById(id);
+function safe(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function choose(name,button){selected=name;document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));button.classList.add("active");render();}
+async function loadRemotes(){
+ if(!isAdmin && el("catalogArea").style.display!=="block"){return;}
+ el("count").textContent="جارٍ تحميل الريموتات...";
+ const {data,error}=await db.from("remotes").select("*").order("created_at",{ascending:false});
+ if(error){el("count").textContent="تعذر تحميل البيانات. تأكد من إعدادات قاعدة البيانات والاتصال بالإنترنت.";console.error(error);return;}
+ remotes=data||[];render();
+}
+function render(){
+ const q=el("search").value.trim().toLowerCase();
+ const list=remotes.filter(r=>(selected==="الكل"||String(r.brand||r.name||"").toLowerCase().includes(selected.toLowerCase())) &&
+ [r.name,r.brand,r.model_number,r.compatible_models,r.notes].some(v=>String(v||"").toLowerCase().includes(q)));
+ el("count").textContent="عدد النتائج: "+list.length;
+ el("products").innerHTML=list.length?list.map(r=>`<article class="card">
+ <div class="remote">${r.image_front?'<img src="'+safe(r.image_front)+'" alt="صورة الريموت" loading="lazy">':'📺'}</div>
+ <h3>${safe(r.name||r.brand||"ريموت")}</h3><div class="number">${safe(r.model_number||"")}</div>
+ <p>${safe(r.compatible_models||"")}</p><p>${safe(r.notes||"")}</p>
+ <div class="status">${r.available===false?"غير متوفر":"متوفر"}</div>
+ ${isAdmin?'<div class="admin-actions"><button onclick="editRemote('+Number(r.id)+')">تعديل</button><button class="danger" onclick="deleteRemote('+Number(r.id)+')">حذف</button></div>':""}
+ </article>`).join(""):'<div class="empty">لا توجد ريموتات مطابقة حالياً</div>';
+}
+function openLogin(){el("authBox").style.display="block";el("authBox").scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>el("email").focus(),350);}
+async function sendPasswordRecovery(){
+ const raw=el("email").value.trim();
+ if(!raw || !raw.includes("@")){el("authMsg").textContent="اكتب البريد الإلكتروني الكامل للحساب أولاً.";return;}
+ el("authMsg").textContent="جارٍ إرسال رابط الاستعادة...";
+ const {error}=await db.auth.resetPasswordForEmail(raw,{redirectTo:"https://wwwmandotreding111-stack.github.io/mando-remote/reset-password.html"});
+ el("authMsg").textContent=error?"تعذر إرسال الرابط: "+error.message:"تم إرسال رابط الاستعادة إلى بريدك الإلكتروني. افحص الوارد والرسائل غير المرغوبة.";
+}
+async function login(){
+ el("authMsg").textContent="جارٍ التحقق...";
+ const loginValue=el("email").value.trim().toLowerCase();
+ const loginEmail=loginValue.includes("@")?loginValue:`${loginValue}@users.mando.local`;
+ const {error}=await db.auth.signInWithPassword({email:loginEmail,password:el("password").value});
+ if(error){el("authMsg").textContent="تعذر تسجيل الدخول: "+error.message;return;}
+ const {data,error:roleError}=await db.rpc("is_admin");
+ if(roleError||data!==true){await db.auth.signOut();el("authMsg").textContent="هذا الحساب لا يملك صلاحية الإدارة.";return;}
+ isAdmin=true;el("authBox").style.display="none";el("adminPanel").style.display="block";el("adminMsg").textContent="تم تسجيل الدخول بنجاح.";render();loadCustomers();loadAds(true);loadSettings(true);
+}
+async function logout(){await db.auth.signOut();isAdmin=false;el("adminPanel").style.display="none";el("customerPanel").style.display="none";render();}
+async function addRemote(){
+ const name=el("rName").value.trim(), number=el("rNumber").value.trim();
+ if(!name||!number){el("adminMsg").textContent="اكتب اسم الماركة ورقم الريموت أولاً.";return;}
+ const file=el("rImageFile").files[0];let imageUrl=null;
+ if(file){if(file.size>5*1024*1024){el("adminMsg").textContent="حجم الصورة كبير. اختر صورة أقل من 5 ميغابايت.";return;}el("adminMsg").textContent="رفع الصورة قيد التجهيز؛ سنفعّل التخزين بعد إعداد مساحة الصور.";return;}
+ const payload={name,brand:"",model_number:number,compatible_models:"",image_front:imageUrl,notes:"",available:true};
+ const {error}=await db.from("remotes").insert(payload);
+ if(error){el("adminMsg").textContent="لم يتم الحفظ: "+error.message;return;}
+ ["rName","rNumber"].forEach(id=>el(id).value="");el("rImageFile").value="";
+ el("adminMsg").textContent="تمت إضافة الريموت بنجاح.";await loadRemotes();
+}
+async function editRemote(id){
+ const r=remotes.find(x=>Number(x.id)===id);if(!r)return;
+ const name=prompt("اسم الماركة:",r.name||r.brand||"");if(name===null)return;
+ const number=prompt("رقم الريموت:",r.model_number||"");if(number===null)return;
+ const models=prompt("الموديلات المتوافقة:",r.compatible_models||"");if(models===null)return;
+ const {error}=await db.from("remotes").update({name,brand:name,model_number:number,compatible_models:models}).eq("id",id);
+ if(error){alert("تعذر التعديل: "+error.message);return;}await loadRemotes();
+}
+async function deleteRemote(id){
+ if(!confirm("متأكد من حذف هذا الريموت؟"))return;
+ const {error}=await db.from("remotes").delete().eq("id",id);
+ if(error){alert("تعذر الحذف: "+error.message);return;}await loadRemotes();
+}
+
+async function adminRequest(action,body={}) {
+ let {data:{session},error:sessionError}=await db.auth.getSession();
+ if(sessionError) throw new Error("تعذر قراءة جلسة الدخول: "+sessionError.message);
+ if(!session) throw new Error("انتهت جلسة المدير. سجّل الدخول من جديد.");
+ const refreshed=await db.auth.refreshSession();
+ if(refreshed.error) throw new Error("تعذر تجديد جلسة الدخول. سجّل خروجك وادخل مجدداً.");
+ session=refreshed.data.session||session;
+ const res=await fetch(ADMIN_FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+session.access_token,"apikey":SUPABASE_KEY},body:JSON.stringify({action,...body})});
+ let out={}; try{out=await res.json();}catch(_){}
+ if(!res.ok) throw new Error(out.error||("فشل الطلب (HTTP "+res.status+")"));
+ return out;
+}
+function showCustomerPanel(){el("customerPanel").style.display="block";loadCustomers();}
+function getDeviceId(){let id=localStorage.getItem("mando_device_id");if(!id){id=(crypto.randomUUID?crypto.randomUUID()+crypto.randomUUID():"mando-"+Date.now()+"-"+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2));localStorage.setItem("mando_device_id",id);}return id;}
+async function customerLogin(){
+ const code=el("customerLoginCode").value.trim();
+ if(!code){el("customerLoginMsg").textContent="اكتب كود الدخول أولاً.";return;}
+ el("customerLoginMsg").textContent="جارٍ التحقق من الكود...";
+ try{
+  const response=await fetch(CUSTOMER_LOGIN_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify({code,device_id:getDeviceId()})});
+  const result=await response.json();
+  if(!response.ok)throw new Error(result.error||"تعذر تسجيل الدخول");
+  const {error}=await db.auth.verifyOtp({email:result.email,token_hash:result.token_hash,type:result.type});
+  if(error)throw error;
+  showCustomerSession(result.display_name,code);
+  el("customerLoginMsg").textContent="";
+  await loadRemotes();heartbeat();
+ }catch(e){el("customerLoginMsg").textContent="تعذر الدخول: "+e.message;}
+}
+function showCustomerSession(name,code){
+ document.body.classList.remove("login-screen");
+ el("customerGate").style.display="none";
+ el("customerProfile").style.display="block";
+ el("customerDisplayName").textContent=name||"زبون مندو";
+ el("customerDisplayCode").textContent=code;
+ el("catalogArea").style.display="block";
+}
+async function customerLogout(){
+ await db.auth.signOut();
+ document.body.classList.add("login-screen");
+ el("customerProfile").style.display="none";
+ el("catalogArea").style.display="none";
+ el("customerGate").style.display="block";
+ el("customerLoginCode").value="";
+ remotes=[];render();
+}
+function openCustomerLogin(){el("customerLoginCode").focus();}
+async function createCustomer(){
+ el("customerMsg").textContent="جارٍ إنشاء الزبون...";
+ try{
+  const result=await adminRequest("create_code_customer",{display_name:el("cName").value.trim(),code:el("cCode").value.trim()||undefined});
+  el("customerMsg").innerHTML="تم إنشاء الزبون. كود الدخول: <b style='color:#f1d18b'>"+safe(result.code)+"</b> <button onclick='copyCustomerCode("+JSON.stringify(result.code)+")'>نسخ الكود</button><p>احتفظ بالكود؛ لن يظهر مرة ثانية.</p>";
+  ["cName","cCode"].forEach(x=>el(x).value="");await loadCustomers();
+ }catch(e){el("customerMsg").textContent="تعذر الإضافة: "+e.message;}
+}
+async function copyCustomerCode(code){try{await navigator.clipboard.writeText(code);alert("تم نسخ الكود");}catch(_){prompt("انسخ الكود:",code);}}
+async function loadCustomers(){
+ if(!isAdmin)return;
+ const box=el("customersList");box.textContent="جارٍ تحميل الزبائن...";
+ try{
+ const {data,error}=await db.from("customer_profiles").select("id,display_name,active,role,last_seen_at,code_enabled,blocked").eq("role","customer").order("display_name");
+ if(error)throw error;
+ if(!data?.length){box.textContent="ما في زبائن مسجلين حالياً.";return;}
+ box.innerHTML=data.map(u=>{
+  const online=u.last_seen_at && (Date.now()-new Date(u.last_seen_at).getTime()<90000);
+  return '<div class="card" style="margin:8px 0;text-align:right"><b>'+safe(u.display_name||"بدون اسم")+'</b><div>'+(u.active?"🟢 مفعّل":"⚪ موقوف")+' · '+(u.blocked?"🚫 محظور":"غير محظور")+' · '+(u.code_enabled?"الكود فعّال":"الكود معطّل")+' · '+(online?"🟢 متصل الآن":"⚪ غير متصل")+'</div><small>آخر ظهور: '+(u.last_seen_at?new Date(u.last_seen_at).toLocaleString("ar"):"غير معروف")+'</small><div class="admin-actions"><button onclick="editCustomer(\''+u.id+'\',\''+safe(u.display_name||"").replace(/'/g,"\\'")+'\')">تعديل الاسم/الكود</button><button onclick="customerAction(\''+u.id+'\',\'active\','+(!u.active)+')">'+(u.active?"إيقاف":"تفعيل")+'</button><button onclick="customerAction(\''+u.id+'\',\'blocked\','+(!u.blocked)+')">'+(u.blocked?"إلغاء الحظر":"حظر")+'</button><button onclick="customerAction(\''+u.id+'\',\'code_enabled\','+(!u.code_enabled)+')">'+(u.code_enabled?"تعطيل الكود":"تفعيل الكود")+'</button><button class="danger" onclick="deleteCustomer(\''+u.id+'\')">حذف</button></div></div>';
+ }).join("");
+ }catch(e){box.textContent="تعذر تحميل القائمة: "+e.message;}
+}
+async function editCustomer(id,currentName){
+ const name=prompt("اسم الزبون:",currentName);if(name===null)return;
+ const code=prompt("كود جديد (اتركه فارغاً دون تغيير الكود):","");
+ const body={user_id:id,display_name:name.trim()};
+ if(code&&code.trim())body.code=code.trim();
+ try{await adminRequest("update_customer",body);alert("تم تحديث بيانات الزبون");await loadCustomers();}
+ catch(e){alert("تعذر التعديل: "+e.message);}
+}
+async function customerAction(id,kind,value){
+ const labels={active:value?"تفعيل الحساب؟":"إيقاف الحساب؟",blocked:value?"حظر الزبون؟":"إلغاء حظر الزبون؟",code_enabled:value?"تفعيل الكود؟":"تعطيل الكود؟"};
+ if(!confirm(labels[kind]))return;
+ try{await adminRequest("update_customer",{user_id:id,[kind]:value});await loadCustomers();}
+ catch(e){alert("تعذر تنفيذ العملية: "+e.message);}
+}
+async function deleteCustomer(id){
+ if(!confirm("حذف الزبون نهائياً؟"))return;
+ try{await adminRequest("delete_customer",{user_id:id});await loadCustomers();}
+ catch(e){alert("تعذر الحذف: "+e.message);}
+}
+
+async function loadAds(admin=false){const {data,error}=await db.from("site_ads").select("*").order("sort_order",{ascending:true}).order("created_at",{ascending:false});if(error){console.warn(error.message);siteAds=[];showAd();return;}siteAds=(data||[]).filter(a=>admin||a.enabled);adIndex=0;showAd();if(admin)renderAdsAdmin(data||[]);}
+function renderAdsAdmin(rows){const box=el("adsList");if(!box)return;box.innerHTML=rows.length?rows.map(a=>'<div class="card" style="margin:8px 0;text-align:right"><b>'+safe(a.title)+'</b><p>'+safe(a.description)+'</p><small>'+(a.enabled?'🟢 ظاهر':'⚪ مخفي')+' · الترتيب '+a.sort_order+'</small><div class="admin-actions"><button onclick="editAd('+a.id+')">تعديل</button><button onclick="toggleAd('+a.id+','+(!a.enabled)+')">'+(a.enabled?'إخفاء':'إظهار')+'</button><button class="danger" onclick="deleteAd('+a.id+')">حذف</button></div></div>').join(""):"ما في إعلانات مضافة.";}
+function showAdsPanel(){el("adsPanel").style.display="block";loadAds(true);}
+function resetAdForm(){["adEditId","adAdminTitle","adAdminText","adAdminLink"].forEach(id=>el(id).value="");el("adAdminImage").value="";el("adAdminOrder").value="0";el("adAdminEnabled").checked=true;}
+function editAd(id){const a=siteAds.find(x=>Number(x.id)===Number(id));if(!a)return;el("adEditId").value=a.id;el("adAdminTitle").value=a.title||"";el("adAdminText").value=a.description||"";el("adAdminLink").value=a.target_url||"";el("adAdminOrder").value=a.sort_order||0;el("adAdminEnabled").checked=!!a.enabled;}
+async function saveAd(){try{const title=el("adAdminTitle").value.trim();if(!title)throw new Error("اكتب عنوان الإعلان");let imageUrl=siteAds.find(a=>String(a.id)===el("adEditId").value)?.image_url||null;const file=el("adAdminImage").files[0];if(file){if(file.size>7*1024*1024)throw new Error("حجم الصورة يجب أن يكون أقل من 7 ميغابايت");const path="ads/"+Date.now()+"-"+file.name.replace(/[^a-zA-Z0-9._-]/g,"_");const up=await db.storage.from("site-media").upload(path,file,{upsert:true});if(up.error)throw up.error;imageUrl=db.storage.from("site-media").getPublicUrl(path).data.publicUrl;}const payload={title,description:el("adAdminText").value.trim(),image_url:imageUrl,target_url:el("adAdminLink").value.trim()||null,sort_order:Number(el("adAdminOrder").value)||0,enabled:el("adAdminEnabled").checked};const id=el("adEditId").value;const result=id?await db.from("site_ads").update(payload).eq("id",id):await db.from("site_ads").insert(payload);if(result.error)throw result.error;el("adsMsg").textContent="تم حفظ الإعلان";resetAdForm();await loadAds(true);}catch(e){el("adsMsg").textContent="تعذر الحفظ: "+e.message;}}
+async function toggleAd(id,enabled){const {error}=await db.from("site_ads").update({enabled}).eq("id",id);if(error){alert(error.message);return;}await loadAds(true);}
+async function deleteAd(id){if(!confirm("حذف الإعلان؟"))return;const {error}=await db.from("site_ads").delete().eq("id",id);if(error){alert(error.message);return;}await loadAds(true);}
+async function loadSettings(admin=false){const {data,error}=await db.from("site_settings").select("*").eq("id",1).maybeSingle();if(error){console.warn(error.message);return;}siteSettings=data||{};const fields={setAddress:"company_address",setGps:"gps_url",setWhatsapp:"whatsapp",setFacebook:"facebook_url",setInstagram:"instagram_url"};if(admin)Object.entries(fields).forEach(([id,key])=>{el(id).value=siteSettings[key]||"";});el("footerAddress").textContent=siteSettings.company_address||"";el("footerWhatsapp").href="https://wa.me/"+String(siteSettings.whatsapp||"963991936353").replace(/[^0-9]/g,"");for(const [id,key] of [["footerGps","gps_url"],["footerFacebook","facebook_url"],["footerInstagram","instagram_url"]]){const a=el(id);if(siteSettings[key]){a.href=siteSettings[key];a.style.display="inline";}else a.style.display="none";}}
+function showSettingsPanel(){el("settingsPanel").style.display="block";loadSettings(true);}
+async function saveSettings(){const payload={id:1,company_address:el("setAddress").value.trim(),gps_url:el("setGps").value.trim(),whatsapp:el("setWhatsapp").value.trim(),facebook_url:el("setFacebook").value.trim(),instagram_url:el("setInstagram").value.trim(),updated_at:new Date().toISOString()};const {error}=await db.from("site_settings").upsert(payload,{onConflict:"id"});el("settingsMsg").textContent=error?"تعذر الحفظ: "+error.message:"تم حفظ معلومات الشركة";if(!error)await loadSettings(false);}
+
+async function heartbeat(){
+ const {data:{session}}=await db.auth.getSession();if(!session)return;
+ await db.rpc("touch_my_presence").catch(()=>{});
+}
+setInterval(heartbeat,30000);
+
+document.addEventListener("DOMContentLoaded",async()=>{
+ document.body.classList.add("login-screen");
+ const {data}=await db.auth.getSession();
+ if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){document.body.classList.remove("login-screen");isAdmin=true;el("adminPanel").style.display="block";loadCustomers();loadAds(true);loadSettings(true);}else{const {data:profile}=await db.from("customer_profiles").select("display_name,role,active,blocked,code_enabled").eq("id",data.session.user.id).maybeSingle();if(profile&&profile.role==="customer"&&profile.active&&!profile.blocked&&profile.code_enabled){showCustomerSession(profile.display_name,"••••••");await loadRemotes();heartbeat();}}}
+ await loadAds(false);await loadSettings(false);setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
+});
+</script>
+
+</body></html>
