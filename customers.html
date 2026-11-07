@@ -258,35 +258,74 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
  #customerGate.mando-entry:after{bottom:14px;font-size:11px}
 }
 
+
+/* MANDO CUSTOMER LOGIN — refreshed image-led customer interface */
+#customerGate.mando-image-entry{
+  position:relative!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;
+  width:min(100% - 28px,1180px)!important;min-height: min(680px, calc(100vh - 36px))!important;
+  margin:22px auto!important;padding:clamp(18px,4vw,52px)!important;overflow:hidden!important;
+  border:1px solid rgba(211,164,75,.65)!important;border-radius:24px!important;
+  background:#070604!important;box-shadow:0 24px 70px #000b!important;isolation:isolate
+}
+#customerGate.mando-image-entry .mando-entry-art{
+  position:absolute;inset:0;z-index:-2;
+  background-image:linear-gradient(90deg,rgba(4,4,4,.08) 0%,rgba(4,4,4,.28) 48%,rgba(4,4,4,.88) 100%),url('https://raw.githubusercontent.com/wwwmandotreding111-stack/mando-remote/main/mando-login-showroom.jpg');
+  background-size:cover;background-position:center;background-repeat:no-repeat;transform:scale(1.01)
+}
+#customerGate.mando-image-entry:before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:radial-gradient(ellipse at 78% 48%,rgba(5,5,5,.18),rgba(0,0,0,.72) 68%);
+  pointer-events:none
+}
+#customerGate.mando-image-entry .mando-entry-overlay{
+  width:min(100%,420px);padding:clamp(22px,4vw,38px);text-align:center;
+  border:1px solid rgba(213,171,91,.55);border-radius:20px;
+  background:linear-gradient(145deg,rgba(13,12,10,.94),rgba(5,5,5,.86));
+  box-shadow:0 18px 55px #000b, inset 0 1px rgba(255,224,160,.08);
+  backdrop-filter:blur(8px)
+}
+#customerGate.mando-image-entry .entry-eagle{font-size:48px!important;line-height:1.1;color:#e8bd64!important;margin:0 auto 10px}
+#customerGate.mando-image-entry h2{margin:0;color:#f2d28b!important;font-size:clamp(25px,4vw,34px)!important;letter-spacing:1.5px;text-shadow:0 2px 16px #000}
+#customerGate.mando-image-entry .entry-en{margin-top:9px;color:#e8d5ad!important;font-size:15px!important}
+#customerGate.mando-image-entry .entry-line{width:76px;height:2px;margin:20px auto;background:linear-gradient(90deg,transparent,#d8aa54,transparent)}
+#customerGate.mando-image-entry .entry-form{display:flex;align-items:center;gap:10px;margin:12px 0;padding:0 14px;height:54px;border:1px solid rgba(213,171,91,.62);border-radius:10px;background:rgba(0,0,0,.62)}
+#customerGate.mando-image-entry .entry-lock{color:#e9c16f;font-size:18px}
+#customerGate.mando-image-entry .entry-form input{width:100%;min-width:0;border:0!important;outline:0!important;background:transparent!important;color:#fff!important;font-size:15px!important;text-align:right!important;box-shadow:none!important}
+#customerGate.mando-image-entry .entry-form input::placeholder{color:#d2c3a4!important}
+#customerGate.mando-image-entry .primary{width:100%;min-height:52px;margin-top:12px;border:0!important;border-radius:10px!important;background:linear-gradient(100deg,#93631e,#f0d184,#a8792b)!important;color:#171006!important;font-weight:800!important;font-size:17px!important;box-shadow:0 7px 22px #0008}
+#customerGate.mando-image-entry .recheck-code{margin-top:10px;background:transparent!important;border:1px solid rgba(213,171,91,.4)!important;color:#e8d19e!important}
+#customerGate.mando-image-entry .notice{min-height:18px;color:#ffe0a0!important}
+#customerGate.mando-image-entry .mando-entry-copyright{margin-top:18px;color:#bba77d;font-size:11px}
+@media(max-width:680px){
+ #customerGate.mando-image-entry{width:calc(100% - 20px)!important;min-height:620px!important;justify-content:center!important;margin:10px auto!important;padding:14px!important;border-radius:17px!important}
+ #customerGate.mando-image-entry .mando-entry-art{background-position:38% center;background-image:linear-gradient(0deg,rgba(0,0,0,.78),rgba(0,0,0,.3)),url('https://raw.githubusercontent.com/wwwmandotreding111-stack/mando-remote/main/mando-login-showroom.jpg')}
+ #customerGate.mando-image-entry .mando-entry-overlay{width:min(100%,390px);padding:22px 18px}
+}
+
 </style>
 </head>
 <body class="login-screen">
 <header><div class="logo">🦅</div><h1>MANDO REMOTE</h1><div class="sub">شركة مندو التجارية</div><div class="sub">مكتبة الريموتات البديلة للشاشات</div></header>
 <div class="ad-wrap"><a id="adLink" href="#" style="text-decoration:none;color:inherit" onclick="return openAd(event)"><div class="ad-banner"><img id="adImage" alt="" style="display:none"><div class="ad-copy"><h2 id="adTitle">عروض شركة مندو التجارية</h2><p id="adText">أفضل الخيارات والريموتات البديلة لشاشتك</p></div></div></a><div class="ad-dots" id="adDots"></div></div>
-<section id="customerGate" class="mando-entry">
-  <div class="entry-room" aria-hidden="true">
-    <div class="entry-tv entry-tv-left"><img src="https://images.pexels.com/photos/3137890/pexels-photo-3137890.jpeg?auto=compress&cs=tinysrgb&w=1200" alt=""></div>
-    <div class="entry-tv entry-tv-right"><img src="https://images.pexels.com/photos/1444416/pexels-photo-1444416.jpeg?auto=compress&cs=tinysrgb&w=1000" alt=""></div>
-    <div class="entry-console"></div>
-    <div class="entry-box"></div>
-    <div class="entry-remotes"><i></i><i></i><i></i></div>
-  </div>
-  <div class="entry-center">
+<section id="customerGate" class="mando-entry mando-image-entry">
+  <div class="mando-entry-art" aria-hidden="true"></div>
+  <div class="mando-entry-overlay">
     <div class="entry-eagle" aria-hidden="true">🦅</div>
     <h2>MANDO REMOTE</h2>
     <div class="entry-en">جميع بدائل التحكمات الشاشة</div>
     <div class="entry-line"></div>
     <div class="entry-form">
       <span class="entry-lock">♙</span>
-      <input id="customerLoginName" placeholder="اكتب اسم الزبون" autocomplete="name">
+      <input id="customerLoginName" placeholder="اسم الزبون" autocomplete="name" aria-label="اسم الزبون">
     </div>
     <div class="entry-form">
       <span class="entry-lock">♙</span>
-      <input id="customerLoginCode" placeholder="أدخل كود الزبون" autocomplete="one-time-code">
+      <input id="customerLoginCode" placeholder="كود الزبون" autocomplete="one-time-code" aria-label="كود الزبون">
     </div>
     <button class="primary" onclick="customerLogin()">دخول　↪</button>
     <button type="button" class="recheck-code" onclick="customerLogin()">⟳ إعادة التحقق من الكود</button>
     <p class="notice" id="customerLoginMsg"></p>
+    <div class="mando-entry-copyright">جميع الحقوق محفوظة لشركة مندو التجارية</div>
   </div>
 </section>
 <section id="customerProfile" style="display:none;max-width:760px;margin:18px auto;padding:16px;background:#142238;border:1px solid #a77a2b;border-radius:16px;text-align:center"><h3 style="color:var(--gold);margin:0 0 8px">مرحباً بك <span id="customerDisplayName"></span></h3><button onclick="customerLogout()">تسجيل الخروج</button></section>
