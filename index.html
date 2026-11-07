@@ -55,15 +55,42 @@ footer{text-align:center;padding:34px 18px;color:var(--muted);border-top:1px sol
 footer strong{color:var(--gold);font-size:19px}.footer-links{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:12px}footer a{color:#e7c477;text-decoration:none}
 .whatsapp{position:fixed;bottom:18px;left:18px;background:linear-gradient(135deg,#1aaf65,#087c43);color:white;border:1px solid #74d8a3;border-radius:30px;padding:13px 18px;text-decoration:none;font-weight:bold;box-shadow:0 6px 24px #0009;z-index:5}
 @media(max-width:600px){.container{padding:14px}.ad-wrap{padding:0 13px}.ad-banner{min-height:145px;border-radius:17px;padding:22px 16px}#customerGate{margin:22px 13px 30px!important;padding:27px 18px!important}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{padding:9px}.remote{height:140px}.card h3{font-size:14px}.welcome h2{font-size:22px}.logo{width:74px;height:74px}}
+
+/* Minimal premium customer entrance */
+body.login-screen{background:radial-gradient(ellipse at 50% 38%,#1b2c42 0%,#0b1421 48%,#050910 100%);min-height:100vh}
+body.login-screen:before{display:none}
+body.login-screen header,body.login-screen .ad-wrap,body.login-screen footer,body.login-screen .whatsapp{display:none}
+#customerGate{position:relative!important;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:100vh;width:100%;max-width:none!important;margin:0!important;padding:36px 18px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;text-align:center}
+#customerGate:before{content:"";position:absolute;inset:0;z-index:-2;border:0;border-radius:0;background:radial-gradient(ellipse at 50% 48%,#263a52 0%,#101c2c 44%,#070d17 78%)}
+#customerGate:after{content:"";position:absolute;z-index:-1;inset:0;opacity:.55;background:radial-gradient(ellipse at 18% 48%,#bd91432a,transparent 26%),radial-gradient(ellipse at 82% 48%,#bd91432a,transparent 26%)}
+.gate-content{position:relative;z-index:2;width:min(100%,420px);padding:32px 28px 26px;border:1px solid #9e7a3e;border-radius:23px;background:linear-gradient(150deg,#142238ed,#091321f2);box-shadow:0 24px 70px #0009,inset 0 1px #ffffff13}
+.gate-eagle{font-size:39px;line-height:1;margin:0 auto 14px;filter:drop-shadow(0 4px 12px #c79b4c55)}
+.gate-content h2{font-size:clamp(24px,5vw,31px);font-weight:800;color:#f0d18e;margin:0 0 8px;letter-spacing:0}
+.gate-sub{font-size:14px;color:#c1cbd8;margin:0 0 22px}
+.gate-rule{height:1px;width:64px;margin:0 auto 23px;background:linear-gradient(90deg,transparent,#d7b15b,transparent)}
+.gate-content label{display:block;color:#f2d795;font-size:15px;font-weight:700;margin-bottom:8px}
+#customerGate input{display:block;width:100%;height:54px;margin:0 0 12px!important;padding:12px 16px;border-radius:12px;background:#070f1b;border:1px solid #526078;color:white;text-align:center;font-size:19px;letter-spacing:2px}
+#customerGate input:focus{border-color:#e8c477;box-shadow:0 0 0 3px #e8c47720}
+#customerGate button{width:100%;height:52px;border-radius:12px;font-size:16px}
+#customerGate .notice{min-height:18px;margin:10px 0 0}
+.gate-art{position:absolute;z-index:0;inset:0;pointer-events:none;opacity:.58}
+.gate-art .screen{position:absolute;width:clamp(120px,22vw,245px);height:clamp(85px,15vw,165px);border:5px solid #68778a;border-radius:9px;background:linear-gradient(135deg,#1b3147,#0a1421 65%,#31465b);box-shadow:0 0 0 2px #d2ad6340,0 18px 45px #0008}
+.gate-art .screen:after{content:"";position:absolute;left:43%;bottom:-15px;width:14%;height:10px;background:#8c7958;border-radius:0 0 5px 5px}
+.gate-art .screen-one{left:7%;top:22%;transform:rotate(-8deg)}
+.gate-art .screen-two{right:7%;bottom:20%;transform:rotate(8deg)}
+.gate-art .remote-art{position:absolute;right:22%;top:19%;width:30px;height:125px;border:2px solid #b8a47b;border-radius:18px;background:linear-gradient(#27374a,#0b1420);transform:rotate(19deg);box-shadow:0 10px 28px #0008}
+.gate-art .remote-art:before{content:"";position:absolute;top:12px;left:8px;width:10px;height:10px;border-radius:50%;background:#d4b56e;box-shadow:0 18px 0 #8e9aaa,0 36px 0 #8e9aaa,0 54px 0 #8e9aaa,0 72px 0 #8e9aaa}
+body:not(.login-screen) #customerGate{display:none!important}
+@media(max-width:650px){.gate-content{padding:29px 22px 23px}.gate-art .screen-one{left:-42px;top:17%;transform:rotate(-12deg) scale(.8)}.gate-art .screen-two{right:-48px;bottom:14%;transform:rotate(11deg) scale(.8)}.gate-art .remote-art{right:9%;top:12%;transform:rotate(22deg) scale(.82)}}
 </style>
 </head>
 <body>
 <header><div class="logo">🦅</div><h1>MANDO REMOTE</h1><div class="sub">شركة مندو التجارية</div><div class="sub">مكتبة الريموتات البديلة للشاشات</div></header>
 <div class="ad-wrap"><a id="adLink" href="#" style="text-decoration:none;color:inherit" onclick="return openAd(event)"><div class="ad-banner"><img id="adImage" alt="" style="display:none"><div class="ad-copy"><h2 id="adTitle">عروض شركة مندو التجارية</h2><p id="adText">أفضل الخيارات والريموتات البديلة لشاشتك</p></div></div></a><div class="ad-dots" id="adDots"></div></div>
-<section id="customerGate" style="max-width:480px;margin:28px auto 34px;padding:26px 20px;text-align:center;background:linear-gradient(145deg,#17263a,#0b1421);border:1px solid #b58a3e;border-radius:22px;box-shadow:0 18px 55px #0008">
-<div style="font-size:46px;margin-bottom:8px">🦅</div><h2 style="color:#f1d18b;margin:0 0 8px">شركة مندو التجارية</h2><p class="sub" style="margin:0 0 20px">أهلاً بك في مكتبة MANDO REMOTE</p>
-<div style="display:flex;justify-content:center;align-items:end;gap:12px;margin:12px 0 20px"><div style="font-size:42px">📺</div><div style="font-size:42px">🎛️</div><div style="font-size:42px">📺</div></div>
-<h3 style="color:var(--gold)">أدخل كود الدخول</h3><input id="customerLoginCode" placeholder="اكتب كود الزبون هنا" autocomplete="one-time-code" style="text-align:center;font-size:20px;letter-spacing:2px"><button class="primary" style="width:100%;padding:14px" onclick="customerLogin()">دخول إلى المكتبة</button><p class="notice" id="customerLoginMsg"></p></section>
+<section id="customerGate">
+<div class="gate-art" aria-hidden="true"><div class="screen screen-one"></div><div class="screen screen-two"></div><div class="remote-art"></div></div>
+<div class="gate-content"><div class="gate-eagle">🦅</div><h2>شركة مندو التجارية</h2><p class="gate-sub">مكتبة أجهزة التحكم للشاشات</p>
+<div class="gate-rule"></div><label for="customerLoginCode">أدخل كود الدخول</label><input id="customerLoginCode" placeholder="كود الدخول" autocomplete="one-time-code"><button class="primary" onclick="customerLogin()">دخول إلى المكتبة</button><p class="notice" id="customerLoginMsg"></p></div></section>
 <section id="customerProfile" style="display:none;max-width:760px;margin:18px auto;padding:16px;background:#142238;border:1px solid #a77a2b;border-radius:16px;text-align:center"><h3 style="color:var(--gold);margin:0 0 8px">مرحباً بك <span id="customerDisplayName"></span></h3><p class="notice">كود الدخول: <b id="customerDisplayCode" style="color:#f1d18b"></b></p><button onclick="customerLogout()">تسجيل الخروج</button></section>
 <main class="container">
 <section id="catalogArea" style="display:none"><section class="welcome"><h2>أهلاً بكم في مكتبة مندو</h2><p class="sub">ابحث عن ريموت شاشتك بسهولة</p></section>
@@ -212,6 +239,7 @@ async function customerLogin(){
  }catch(e){el("customerLoginMsg").textContent="تعذر الدخول: "+e.message;}
 }
 function showCustomerSession(name,code){
+ document.body.classList.remove("login-screen");
  el("customerGate").style.display="none";
  el("customerProfile").style.display="block";
  el("customerDisplayName").textContent=name||"زبون مندو";
@@ -220,6 +248,7 @@ function showCustomerSession(name,code){
 }
 async function customerLogout(){
  await db.auth.signOut();
+ document.body.classList.add("login-screen");
  el("customerProfile").style.display="none";
  el("catalogArea").style.display="none";
  el("customerGate").style.display="block";
@@ -288,6 +317,7 @@ async function heartbeat(){
 setInterval(heartbeat,30000);
 
 document.addEventListener("DOMContentLoaded",async()=>{
+ document.body.classList.add("login-screen");
  const {data}=await db.auth.getSession();
  if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){isAdmin=true;el("adminPanel").style.display="block";loadCustomers();loadAds(true);loadSettings(true);}else{const {data:profile}=await db.from("customer_profiles").select("display_name,role,active,blocked,code_enabled").eq("id",data.session.user.id).maybeSingle();if(profile&&profile.role==="customer"&&profile.active&&!profile.blocked&&profile.code_enabled){showCustomerSession(profile.display_name,"••••••");await loadRemotes();heartbeat();}}}
  await loadAds(false);await loadSettings(false);setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
