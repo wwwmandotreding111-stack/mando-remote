@@ -82,15 +82,62 @@ body.login-screen header,body.login-screen .ad-wrap,body.login-screen footer,bod
 .gate-art .remote-art:before{content:"";position:absolute;top:12px;left:8px;width:10px;height:10px;border-radius:50%;background:#d4b56e;box-shadow:0 18px 0 #8e9aaa,0 36px 0 #8e9aaa,0 54px 0 #8e9aaa,0 72px 0 #8e9aaa}
 body:not(.login-screen) #customerGate{display:none!important}
 @media(max-width:650px){.gate-content{padding:29px 22px 23px}.gate-art .screen-one{left:-42px;top:17%;transform:rotate(-12deg) scale(.8)}.gate-art .screen-two{right:-48px;bottom:14%;transform:rotate(11deg) scale(.8)}.gate-art .remote-art{right:9%;top:12%;transform:rotate(22deg) scale(.82)}}
+
+/* Approved MANDO REMOTE cinematic login design */
+body.login-screen{background:#08090b;overflow:hidden}
+body.login-screen:before{display:none}
+body.login-screen header,body.login-screen .ad-wrap,body.login-screen footer,body.login-screen .whatsapp{display:none!important}
+#customerGate.mando-entry{position:relative!important;isolation:isolate;display:flex!important;align-items:center;justify-content:center;min-height:100svh;width:100%;max-width:none!important;margin:0!important;padding:24px!important;overflow:hidden;border:0!important;border-radius:0!important;background:radial-gradient(ellipse at 50% 55%,#4a321b 0%,#17130f 38%,#08090b 78%)!important;box-shadow:none!important}
+#customerGate.mando-entry:before{content:"";position:absolute;inset:0;z-index:-3;background:linear-gradient(90deg,#07090dcc,#07090d70 50%,#07090dcc),url("https://images.pexels.com/photos/29606737/pexels-photo-29606737/free-photo-of-modern-living-room-with-digital-devices-and-tv.jpeg?auto=compress&dpr=1&h=1200&w=2000") center/cover no-repeat;filter:saturate(.82)}
+#customerGate.mando-entry:after{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(180deg,#05050555,transparent 35%,#05050599);pointer-events:none}
+.entry-room{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.entry-tv{position:absolute;top:22%;width:34vw;height:42vh;min-height:220px;border:7px solid #17191c;border-radius:5px;background:#080b10;box-shadow:0 0 0 1px #b68a3d,0 22px 55px #000c,0 0 35px #d4a34b22;overflow:hidden}
+.entry-tv img{width:100%;height:100%;object-fit:cover;display:block}
+.entry-tv-left{left:4%;transform:perspective(900px) rotateY(8deg)}
+.entry-tv-right{right:4%;transform:perspective(900px) rotateY(-8deg)}
+.entry-console{position:absolute;bottom:14%;left:0;right:0;height:12%;background:linear-gradient(180deg,#2b2118,#090909 60%);border-top:2px solid #b58a43;box-shadow:0 -8px 30px #d5a64a22}
+.entry-box{position:absolute;bottom:12%;left:5%;width:25%;height:7%;border-radius:8px;background:linear-gradient(145deg,#202326,#050607);border:1px solid #8d6a35;box-shadow:0 8px 25px #000}
+.entry-remotes{position:absolute;right:8%;bottom:16%;height:30%;width:22%;display:flex;align-items:end;justify-content:center;gap:12px}
+.entry-remotes i{display:block;width:clamp(28px,4vw,54px);height:100%;border-radius:22px 22px 13px 13px;border:2px solid #806334;background:radial-gradient(circle at 50% 14%,#b22 0 4px,transparent 5px),repeating-linear-gradient(180deg,#30343a 0 7px,#101215 8px 14px);box-shadow:0 10px 25px #000c}
+.entry-remotes i:nth-child(2){height:112%;background-color:#111}
+.entry-center{position:relative;z-index:3;width:min(100%,610px);text-align:center;padding:20px 26px 18px;margin-top:-2vh}
+.entry-eagle{font-size:clamp(70px,10vw,112px);line-height:1;color:#e8bd62;text-shadow:0 3px 0 #704713,0 0 28px #d59a3c99;filter:drop-shadow(0 9px 10px #000)}
+.entry-center h2{font-size:clamp(28px,4vw,48px);font-weight:900;color:#f1d18e;margin:10px 0 0;text-shadow:0 3px 18px #000;letter-spacing:0}
+.entry-en{font-family:Georgia,serif;font-size:clamp(19px,2.5vw,28px);letter-spacing:3px;color:#e7c477;margin:3px 0 15px}
+.entry-line{width:min(72%,400px);height:1px;margin:0 auto 28px;background:linear-gradient(90deg,transparent,#e8c477,transparent)}
+.entry-form{display:flex;align-items:center;gap:14px;width:min(100%,610px);height:66px;margin:0 auto 22px;padding:0 22px;border:1px solid #d2a34d;border-radius:19px;background:#050608df;box-shadow:0 0 0 3px #d5a64a18,0 12px 35px #0009}
+.entry-lock{font-size:27px;color:#f5e9cb;border-right:1px solid #8e713f;padding-right:17px}
+#customerGate.mando-entry input{height:100%;margin:0!important;padding:10px 8px;border:0!important;box-shadow:none!important;background:transparent!important;text-align:center;font-size:clamp(18px,2.5vw,24px);letter-spacing:1px;color:#fff}
+#customerGate.mando-entry input::placeholder{color:#d5d0c8}
+#customerGate.mando-entry button{width:min(72%,410px);height:64px;border-radius:22px;font-size:clamp(22px,3vw,29px);font-weight:900;background:linear-gradient(110deg,#f8dfa0,#d8a94e 55%,#f5d58b)!important;color:#17120a!important;border:1px solid #ffe9b1!important;box-shadow:0 10px 28px #0009,0 0 24px #d5a34a33}
+#customerGate.mando-entry .notice{color:#f2d99f;min-height:18px}
+@media(max-width:700px){#customerGate.mando-entry{padding:16px!important}.entry-tv{top:15%;width:47vw;height:27vh;min-height:130px;border-width:4px}.entry-tv-left{left:-5%}.entry-tv-right{right:-5%}.entry-console{bottom:10%;height:12%}.entry-box{bottom:10%;left:2%;width:25%;height:5%}.entry-remotes{right:2%;bottom:12%;height:22%;width:26%;gap:6px}.entry-remotes i{width:25px}.entry-center{padding:10px 8px;margin-top:-5vh}.entry-eagle{font-size:72px}.entry-center h2{font-size:27px}.entry-en{font-size:17px;letter-spacing:2px;margin-bottom:12px}.entry-line{margin-bottom:20px}.entry-form{height:58px;padding:0 12px;margin-bottom:16px}.entry-lock{font-size:22px;padding-right:10px}#customerGate.mando-entry button{height:57px;width:80%}}
 </style>
 </head>
 <body>
 <header><div class="logo">🦅</div><h1>MANDO REMOTE</h1><div class="sub">شركة مندو التجارية</div><div class="sub">مكتبة الريموتات البديلة للشاشات</div></header>
 <div class="ad-wrap"><a id="adLink" href="#" style="text-decoration:none;color:inherit" onclick="return openAd(event)"><div class="ad-banner"><img id="adImage" alt="" style="display:none"><div class="ad-copy"><h2 id="adTitle">عروض شركة مندو التجارية</h2><p id="adText">أفضل الخيارات والريموتات البديلة لشاشتك</p></div></div></a><div class="ad-dots" id="adDots"></div></div>
-<section id="customerGate">
-<div class="gate-art" aria-hidden="true"><div class="screen screen-one"></div><div class="screen screen-two"></div><div class="remote-art"></div></div>
-<div class="gate-content"><div class="gate-eagle">🦅</div><h2>شركة مندو التجارية</h2><p class="gate-sub">مكتبة أجهزة التحكم للشاشات</p>
-<div class="gate-rule"></div><label for="customerLoginCode">أدخل كود الدخول</label><input id="customerLoginCode" placeholder="كود الدخول" autocomplete="one-time-code"><button class="primary" onclick="customerLogin()">دخول إلى المكتبة</button><p class="notice" id="customerLoginMsg"></p></div></section>
+<section id="customerGate" class="mando-entry">
+  <div class="entry-room" aria-hidden="true">
+    <div class="entry-tv entry-tv-left"><img src="https://images.pexels.com/photos/3137890/pexels-photo-3137890.jpeg?auto=compress&cs=tinysrgb&w=1200" alt=""></div>
+    <div class="entry-tv entry-tv-right"><img src="https://images.pexels.com/photos/1444416/pexels-photo-1444416.jpeg?auto=compress&cs=tinysrgb&w=1000" alt=""></div>
+    <div class="entry-console"></div>
+    <div class="entry-box"></div>
+    <div class="entry-remotes"><i></i><i></i><i></i></div>
+  </div>
+  <div class="entry-center">
+    <div class="entry-eagle" aria-hidden="true">♛</div>
+    <h2>شركة مندو التجارية</h2>
+    <div class="entry-en">MANDO TRADING</div>
+    <div class="entry-line"></div>
+    <div class="entry-form">
+      <span class="entry-lock">♙</span>
+      <input id="customerLoginCode" placeholder="أدخل كود الزبون" autocomplete="one-time-code">
+    </div>
+    <button class="primary" onclick="customerLogin()">دخول　↪</button>
+    <p class="notice" id="customerLoginMsg"></p>
+  </div>
+</section>
 <section id="customerProfile" style="display:none;max-width:760px;margin:18px auto;padding:16px;background:#142238;border:1px solid #a77a2b;border-radius:16px;text-align:center"><h3 style="color:var(--gold);margin:0 0 8px">مرحباً بك <span id="customerDisplayName"></span></h3><p class="notice">كود الدخول: <b id="customerDisplayCode" style="color:#f1d18b"></b></p><button onclick="customerLogout()">تسجيل الخروج</button></section>
 <main class="container">
 <section id="catalogArea" style="display:none"><section class="welcome"><h2>أهلاً بكم في مكتبة مندو</h2><p class="sub">ابحث عن ريموت شاشتك بسهولة</p></section>
