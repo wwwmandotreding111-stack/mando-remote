@@ -177,6 +177,9 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 #authBox button{margin:8px 4px;padding:12px 16px;border-radius:10px}
 
 
+#customerGate.mando-entry .recheck-code{width:100%!important;height:44px!important;margin:10px 0 0!important;background:rgba(9,20,34,.72)!important;color:#f2d18a!important;border:1px solid #b89556!important;border-radius:12px!important;font-size:15px!important;font-weight:700!important;box-shadow:none!important}
+#customerGate.mando-entry .recheck-code:hover{background:#263c55!important;border-color:#f2d18a!important}
+
 /* Dedicated customer page */
 #authBox,#adminPanel,.admin-entry-link{display:none!important}
 #customerGate{display:flex!important}
@@ -204,6 +207,7 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
       <input id="customerLoginCode" placeholder="أدخل كود الزبون" autocomplete="one-time-code">
     </div>
     <button class="primary" onclick="customerLogin()">دخول　↪</button>
+    <button type="button" class="recheck-code" onclick="customerLogin()">⟳ إعادة التحقق من الكود</button>
     <p class="notice" id="customerLoginMsg"></p>
   </div>
 </section>
