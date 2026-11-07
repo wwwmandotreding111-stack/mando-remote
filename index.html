@@ -126,6 +126,50 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
  #customerGate.mando-entry button{width:100%}
 }
 
+
+/* Clean, balanced customer entry screen */
+#customerGate.mando-entry{
+ position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;
+ min-height:calc(100svh - 24px)!important;width:100%!important;padding:28px 18px!important;
+ background:radial-gradient(ellipse at 50% 20%,#29415b 0%,#192d43 48%,#101d2d 100%)!important;
+ overflow:hidden!important
+}
+#customerGate.mando-entry:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.035),transparent 45%,rgba(0,0,0,.12));pointer-events:none}
+#customerGate.mando-entry:after{display:none!important}
+#customerGate.mando-entry .entry-room{display:none!important}
+#customerGate.mando-entry .entry-center{
+ position:relative!important;inset:auto!important;left:auto!important;top:auto!important;transform:none!important;
+ width:min(100%,430px)!important;margin:0!important;padding:34px 28px 28px!important;
+ display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important;
+ background:linear-gradient(155deg,#243b54,#172a40)!important;
+ border:1px solid rgba(226,190,119,.8)!important;border-radius:26px!important;
+ box-shadow:0 22px 55px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.08)!important
+}
+#customerGate.mando-entry .entry-eagle{display:block!important;font-size:48px!important;line-height:1!important;margin:0 0 14px!important;filter:drop-shadow(0 3px 5px #0006)}
+#customerGate.mando-entry .entry-center h2{display:block!important;height:auto!important;font-size:clamp(23px,5vw,29px)!important;line-height:1.5!important;color:#fff4d9!important;margin:0!important}
+#customerGate.mando-entry .entry-en{display:block!important;font-size:12px!important;letter-spacing:3px!important;font-weight:800!important;color:#e8c77f!important;margin:6px 0 14px!important}
+#customerGate.mando-entry .entry-line{display:block!important;width:74px!important;height:2px!important;margin:0 0 24px!important;background:linear-gradient(90deg,transparent,#e8c77f,transparent)!important}
+#customerGate.mando-entry .entry-form{
+ display:flex!important;align-items:center!important;gap:12px!important;width:100%!important;height:62px!important;
+ margin:0 0 18px!important;padding:0 16px!important;background:#102237!important;
+ border:1px solid #71869b!important;border-radius:14px!important;box-shadow:inset 0 2px 6px #0004!important
+}
+#customerGate.mando-entry .entry-lock{flex:0 0 auto!important;color:#e8c77f!important;font-size:22px!important;padding:0 0 0 12px!important;border-right:1px solid #52677e!important}
+#customerGate.mando-entry input{flex:1!important;min-width:0!important;width:100%!important;height:100%!important;padding:0 8px!important;
+ margin:0!important;border:0!important;background:transparent!important;box-shadow:none!important;
+ color:#fff!important;text-align:right!important;font-size:17px!important;line-height:normal!important}
+#customerGate.mando-entry input::placeholder{color:#c2cfdd!important;opacity:1!important}
+#customerGate.mando-entry button{width:100%!important;height:58px!important;margin:0!important;border-radius:14px!important;
+ font-size:20px!important;font-weight:800!important;background:linear-gradient(110deg,#f5dda0,#d5a64c)!important;
+ color:#1b1a16!important;border:1px solid #ffe8b2!important;box-shadow:0 8px 20px #0004!important}
+#customerGate.mando-entry .notice{width:100%!important;min-height:20px!important;margin:12px 0 0!important;color:#ffe7b8!important;font-size:14px!important;text-shadow:none!important}
+@media(max-width:600px){
+ #customerGate.mando-entry{min-height:calc(100svh - 12px)!important;padding:22px 18px!important}
+ #customerGate.mando-entry .entry-center{padding:30px 22px 24px!important;border-radius:22px!important}
+ #customerGate.mando-entry .entry-form{height:58px!important}
+ #customerGate.mando-entry button{height:56px!important}
+}
+
 </style>
 </head>
 <body>
@@ -140,7 +184,7 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
     <div class="entry-remotes"><i></i><i></i><i></i></div>
   </div>
   <div class="entry-center">
-    <div class="entry-eagle" aria-hidden="true">♛</div>
+    <div class="entry-eagle" aria-hidden="true">🦅</div>
     <h2>شركة مندو التجارية</h2>
     <div class="entry-en">MANDO TRADING</div>
     <div class="entry-line"></div>
