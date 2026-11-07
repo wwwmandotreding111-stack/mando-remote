@@ -201,9 +201,13 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 
 /* MANDO APPS: vertical side tab, visible only inside the signed-in catalogue */
 .catalog-apps{position:fixed;right:0;top:38%;z-index:9999;width:auto;margin:0;padding:0;background:transparent;border:0;box-shadow:none}
-.mando-apps-inline-toggle{width:48px;height:190px;padding:12px 8px;border:1px solid #b99455;border-right:0;border-radius:13px 0 0 13px;background:linear-gradient(160deg,#2b2110,#090909);color:#f2d18a;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 5px 20px #0008;writing-mode:vertical-rl;transform:rotate(180deg)}
-.mando-apps-inline-toggle span{font-size:18px;margin-top:8px}
-.mando-apps-inline-list{position:fixed;right:54px;top:25%;width:min(340px,calc(100vw - 70px));max-height:65vh;display:grid;gap:9px;margin:0;padding:14px;overflow:auto;text-align:right;background:linear-gradient(160deg,#17283d,#080e17);border:1px solid #b99455;border-radius:14px;box-shadow:0 10px 35px #000b}
+.mando-menu-trigger{width:48px;height:145px;padding:12px 8px;border:1px solid #b99455;border-right:0;border-radius:13px 0 0 13px;background:linear-gradient(160deg,#2b2110,#090909);color:#f2d18a;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 5px 20px #0008;writing-mode:vertical-rl;transform:rotate(180deg)}
+.mando-menu-panel{position:fixed;right:0;top:0;height:100vh;width:min(330px,86vw);z-index:10000;padding:20px;background:linear-gradient(160deg,#17283d,#080e17);border-left:2px solid #b99455;box-shadow:-12px 0 35px #000a;transform:translateX(105%);transition:transform .25s ease;overflow:auto}
+.mando-menu-panel.open{transform:translateX(0)}
+.mando-menu-head{display:flex;justify-content:space-between;align-items:center;color:#f2d18a;border-bottom:1px solid #8b6b35;padding-bottom:14px;margin-bottom:16px}
+.mando-menu-item{width:100%;padding:15px;margin:8px 0;border:1px solid #b99455;border-radius:11px;background:linear-gradient(145deg,#243b54,#14263a);color:#f2d18a;text-align:right;font-size:15px;font-weight:800;cursor:pointer}
+.mando-apps-inline-list{display:none;position:relative;width:100%;max-height:55vh;gap:9px;margin:12px 0 0;padding:12px;overflow:auto;text-align:right;background:#0c1725;border:1px solid #52677e;border-radius:12px;box-shadow:none}
+.mando-apps-inline-list:not([hidden]){display:grid}
 .mando-apps-inline-list[hidden]{display:none!important}
 .mando-apps-inline-list .mando-app-card{background:#0c1929;border-color:#52677e}
 .mando-apps-inline-list .mando-app-download{display:inline-block;width:auto;height:auto;padding:7px 12px;font-size:12px}
@@ -248,8 +252,12 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 <main class="container">
 <section id="catalogArea" style="display:none"><section class="welcome"><h2>أهلاً بكم في مكتبة مندو</h2><p class="sub">ابحث عن ريموت شاشتك بسهولة</p></section>
 <div class="mando-apps-inline catalog-apps">
-  <button type="button" class="mando-apps-inline-toggle" onclick="toggleMandoAppsInline()" aria-label="فتح تطبيقات MANDO">📱 تطبيقات APK MANDO <span>＋</span></button>
-  <div id="mandoAppsInlineList" class="mando-apps-inline-list" hidden><p class="notice">اضغط لعرض التطبيقات المتاحة.</p></div>
+  <button type="button" class="mando-menu-trigger" onclick="toggleMandoMenu()" aria-label="فتح القائمة">☰ القائمة</button>
+  <aside id="mandoMenuPanel" class="mando-menu-panel" aria-label="قائمة مندو">
+    <div class="mando-menu-head"><b>قائمة MANDO</b><button type="button" onclick="toggleMandoMenu()">✕</button></div>
+    <button type="button" class="mando-menu-item" onclick="toggleMandoAppsInline()">📱 تطبيقات MANDO APK <span>＋</span></button>
+    <div id="mandoAppsInlineList" class="mando-apps-inline-list" hidden><p class="notice">جارٍ تحميل التطبيقات...</p></div>
+  </aside>
 </div>
 <input id="search" placeholder="ابحث عن ماركة الشاشة أو رقم الريموت..." oninput="render()">
 <div class="filters" id="filters"><button class="active" onclick="choose('الكل',this)">الكل</button><button onclick="choose('Samsung',this)">Samsung</button><button onclick="choose('LG',this)">LG</button><button onclick="choose('TCL',this)">TCL</button><button onclick="choose('Hisense',this)">Hisense</button></div>
@@ -491,6 +499,7 @@ document.addEventListener("DOMContentLoaded",async()=>{
  setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
 });
  
+function toggleMandoMenu(){el("mandoMenuPanel").classList.toggle("open");}
 function toggleMandoAppsInline(){const box=el("mandoAppsInlineList");box.hidden=!box.hidden;if(!box.hidden)loadMandoApps();}
 async function loadMandoApps(){const box=el("mandoAppsInlineList");box.innerHTML="<p>جارٍ تحميل التطبيقات...</p>";const {data,error}=await db.from("mando_apps").select("name,version,description,icon_url,download_url,size_label").eq("is_active",true).order("created_at",{ascending:false});if(error){box.innerHTML='<p style="color:#e7c77d;line-height:1.8">قسم التطبيقات قيد الإعداد. سيتم عرض التطبيقات بعد تفعيل القسم.</p>';return;}if(!data?.length){box.innerHTML='<p style="color:#aab4c2">لا توجد تطبيقات مضافة حالياً.</p>';return;}box.innerHTML=data.map(a=>'<article class="mando-app-card"><div class="mando-app-icon">'+(a.icon_url?'<img src="'+safe(a.icon_url)+'" alt="">':'📦')+'</div><div class="mando-app-info"><b>'+safe(a.name)+'</b><small>الإصدار '+safe(a.version||"—")+' · '+safe(a.size_label||"APK")+'</small><div style="color:#c4cbd5;font-size:12px;margin-top:5px">'+safe(a.description||"")+'</div><a class="mando-app-download" href="'+safe(a.download_url)+'" download>تحميل التطبيق</a></div></article>').join("");}
 </script>
