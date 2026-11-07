@@ -251,14 +251,7 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 <section id="customerProfile" style="display:none;max-width:760px;margin:18px auto;padding:16px;background:#142238;border:1px solid #a77a2b;border-radius:16px;text-align:center"><h3 style="color:var(--gold);margin:0 0 8px">مرحباً بك <span id="customerDisplayName"></span></h3><button onclick="customerLogout()">تسجيل الخروج</button></section>
 <main class="container">
 <section id="catalogArea" style="display:none"><section class="welcome"><h2>أهلاً بكم في مكتبة مندو</h2><p class="sub">ابحث عن ريموت شاشتك بسهولة</p></section>
-<div class="mando-apps-inline catalog-apps">
-  <button type="button" class="mando-menu-trigger" onclick="toggleMandoMenu()" aria-label="فتح القائمة">☰ القائمة</button>
-  <aside id="mandoMenuPanel" class="mando-menu-panel" aria-label="قائمة مندو">
-    <div class="mando-menu-head"><b>قائمة MANDO</b><button type="button" onclick="toggleMandoMenu()">✕</button></div>
-    <button type="button" class="mando-menu-item" onclick="toggleMandoAppsInline()">📱 تطبيقات MANDO APK <span>＋</span></button>
-    <div id="mandoAppsInlineList" class="mando-apps-inline-list" hidden><p class="notice">جارٍ تحميل التطبيقات...</p></div>
-  </aside>
-</div>
+
 <input id="search" placeholder="ابحث عن ماركة الشاشة أو رقم الريموت..." oninput="render()">
 <div class="filters" id="filters"><button class="active" onclick="choose('الكل',this)">الكل</button><button onclick="choose('Samsung',this)">Samsung</button><button onclick="choose('LG',this)">LG</button><button onclick="choose('TCL',this)">TCL</button><button onclick="choose('Hisense',this)">Hisense</button></div>
 <div class="count" id="count">سجّل الدخول لعرض المكتبة</div><div class="products" id="products"></div></section>
@@ -305,6 +298,14 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 <footer><strong>🦅 MANDO TRADING COMPANY</strong><p>شركة مندو التجارية — مكتبة الريموتات البديلة للشاشات</p><p id="footerAddress"></p><div class="footer-links"><a id="footerWhatsapp" href="https://wa.me/963991936353" target="_blank" rel="noopener">واتساب الشركة</a><a id="footerGps" href="#" target="_blank" rel="noopener" style="display:none">📍 موقع الشركة</a><a id="footerFacebook" href="#" target="_blank" rel="noopener" style="display:none">Facebook</a><a id="footerInstagram" href="#" target="_blank" rel="noopener" style="display:none">Instagram</a></div><p>جميع الحقوق محفوظة © شركة مندو التجارية</p></footer>
 
 <a class="whatsapp" href="https://wa.me/963991936353" target="_blank" rel="noopener">تواصل واتساب</a>
+<div id="mandoSideMenu" class="mando-side-menu" style="display:none">
+  <button type="button" class="mando-menu-trigger" onclick="toggleMandoMenu()" aria-label="فتح القائمة">☰ القائمة</button>
+  <aside id="mandoMenuPanel" class="mando-menu-panel" aria-label="قائمة مندو">
+    <div class="mando-menu-head"><b>قائمة MANDO</b><button type="button" onclick="toggleMandoMenu()">✕</button></div>
+    <button type="button" class="mando-menu-item" onclick="toggleMandoAppsInline()">📱 تطبيقات MANDO APK <span>＋</span></button>
+    <div id="mandoAppsInlineList" class="mando-apps-inline-list" hidden><p class="notice">جارٍ تحميل التطبيقات...</p></div>
+  </aside>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://lhghepwcvlqazmpouidu.supabase.co";
