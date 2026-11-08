@@ -419,7 +419,7 @@ body:not(.login-screen) footer>p:last-child{display:block!important;text-align:c
 <input id="setInstagram" placeholder="رابط Instagram">
 <button class="primary" onclick="saveSettings()">حفظ معلومات الشركة</button><p class="notice" id="settingsMsg"></p>
 </section>
-<p class="notice">أضف بيانات الريموت. رابط الصورة اختياري حالياً.</p>
+<p class="notice">أضف بيانات الريموت وارفع صورته مباشرة. الصورة اختيارية.</p>
 <input id="rName" placeholder="1. اسم الجهاز (مثلاً Samsung Smart TV)">
 <label class="notice" for="rImageFile">2. رفع صورة الريموت</label><input id="rImageFile" type="file" accept="image/*">
 <input id="rNumber" placeholder="3. اسم البديل (مثلاً RM-123)">
@@ -492,14 +492,33 @@ async function login(){
 async function logout(){await db.auth.signOut();isAdmin=false;el("adminPanel").style.display="none";el("customerPanel").style.display="none";render();}
 async function addRemote(){
  const name=el("rName").value.trim(), number=el("rNumber").value.trim();
- if(!name||!number){el("adminMsg").textContent="اكتب اسم الماركة ورقم الريموت أولاً.";return;}
- const file=el("rImageFile").files[0];let imageUrl=null;
- if(file){if(file.size>5*1024*1024){el("adminMsg").textContent="حجم الصورة كبير. اختر صورة أقل من 5 ميغابايت.";return;}el("adminMsg").textContent="رفع الصورة قيد التجهيز؛ سنفعّل التخزين بعد إعداد مساحة الصور.";return;}
- const payload={name,brand:"",model_number:number,compatible_models:"",image_front:imageUrl,notes:"",available:true};
- const {error}=await db.from("remotes").insert(payload);
- if(error){el("adminMsg").textContent="لم يتم الحفظ: "+error.message;return;}
- ["rName","rNumber"].forEach(id=>el(id).value="");el("rImageFile").value="";
- el("adminMsg").textContent="تمت إضافة الريموت بنجاح.";await loadRemotes();
+ if(!name||!number){el("adminMsg").textContent="اكتب اسم الجهاز واسم البديل أولاً.";return;}
+ const file=el("rImageFile").files[0];let imageUrl=null,uploadedPath=null;
+ try{
+  if(file){
+   if(!file.type.startsWith("image/"))throw new Error("الملف المحدد ليس صورة.");
+   if(file.size>5*1024*1024)throw new Error("حجم الصورة كبير. اختر صورة أقل من 5 ميغابايت.");
+   el("adminMsg").textContent="جارٍ رفع الصورة...";
+   const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"")||"jpg";
+   const unique=(crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random().toString(36).slice(2));
+   uploadedPath="remotes/"+unique+"."+ext;
+   const {error:uploadError}=await db.storage.from("site-media").upload(uploadedPath,file,{cacheControl:"3600",upsert:false,contentType:file.type});
+   if(uploadError)throw new Error("فشل رفع الصورة: "+uploadError.message);
+   const publicResult=db.storage.from("site-media").getPublicUrl(uploadedPath);
+   imageUrl=publicResult?.data?.publicUrl;
+   if(!imageUrl)throw new Error("تم رفع الصورة لكن تعذر إنشاء رابطها.");
+  }
+  el("adminMsg").textContent="جارٍ حفظ بيانات الريموت...";
+  const payload={name,brand:"",model_number:number,compatible_models:"",image_front:imageUrl,notes:"",available:true};
+  const {error}=await db.from("remotes").insert(payload);
+  if(error)throw error;
+  ["rName","rNumber"].forEach(id=>el(id).value="");el("rImageFile").value="";
+  el("adminMsg").textContent="تمت إضافة الريموت وصورته بنجاح.";
+  await loadRemotes();
+ }catch(e){
+  if(uploadedPath)await db.storage.from("site-media").remove([uploadedPath]).catch(()=>{});
+  el("adminMsg").textContent="تعذر إضافة الريموت: "+(e.message||"خطأ غير معروف");
+ }
 }
 async function editRemote(id){
  const r=remotes.find(x=>Number(x.id)===id);if(!r)return;
