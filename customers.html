@@ -347,6 +347,12 @@ body.login-screen #customerGate .mando-entry-copyright{
  body.login-screen #customerGate .mando-entry-overlay{padding:26px 18px 20px!important;border-radius:19px!important}
 }
 
+
+/* Remove extra top bar and secondary login controls */
+body.login-screen>header,body.login-screen>.ad-wrap{display:none!important}
+body.login-screen #customerGate .recheck-code,
+body.login-screen #customerGate .mando-entry-copyright{display:none!important}
+
 </style>
 </head>
 <body class="login-screen">
@@ -368,9 +374,7 @@ body.login-screen #customerGate .mando-entry-copyright{
       <input id="customerLoginCode" placeholder="كود الزبون" autocomplete="one-time-code" aria-label="كود الزبون">
     </div>
     <button class="primary" onclick="customerLogin()">دخول　↪</button>
-    <button type="button" class="recheck-code" onclick="customerLogin()">⟳ إعادة تفعيل / فحص الكود</button>
     <p class="notice" id="customerLoginMsg"></p>
-    <div class="mando-entry-copyright">جميع الحقوق محفوظة لدى شركة مندو التجارية ©</div>
   </div>
 </section>
 <section id="customerProfile" style="display:none;max-width:760px;margin:18px auto;padding:16px;background:#142238;border:1px solid #a77a2b;border-radius:16px;text-align:center"><h3 style="color:var(--gold);margin:0 0 8px">مرحباً بك <span id="customerDisplayName"></span></h3><button onclick="customerLogout()">تسجيل الخروج</button></section>
