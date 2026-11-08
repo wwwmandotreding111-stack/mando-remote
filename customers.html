@@ -585,9 +585,17 @@ async function loadCustomers(){
  if(!data?.length){box.textContent="ما في زبائن مسجلين حالياً.";return;}
  box.innerHTML=data.map(u=>{
   const online=u.last_seen_at && (Date.now()-new Date(u.last_seen_at).getTime()<90000);
-  return '<div class="card" style="margin:8px 0;text-align:right"><b>'+safe(u.display_name||"بدون اسم")+'</b><div>'+(u.active?"🟢 مفعّل":"⚪ موقوف")+' · '+(u.blocked?"🚫 محظور":"غير محظور")+' · '+(u.code_enabled?"الكود فعّال":"الكود معطّل")+' · '+(online?"🟢 متصل الآن":"⚪ غير متصل")+'</div><small>آخر ظهور: '+(u.last_seen_at?new Date(u.last_seen_at).toLocaleString("ar"):"غير معروف")+'</small><div class="admin-actions"><button onclick="editCustomer(\''+u.id+'\',\''+safe(u.display_name||"").replace(/'/g,"\\'")+'\')">تعديل الاسم/الكود</button><button onclick="customerAction(\''+u.id+'\',\'active\','+(!u.active)+')">'+(u.active?"إيقاف":"تفعيل")+'</button><button onclick="customerAction(\''+u.id+'\',\'blocked\','+(!u.blocked)+')">'+(u.blocked?"إلغاء الحظر":"حظر")+'</button><button onclick="customerAction(\''+u.id+'\',\'code_enabled\','+(!u.code_enabled)+')">'+(u.code_enabled?"تعطيل الكود":"تفعيل الكود")+'</button><button class="danger" onclick="deleteCustomer(\''+u.id+'\')">حذف</button></div></div>';
+  return '<div class="card" style="margin:8px 0;text-align:right"><b>'+safe(u.display_name||"بدون اسم")+'</b><div>'+(u.active?"🟢 مفعّل":"⚪ موقوف")+' · '+(u.blocked?"🚫 محظور":"غير محظور")+' · '+(u.code_enabled?"الكود فعّال":"الكود معطّل")+' · '+(online?"🟢 متصل الآن":"⚪ غير متصل")+'</div><small>آخر ظهور: '+(u.last_seen_at?new Date(u.last_seen_at).toLocaleString("ar"):"غير معروف")+'</small><div class="admin-actions"><button onclick="editCustomer(\''+u.id+'\',\''+safe(u.display_name||"").replace(/'/g,"\\'")+'\')">تعديل الاسم/الكود</button><button onclick="customerAction(\''+u.id+'\',\'active\','+(!u.active)+')">'+(u.active?"إيقاف":"تفعيل")+'</button><button onclick="customerAction(\''+u.id+'\',\'blocked\','+(!u.blocked)+')">'+(u.blocked?"إلغاء الحظر":"حظر")+'</button><button onclick="customerAction(\''+u.id+'\',\'code_enabled\','+(!u.code_enabled)+')">'+(u.code_enabled?"تعطيل الكود":"تفعيل الكود")+'</button><button onclick="resetCustomerDevice(\''+u.id+'\')">تحديث الجهاز</button><button class="danger" onclick="deleteCustomer(\''+u.id+'\')">حذف</button></div></div>';
  }).join("");
  }catch(e){box.textContent="تعذر تحميل القائمة: "+e.message;}
+}
+async function resetCustomerDevice(id){
+ if(!confirm("فك ربط الجهاز الحالي؟ عند تسجيل الدخول القادم سيرتبط الكود بالجهاز الجديد."))return;
+ try{
+  const result=await adminRequest("reset_customer_device",{user_id:id});
+  alert(result.message||"تم فك ربط الجهاز. سجّل الدخول من الجهاز الجديد.");
+  await loadCustomers();
+ }catch(e){alert("تعذر تحديث الجهاز: "+e.message);}
 }
 async function editCustomer(id,currentName){
  const name=prompt("اسم الزبون:",currentName);if(name===null)return;
