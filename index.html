@@ -306,13 +306,30 @@ async function logout(){await db.auth.signOut();isAdmin=false;el("adminPanel").s
 async function addRemote(){
  const name=el("rName").value.trim(), number=el("rNumber").value.trim();
  if(!name||!number){el("adminMsg").textContent="اكتب اسم الماركة ورقم الريموت أولاً.";return;}
- const file=el("rImageFile").files[0];let imageUrl=null;
- if(file){if(file.size>5*1024*1024){el("adminMsg").textContent="حجم الصورة كبير. اختر صورة أقل من 5 ميغابايت.";return;}el("adminMsg").textContent="رفع الصورة قيد التجهيز؛ سنفعّل التخزين بعد إعداد مساحة الصور.";return;}
- const payload={name,brand:"",model_number:number,compatible_models:"",image_front:imageUrl,notes:"",available:true};
- const {error}=await db.from("remotes").insert(payload);
- if(error){el("adminMsg").textContent="لم يتم الحفظ: "+error.message;return;}
- ["rName","rNumber"].forEach(id=>el(id).value="");el("rImageFile").value="";
- el("adminMsg").textContent="تمت إضافة الريموت بنجاح.";await loadRemotes();
+ const file=el("rImageFile").files[0];let imageUrl=null, uploadedPath=null;
+ try{
+  if(file){
+   if(!file.type || !file.type.startsWith("image/")){el("adminMsg").textContent="اختر ملف صورة صالحاً.";return;}
+   if(file.size>5*1024*1024){el("adminMsg").textContent="حجم الصورة كبير. اختر صورة أقل من 5 ميغابايت.";return;}
+   const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"")||"jpg";
+   uploadedPath="remotes/"+crypto.randomUUID()+"."+ext;
+   el("adminMsg").textContent="جارٍ رفع الصورة...";
+   const {error:uploadError}=await db.storage.from("site-media").upload(uploadedPath,file,{cacheControl:"3600",upsert:false,contentType:file.type});
+   if(uploadError)throw uploadError;
+   imageUrl=db.storage.from("site-media").getPublicUrl(uploadedPath).data.publicUrl;
+   if(!imageUrl)throw new Error("تعذر إنشاء رابط الصورة.");
+  }
+  const payload={name,brand:"",model_number:number,compatible_models:"",image_front:imageUrl,notes:"",available:true};
+  const {error}=await db.from("remotes").insert(payload);
+  if(error)throw error;
+  ["rName","rNumber"].forEach(id=>el(id).value="");el("rImageFile").value="";
+  el("adminMsg").textContent="تمت إضافة الريموت"+(imageUrl?" مع الصورة":"")+" بنجاح.";
+  await loadRemotes();
+ }catch(error){
+  if(uploadedPath)await db.storage.from("site-media").remove([uploadedPath]);
+  console.error("addRemote:",error);
+  el("adminMsg").textContent="تعذر حفظ الريموت أو رفع الصورة: "+(error?.message||"خطأ غير معروف");
+ }
 }
 async function editRemote(id){
  const r=remotes.find(x=>Number(x.id)===id);if(!r)return;
