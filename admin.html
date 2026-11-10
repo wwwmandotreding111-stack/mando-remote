@@ -21,7 +21,7 @@ button.secondary{background:#17263a;color:var(--gold)}button.danger{background:#
 <section class="box" id="loginBox"><div class="eagle">🦅</div><h1>MANDO REMOTE</h1><p>بوابة الإدارة الخاصة — شركة مندو التجارية</p>
 <input id="user" placeholder="اسم المستخدم أو البريد" autocomplete="username"><input id="pass" type="password" placeholder="كلمة المرور" autocomplete="current-password">
 <button id="go">دخول الإدارة</button><button id="forgot" class="secondary" type="button">نسيت كلمة المرور؟</button><div id="msg"></div></section>
-<section id="dashboard"><div class="top"><div><div class="eagle">🦅 MANDO</div><h1>إدارة الريموتات والأجهزة</h1><p>عرض جميع الأجهزة المضافة مع إمكانية التعديل والحذف</p></div><button class="danger" id="logout">تسجيل الخروج</button></div>
+<section id="dashboard"><div class="top"><div><div class="eagle">🦅 MANDO</div><h1>إدارة الريموتات والأجهزة</h1><p>عرض جميع الأجهزة المضافة مع إمكانية التعديل والحذف</p></div><div><button class="secondary" id="mainSite">فتح الموقع الرئيسي</button><button class="danger" id="logout">تسجيل الخروج</button></div></div>
 <div class="top"><div class="tools"><input id="search" placeholder="ابحث باسم الجهاز أو اسم البديل..." /><button id="refresh">تحديث القائمة</button></div><div class="count" id="count">جارٍ التحميل...</div></div>
 <div class="grid" id="items"></div><p id="listMsg"></p></section>
 </main>
@@ -73,6 +73,7 @@ $("forgot").onclick=async()=>{
  const {error}=await db.auth.resetPasswordForEmail(v,{redirectTo:"https://wwwmandotreding111-stack.github.io/mando-remote/reset-password.html"});
  $("msg").textContent=error?"تعذر إرسال الرابط: "+error.message:"إذا كان البريد مسجلاً، رح يوصلك رابط استعادة كلمة المرور.";
 };
+$("mainSite").onclick=()=>{location.href="./";};
 $("logout").onclick=async()=>{await db.auth.signOut();remotes=[];$("dashboard").style.display="none";$("loginBox").style.display="block";$("pass").value="";};
 $("refresh").onclick=loadItems;$("search").oninput=render;
 </script></body></html>
