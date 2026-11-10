@@ -1,10 +1,78 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>إدارة MANDO REMOTE</title>
+<html lang="ar" dir="rtl">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>إدارة MANDO REMOTE</title>
 <style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(ellipse at top,#20334c,#080d16 65%);font-family:Tahoma,Arial;color:#f5f5f5}.box{width:min(100%,430px);padding:28px;border:1px solid #9a7438;border-radius:22px;background:linear-gradient(145deg,#17263a,#0c1420);box-shadow:0 20px 60px #0008;text-align:center}.eagle{font-size:54px;color:#e6b957}h1{color:#e6b957;margin:8px 0}p{color:#aab5c5;font-size:13px}input{width:100%;padding:14px;margin:8px 0;border-radius:12px;border:1px solid #34465c;background:#091321;color:white;font-size:15px}button{width:100%;padding:14px;margin-top:10px;border:0;border-radius:12px;background:linear-gradient(135deg,#f0cd7d,#b78532);font-weight:bold;font-size:16px;color:#101722;cursor:pointer}#msg{min-height:24px;color:#ffd48a}
-</style></head><body><main class="box"><div class="eagle">🦅</div><h1>MANDO REMOTE</h1><p>بوابة الإدارة الخاصة — شركة مندو التجارية</p><input id="user" placeholder="اسم المستخدم أو البريد" autocomplete="username"><input id="pass" type="password" placeholder="كلمة المرور" autocomplete="current-password"><button id="go">دخول الإدارة</button><button id="forgot" type="button" style="background:transparent;border:1px solid #9a7438;color:#f0cd7d;font-size:14px;margin-top:8px">نسيت كلمة المرور؟</button><div id="msg"></div></main>
+:root{--bg:#080e18;--panel:#142238;--gold:#e8c477;--text:#f7f4ed;--muted:#aeb8c7;--line:#34445a}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:20px;background:radial-gradient(ellipse at top,#20334c,#080d16 65%);font-family:Tahoma,Arial;color:var(--text)}
+.wrap{width:min(100%,1050px);margin:auto}.box{width:min(100%,430px);margin:7vh auto;padding:28px;border:1px solid #9a7438;border-radius:22px;background:linear-gradient(145deg,#17263a,#0c1420);box-shadow:0 20px 60px #0008;text-align:center}
+.eagle{font-size:48px;color:var(--gold)}h1,h2{color:var(--gold);margin:8px 0}p{color:var(--muted);font-size:13px}
+input{width:100%;padding:13px;margin:8px 0;border-radius:12px;border:1px solid var(--line);background:#091321;color:white;font-size:15px}
+button{padding:11px 16px;margin:5px;border:1px solid #9a7438;border-radius:11px;background:linear-gradient(135deg,#f0cd7d,#b78532);font-weight:bold;color:#101722;cursor:pointer}
+button.secondary{background:#17263a;color:var(--gold)}button.danger{background:#351923;color:#ffc4c4;border-color:#873f4b}
+#msg{min-height:24px;color:#ffd48a}.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 20px}
+.tools{display:flex;gap:8px;flex-wrap:wrap}.tools input{max-width:330px;margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.card{background:linear-gradient(145deg,#17283d,#0c1624);border:1px solid #8c6a32;border-radius:17px;padding:14px;box-shadow:0 12px 30px #0005}
+.photo{height:150px;background:#091321;border-radius:12px;display:grid;place-items:center;overflow:hidden;font-size:42px}
+.photo img{width:100%;height:100%;object-fit:contain}.card h3{margin:12px 0 5px;color:#f1d18b}.number{font-weight:bold;color:#fff;font-size:14px}.meta{color:var(--muted);font-size:12px;line-height:1.7;overflow-wrap:anywhere}.actions{display:flex;gap:7px;margin-top:12px}.actions button{flex:1;margin:0}.empty{text-align:center;padding:30px;color:var(--muted);border:1px dashed #52627a;border-radius:15px;grid-column:1/-1}
+#dashboard{display:none}.count{color:var(--gold);font-size:14px}
+</style></head>
+<body><main class="wrap">
+<section class="box" id="loginBox"><div class="eagle">🦅</div><h1>MANDO REMOTE</h1><p>بوابة الإدارة الخاصة — شركة مندو التجارية</p>
+<input id="user" placeholder="اسم المستخدم أو البريد" autocomplete="username"><input id="pass" type="password" placeholder="كلمة المرور" autocomplete="current-password">
+<button id="go">دخول الإدارة</button><button id="forgot" class="secondary" type="button">نسيت كلمة المرور؟</button><div id="msg"></div></section>
+<section id="dashboard"><div class="top"><div><div class="eagle">🦅 MANDO</div><h1>إدارة الريموتات والأجهزة</h1><p>عرض جميع الأجهزة المضافة مع إمكانية التعديل والحذف</p></div><button class="danger" id="logout">تسجيل الخروج</button></div>
+<div class="top"><div class="tools"><input id="search" placeholder="ابحث باسم الجهاز أو اسم البديل..." /><button id="refresh">تحديث القائمة</button></div><div class="count" id="count">جارٍ التحميل...</div></div>
+<div class="grid" id="items"></div><p id="listMsg"></p></section>
+</main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
 const db=window.supabase.createClient("https://lhghepwcvlqazmpouidu.supabase.co","sb_publishable_EgAQZYow05AZT_pQqHkI2w_kxJff9B5");
-document.getElementById("forgot").onclick=async()=>{const msg=document.getElementById("msg");const v=document.getElementById("user").value.trim().toLowerCase();if(!v.includes("@")){msg.textContent="اكتب بريدك الإلكتروني الكامل أولاً.";return;}msg.textContent="جارٍ إرسال رابط الاستعادة...";const {error}=await db.auth.resetPasswordForEmail(v,{redirectTo:"https://wwwmandotreding111-stack.github.io/mando-remote/reset-password.html"});msg.textContent=error?("خطأ من خدمة البريد: "+(error.message||"تعذر إرسال الرابط")):"إذا كان البريد مسجلاً، رح يوصلك رابط استعادة كلمة المرور.";};
-document.getElementById("go").onclick=async()=>{const msg=document.getElementById("msg");msg.textContent="جارٍ التحقق...";const v=document.getElementById("user").value.trim().toLowerCase();const email=v.includes("@")?v:v+"@users.mando.local";const {error}=await db.auth.signInWithPassword({email,password:document.getElementById("pass").value});if(error){msg.textContent="بيانات الدخول غير صحيحة.";return;}const {data, error:e}=await db.rpc("is_admin");if(e||data!==true){await db.auth.signOut();msg.textContent="هذا الحساب ليس لديه صلاحية الإدارة.";return;}location.href="./";};
+let remotes=[];
+const $=id=>document.getElementById(id);
+const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function loadItems(){
+ $("count").textContent="جارٍ تحميل الأجهزة...";
+ const {data,error}=await db.from("remotes").select("*").order("created_at",{ascending:false});
+ if(error){$("count").textContent="تعذر تحميل القائمة";$("listMsg").textContent=error.message;return;}
+ remotes=data||[];render();
+}
+function render(){
+ const q=$("search").value.trim().toLowerCase();
+ const rows=remotes.filter(r=>[r.name,r.brand,r.model_number,r.compatible_models,r.notes].some(v=>String(v||"").toLowerCase().includes(q)));
+ $("count").textContent="عدد الأجهزة والريموتات: "+rows.length;
+ $("items").innerHTML=rows.length?rows.map(r=>'<article class="card"><div class="photo">'+(r.image_front?'<img src="'+safe(r.image_front)+'" alt="صورة الريموت">':'📺')+'</div><h3>'+safe(r.name||r.brand||"جهاز")+'</h3><div class="number">'+safe(r.model_number||"بدون اسم بديل")+'</div><div class="meta">الموديلات المتوافقة: '+safe(r.compatible_models||"—")+'<br>الحالة: '+(r.available===false?"غير متوفر":"متوفر")+'</div><div class="actions"><button onclick="editItem('+Number(r.id)+')">✏️ تعديل</button><button class="danger" onclick="deleteItem('+Number(r.id)+')">🗑️ حذف</button></div></article>').join(""):'<div class="empty">ما في أجهزة مطابقة للبحث.</div>';
+}
+async function editItem(id){
+ const r=remotes.find(x=>Number(x.id)===id);if(!r)return;
+ const name=prompt("اسم الجهاز / الشاشة:",r.name||r.brand||"");if(name===null)return;
+ const number=prompt("اسم الريموت البديل:",r.model_number||"");if(number===null)return;
+ const models=prompt("الموديلات المتوافقة:",r.compatible_models||"");if(models===null)return;
+ const {error}=await db.from("remotes").update({name:name.trim(),brand:name.trim(),model_number:number.trim(),compatible_models:models.trim()}).eq("id",id);
+ if(error){alert("تعذر التعديل: "+error.message);return;}
+ $("listMsg").textContent="تم تعديل البيانات بنجاح.";await loadItems();
+}
+async function deleteItem(id){
+ const r=remotes.find(x=>Number(x.id)===id);if(!r)return;
+ if(!confirm('متأكد من حذف "'+(r.model_number||r.name||"هذا الريموت")+'" نهائياً؟'))return;
+ const {error}=await db.from("remotes").delete().eq("id",id);
+ if(error){alert("تعذر الحذف: "+error.message);return;}
+ $("listMsg").textContent="تم حذف العنصر.";await loadItems();
+}
+$("go").onclick=async()=>{
+ $("msg").textContent="جارٍ التحقق...";
+ const v=$("user").value.trim().toLowerCase();const email=v.includes("@")?v:v+"@users.mando.local";
+ const {error}=await db.auth.signInWithPassword({email,password:$("pass").value});
+ if(error){$("msg").textContent="بيانات الدخول غير صحيحة.";return;}
+ const {data,error:e}=await db.rpc("is_admin");
+ if(e||data!==true){await db.auth.signOut();$("msg").textContent="هذا الحساب ليس لديه صلاحية الإدارة.";return;}
+ $("loginBox").style.display="none";$("dashboard").style.display="block";await loadItems();
+};
+$("forgot").onclick=async()=>{
+ const v=$("user").value.trim().toLowerCase();if(!v.includes("@")){$("msg").textContent="اكتب بريدك الإلكتروني الكامل أولاً.";return;}
+ $("msg").textContent="جارٍ إرسال رابط الاستعادة...";
+ const {error}=await db.auth.resetPasswordForEmail(v,{redirectTo:"https://wwwmandotreding111-stack.github.io/mando-remote/reset-password.html"});
+ $("msg").textContent=error?"تعذر إرسال الرابط: "+error.message:"إذا كان البريد مسجلاً، رح يوصلك رابط استعادة كلمة المرور.";
+};
+$("logout").onclick=async()=>{await db.auth.signOut();remotes=[];$("dashboard").style.display="none";$("loginBox").style.display="block";$("pass").value="";};
+$("refresh").onclick=loadItems;$("search").oninput=render;
 </script></body></html>
