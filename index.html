@@ -212,7 +212,7 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 <div id="authBox"><h3>دخول الإدارة</h3><input id="email" type="text" placeholder="اسم المستخدم أو بريد المدير"><input id="password" type="password" placeholder="كلمة المرور"><button class="primary" onclick="login()">تسجيل الدخول</button><button type="button" onclick="sendPasswordRecovery()">نسيت كلمة المرور؟ إرسال رابط استعادة</button><p class="notice" id="authMsg"></p></div>
 <section class="panel" id="adminPanel">
 <div class="row" style="align-items:center"><h3>لوحة إدارة الريموتات</h3><button onclick="logout()">تسجيل الخروج</button></div>
-<div class="row"><button onclick="showCustomerPanel()">👥 إدارة الزبائن</button><button onclick="showAdsPanel()">📢 إدارة الإعلانات</button><button onclick="showSettingsPanel()">⚙️ معلومات الشركة</button></div><section class="panel" id="customerPanel">
+<div class="row"><button onclick="showCustomerPanel()">👥 إدارة الزبائن</button><button onclick="showAdsPanel()">📢 إدارة الإعلانات</button><button onclick="showSettingsPanel()">⚙️ معلومات الشركة</button><button onclick="showRemotesPanel()">📋 كل الإضافات</button></div><section class="panel" id="remotesAdminPanel"><h3>📋 كل الريموتات والأجهزة المضافة بالموقع</h3><p class="notice">تظهر هنا جميع الإضافات المحفوظة بالموقع، مع إمكانية التعديل والحذف.</p><div class="row"><button onclick="loadRemotes()">🔄 تحديث القائمة</button><span class="notice" id="adminRemotesCount"></span></div><div id="adminRemotesList" class="products"><div class="empty">اضغط على الزر لعرض الإضافات.</div></div></section><section class="panel" id="customerPanel">
 <h3>👥 إدارة الزبائن</h3>
 <p class="notice">إضافة الحسابات ومتابعة حالة الاتصال والصلاحيات.</p>
 <input id="cName" placeholder="اسم الزبون">
@@ -269,7 +269,13 @@ async function loadRemotes(){
  el("count").textContent="جارٍ تحميل الريموتات...";
  const {data,error}=await db.from("remotes").select("*").order("created_at",{ascending:false});
  if(error){el("count").textContent="تعذر تحميل البيانات. تأكد من إعدادات قاعدة البيانات والاتصال بالإنترنت.";console.error(error);return;}
- remotes=data||[];render();
+ remotes=data||[];render();if(isAdmin)renderAdminRemotes();
+}
+function showRemotesPanel(){el("remotesAdminPanel").style.display="block";loadRemotes();}
+function renderAdminRemotes(){
+ const box=el("adminRemotesList");if(!box)return;
+ const count=el("adminRemotesCount");if(count)count.textContent="عدد الإضافات: "+remotes.length;
+ box.innerHTML=remotes.length?remotes.map(function(r){return '<article class="card"><div class="remote">'+(r.image_front?'<img src="'+safe(r.image_front)+'" alt="صورة الريموت" loading="lazy">':"📺")+'</div><h3>'+safe(r.name||r.brand||"بدون اسم")+'</h3><div class="number">'+safe(r.model_number||"بدون اسم بديل")+'</div><p>'+safe(r.compatible_models||"")+'</p><p>'+safe(r.notes||"")+'</p><div class="status">'+(r.available===false?"غير متوفر":"متوفر")+'</div><div class="admin-actions"><button onclick="editRemote('+Number(r.id)+')">تعديل</button><button class="danger" onclick="deleteRemote('+Number(r.id)+')">حذف</button></div></article>';}).join(""):'<div class="empty">ما في إضافات محفوظة بالموقع حالياً.</div>';
 }
 function render(){
  const q=el("search").value.trim().toLowerCase();
