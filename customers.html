@@ -566,7 +566,7 @@ async function customerLogin(){
  const code=normalizeCustomerCode(el("customerLoginCode").value);
  if(!display_name||!code){el("customerLoginMsg").textContent="اكتب اسم الزبون وكود الدخول.";return;}
  customerLoginBusy=true;
- const loginButton=el("customerLoginButton");
+ const loginButton=el("customerGate").querySelector("button.primary");
  if(loginButton){loginButton.disabled=true;loginButton.textContent="جارٍ الدخول...";}
  el("customerLoginMsg").textContent="عم نتحقق من بياناتك...";
  const controller=new AbortController();
@@ -588,7 +588,7 @@ async function customerLogin(){
   el("customerLoginMsg").textContent=e.name==="AbortError"?"الاتصال تأخر. تأكد من الإنترنت وحاول مرة ثانية.":"تعذر الدخول: "+(e.message||"خطأ بالاتصال");
  }finally{
   clearTimeout(timeout);customerLoginBusy=false;
-  if(loginButton){loginButton.disabled=false;loginButton.textContent="تسجيل الدخول";}
+  if(loginButton){loginButton.disabled=false;loginButton.textContent="دخول　↪";}
  }
 }
 function showCustomerSession(name){
