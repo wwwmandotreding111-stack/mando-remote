@@ -457,8 +457,10 @@ function choose(name,button){selected=name;document.querySelectorAll(".filters b
 async function loadRemotes(){
  if(!isAdmin && el("catalogArea").style.display!=="block"){return;}
  el("count").textContent="جارٍ تحميل الريموتات...";
- const {data,error}=await db.from("remotes").select("*").order("created_at",{ascending:false});
- if(error){el("count").textContent="تعذر تحميل البيانات. تأكد من إعدادات قاعدة البيانات والاتصال بالإنترنت.";console.error(error);return;}
+ const {data,error}=await db.from("remotes")
+  .select("id,name,brand,model_number,compatible_models,notes,available,image_front,created_at")
+  .order("created_at",{ascending:false});
+ if(error){el("count").textContent="تعذر تحميل البيانات. تأكد من الاتصال بالإنترنت.";console.error(error);return;}
  remotes=data||[];render();
 }
 function render(){
@@ -557,22 +559,37 @@ function normalizeCustomerCode(value){
   .replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-1776))
   .replace(/[\\u200e\\u200f\\u202a-\\u202e\\u2066-\\u2069]/g,"").trim();
 }
+let customerLoginBusy=false;
 async function customerLogin(){
+ if(customerLoginBusy)return;
  const display_name=el("customerLoginName").value.trim();
  const code=normalizeCustomerCode(el("customerLoginCode").value);
  if(!display_name||!code){el("customerLoginMsg").textContent="اكتب اسم الزبون وكود الدخول.";return;}
- el("customerLoginMsg").textContent="جارٍ التحقق من الاسم والكود...";
+ customerLoginBusy=true;
+ const loginButton=el("customerLoginButton");
+ if(loginButton){loginButton.disabled=true;loginButton.textContent="جارٍ الدخول...";}
+ el("customerLoginMsg").textContent="عم نتحقق من بياناتك...";
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),15000);
  try{
-  const response=await fetch(ADMIN_FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify({action:"customer_login",display_name,code,device_id:getDeviceId()})});
+  const response=await fetch(CUSTOMER_LOGIN_URL,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},body:JSON.stringify({action:"customer_login",display_name,code,device_id:getDeviceId()}),signal:controller.signal});
   const result=await response.json();
   if(!response.ok)throw new Error(result.error||"تعذر تسجيل الدخول");
+  if(!result.token_hash||!result.type)throw new Error("استجابة تسجيل الدخول غير مكتملة، حاول مرة ثانية.");
   const {error}=await db.auth.verifyOtp({token_hash:result.token_hash,type:result.type});
   if(error)throw error;
   localStorage.setItem("mando_customer_name",display_name);
   showCustomerSession(display_name);
   el("customerLoginMsg").textContent="";
-  await startCustomerVisit();await loadRemotes();await heartbeat();
- }catch(e){el("customerLoginMsg").textContent="تعذر الدخول: "+e.message;}
+  // لا نوقف واجهة الزبون بانتظار عمليات الحضور أو تحميل الصور.
+  loadRemotes().catch(e=>console.warn("تحميل الريموتات:",e));
+  startCustomerVisit().then(()=>heartbeat()).catch(e=>console.warn("تسجيل الزيارة:",e));
+ }catch(e){
+  el("customerLoginMsg").textContent=e.name==="AbortError"?"الاتصال تأخر. تأكد من الإنترنت وحاول مرة ثانية.":"تعذر الدخول: "+(e.message||"خطأ بالاتصال");
+ }finally{
+  clearTimeout(timeout);customerLoginBusy=false;
+  if(loginButton){loginButton.disabled=false;loginButton.textContent="تسجيل الدخول";}
+ }
 }
 function showCustomerSession(name){
  document.body.classList.remove("login-screen");
@@ -688,33 +705,33 @@ async function heartbeat(){
 }
 setInterval(()=>{heartbeat();},30000);
 
-document.addEventListener("DOMContentLoaded",async()=>{
+document.addEventListener("DOMContentLoaded",()=>{
  document.body.classList.add("login-screen");
- await loadAds(false);await loadSettings(false);
- // استعادة الدخول من جلسة Supabase المحفوظة؛ لا نعتمد على تخزين كلمة السر أو الاسم محلياً.
- try{
-  const {data:{session},error}=await db.auth.getSession();
-  if(error)throw error;
-  if(session?.user?.id){
-   const {data:isAdminUser,error:roleError}=await db.rpc("is_admin");
-   if(roleError)throw roleError;
-   if(isAdminUser!==true){
-    const {data:profile,error:profileError}=await db.from("customer_profiles").select("display_name,active,role,blocked,code_enabled").eq("id",session.user.id).maybeSingle();
-    if(profileError)throw profileError;
-    if(profile && profile.role==="customer" && profile.active!==false && profile.blocked!==true && profile.code_enabled!==false){
-     const savedName=profile.display_name||localStorage.getItem("mando_customer_name")||"زبون مندو";
-     localStorage.setItem("mando_customer_name",savedName);
-     showCustomerSession(savedName);
-     await loadRemotes();
-     await startCustomerVisit();
-     await heartbeat();
-    }else{
-     await db.auth.signOut();
-     localStorage.removeItem("mando_customer_name");
-    }
+ // تحميل الإعلانات والإعدادات بالخلفية حتى لا تتأخر شاشة الدخول.
+ loadAds(false).catch(e=>console.warn("تحميل الإعلانات:",e));
+ loadSettings(false).catch(e=>console.warn("تحميل الإعدادات:",e));
+ // استعادة الجلسة مباشرة، ثم تحميل المحتوى ومعلومات الحضور بالخلفية.
+ (async()=>{
+  try{
+   const {data:{session},error}=await db.auth.getSession();
+   if(error)throw error;
+   if(!session?.user?.id)return;
+   const {data:profile,error:profileError}=await db.from("customer_profiles")
+    .select("display_name,active,role,blocked,code_enabled").eq("id",session.user.id).maybeSingle();
+   if(profileError)throw profileError;
+   if(profile && profile.role==="customer" && profile.active!==false && profile.blocked!==true && profile.code_enabled!==false){
+    const savedName=profile.display_name||localStorage.getItem("mando_customer_name")||"زبون مندو";
+    localStorage.setItem("mando_customer_name",savedName);
+    showCustomerSession(savedName);
+    loadRemotes().catch(e=>console.warn("تحميل الريموتات:",e));
+    startCustomerVisit().then(()=>heartbeat()).catch(e=>console.warn("تسجيل الزيارة:",e));
+   }else{
+    const {data:isAdminUser,error:roleError}=await db.rpc("is_admin");
+    if(roleError)throw roleError;
+    if(isAdminUser!==true){await db.auth.signOut();localStorage.removeItem("mando_customer_name");}
    }
-  }
- }catch(e){console.warn("تعذرت استعادة جلسة الزبون:",e);el("customerLoginMsg").textContent="تعذر استعادة الدخول تلقائياً. جرّب تسجيل الدخول مرة واحدة: "+(e.message||"");}
+  }catch(e){console.warn("تعذرت استعادة جلسة الزبون:",e);el("customerLoginMsg").textContent="تعذر استعادة الدخول تلقائياً. جرّب تسجيل الدخول مرة واحدة: "+(e.message||"");}
+ })();
  setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
 });
  
