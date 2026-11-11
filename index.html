@@ -496,7 +496,7 @@ async function endCustomerVisit(){
  activeVisitId=null;sessionStorage.removeItem("mando_active_visit");
 }
 async function heartbeat(){
- const {data:{session}}=await db.auth.getSession();if(!session)return;
+ const {data:{session}}=await db.auth.getSession();if(!session||isAdmin)return;
  await db.rpc("touch_my_presence").catch(()=>{});
  if(!activeVisitId)activeVisitId=sessionStorage.getItem("mando_active_visit")||null;
  if(!activeVisitId)await startCustomerVisit();
