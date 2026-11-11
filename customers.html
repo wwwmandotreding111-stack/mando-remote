@@ -691,21 +691,30 @@ setInterval(()=>{heartbeat();},30000);
 document.addEventListener("DOMContentLoaded",async()=>{
  document.body.classList.add("login-screen");
  await loadAds(false);await loadSettings(false);
- // استعادة جلسة الزبون المحفوظة بعد تحديث الصفحة، دون حفظ أو إعادة طلب كود الدخول.
+ // استعادة الدخول من جلسة Supabase المحفوظة؛ لا نعتمد على تخزين كلمة السر أو الاسم محلياً.
  try{
   const {data:{session},error}=await db.auth.getSession();
-  const savedName=localStorage.getItem("mando_customer_name");
-  if(!error && session && savedName){
-   // جلسة Supabase محفوظة: لا نطلب من الزبون إدخال الكود مرة ثانية عند تحديث الصفحة.
+  if(error)throw error;
+  if(session?.user?.id){
    const {data:isAdminUser,error:roleError}=await db.rpc("is_admin");
-   if(!roleError && isAdminUser!==true){
-    showCustomerSession(savedName);
-    await startCustomerVisit();
-    await loadRemotes();
-    await heartbeat();
+   if(roleError)throw roleError;
+   if(isAdminUser!==true){
+    const {data:profile,error:profileError}=await db.from("customer_profiles").select("display_name,active,role,blocked,code_enabled").eq("id",session.user.id).maybeSingle();
+    if(profileError)throw profileError;
+    if(profile && profile.role==="customer" && profile.active!==false && profile.blocked!==true && profile.code_enabled!==false){
+     const savedName=profile.display_name||localStorage.getItem("mando_customer_name")||"زبون مندو";
+     localStorage.setItem("mando_customer_name",savedName);
+     showCustomerSession(savedName);
+     await loadRemotes();
+     await startCustomerVisit();
+     await heartbeat();
+    }else{
+     await db.auth.signOut();
+     localStorage.removeItem("mando_customer_name");
+    }
    }
   }
- }catch(e){console.warn("تعذرت استعادة جلسة الزبون:",e);}
+ }catch(e){console.warn("تعذرت استعادة جلسة الزبون:",e);el("customerLoginMsg").textContent="تعذر استعادة الدخول تلقائياً. جرّب تسجيل الدخول مرة واحدة: "+(e.message||"");}
  setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
 });
  
