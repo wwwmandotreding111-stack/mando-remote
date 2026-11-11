@@ -559,7 +559,7 @@ async function heartbeat(){
  if(activeVisitId)await db.rpc("heartbeat_customer_visit",{p_visit_id:activeVisitId}).catch(e=>console.warn(e));
 }
 setInterval(heartbeat,30000);
-setInterval(()=>{if(isAdmin&&el("customerPanel")?.style.display==="block")loadCustomers();},30000);
+setInterval(()=>{if(isAdmin&&el("customerPanel")?.style.display==="block")loadCustomers();},5000);
 
 document.addEventListener("DOMContentLoaded",async()=>{
  document.body.classList.add("login-screen");
