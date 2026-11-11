@@ -210,6 +210,7 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 .mando-apps-inline-list{display:none;position:relative;width:100%;max-height:55vh;gap:9px;margin:12px 0 0;padding:12px;overflow:auto;text-align:right;background:#0c1725;border:1px solid #52677e;border-radius:12px;box-shadow:none}
 .mando-apps-inline-list:not([hidden]){display:grid}
 .mando-apps-inline-list[hidden]{display:none!important}
+.mando-similar-image{width:100%;display:block;max-height:260px;object-fit:contain;background:#101d2c;border:1px solid #52677e;border-radius:12px;padding:5px}.mando-similar-card{min-width:0;padding:9px;background:#14263a;border:1px solid #52677e;border-radius:13px}.mando-similar-title{display:block;color:#f2d18a;font-size:13px;font-weight:800;margin:5px 2px 0;text-align:right}
 .mando-apps-inline-list .mando-app-card{background:#0c1929;border-color:#52677e}
 .mando-apps-inline-list .mando-app-download{display:inline-block;width:auto;height:auto;padding:7px 12px;font-size:12px}
 #customerGate.mando-entry .mando-apps-inline-toggle{width:100%!important;height:46px!important;border:1px solid #b99455!important;border-radius:12px!important;background:linear-gradient(145deg,#243b54,#14263a)!important;color:#f2d18a!important;font-size:15px!important;font-weight:800!important;box-shadow:none!important}
@@ -436,6 +437,8 @@ body:not(.login-screen) footer>p:last-child{display:block!important;text-align:c
     <div class="mando-menu-head"><b>قائمة MANDO</b><button type="button" onclick="toggleMandoMenu()">✕</button></div>
     <button type="button" class="mando-menu-item" onclick="toggleMandoAppsInline()">📱 تطبيقات MANDO APK <span>＋</span></button>
     <div id="mandoAppsInlineList" class="mando-apps-inline-list" hidden><p class="notice">جارٍ تحميل التطبيقات...</p></div>
+    <button type="button" class="mando-menu-item" onclick="toggleSimilarRemoteGallery()">🖼️ تحكمات متشابهة <span>＋</span></button>
+    <div id="similarRemoteGalleryList" class="mando-apps-inline-list" hidden><p class="notice">جارٍ تحميل الصور...</p></div>
   </aside>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -702,6 +705,8 @@ document.addEventListener("DOMContentLoaded",async()=>{
  
 function toggleMandoMenu(){el("mandoMenuPanel").classList.toggle("open");}
 function toggleMandoAppsInline(){const box=el("mandoAppsInlineList");box.hidden=!box.hidden;if(!box.hidden)loadMandoApps();}
+async function toggleSimilarRemoteGallery(){const box=el("similarRemoteGalleryList");box.hidden=!box.hidden;if(!box.hidden)await loadSimilarRemoteGallery();}
+async function loadSimilarRemoteGallery(){const box=el("similarRemoteGalleryList");box.innerHTML="<p>جارٍ تحميل الصور...</p>";const {data,error}=await db.from("similar_remote_images").select("title,image_url,created_at").order("created_at",{ascending:false});if(error){box.innerHTML='<p style="color:#e7c77d;line-height:1.8">تعذر تحميل الصور حالياً. حاول تحديث الصفحة.</p>';console.warn(error.message);return;}if(!data?.length){box.innerHTML='<p style="color:#aab4c2">لا توجد صور مضافة حالياً.</p>';return;}box.innerHTML=data.map(x=>'<article class="mando-similar-card"><img class="mando-similar-image" src="'+safe(x.image_url)+'" alt="'+safe(x.title||"تحكم متشابه")+'" loading="lazy">'+(x.title?'<b class="mando-similar-title">'+safe(x.title)+'</b>':'')+'</article>').join("");}
 async function loadMandoApps(){const box=el("mandoAppsInlineList");box.innerHTML="<p>جارٍ تحميل التطبيقات...</p>";const {data,error}=await db.from("mando_apps").select("name,version,description,icon_url,download_url,size_label").eq("is_active",true).order("created_at",{ascending:false});if(error){box.innerHTML='<p style="color:#e7c77d;line-height:1.8">قسم التطبيقات قيد الإعداد. سيتم عرض التطبيقات بعد تفعيل القسم.</p>';return;}if(!data?.length){box.innerHTML='<p style="color:#aab4c2">لا توجد تطبيقات مضافة حالياً.</p>';return;}box.innerHTML=data.map(a=>'<article class="mando-app-card"><div class="mando-app-icon">'+(a.icon_url?'<img src="'+safe(a.icon_url)+'" alt="">':'📦')+'</div><div class="mando-app-info"><b>'+safe(a.name)+'</b><small>الإصدار '+safe(a.version||"—")+' · '+safe(a.size_label||"APK")+'</small><div style="color:#c4cbd5;font-size:12px;margin-top:5px">'+safe(a.description||"")+'</div><a class="mando-app-download" href="'+safe(a.download_url)+'" download>تحميل التطبيق</a></div></article>').join("");}
 </script>
 
