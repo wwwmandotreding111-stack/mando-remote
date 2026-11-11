@@ -578,7 +578,7 @@ function normalizeCustomerCode(value){
  return String(value??"").normalize("NFKC")
   .replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-1632))
   .replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-1776))
-  .replace(/[\\u200e\\u200f\\u202a-\\u202e\\u2066-\\u2069]/g,"").trim();
+  .replace(/[\u200e\u200f\u202a-\u202e\u2066-\u2069]/g,"").trim();
 }
 let customerLoginBusy=false;
 async function customerLogin(){
