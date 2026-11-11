@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#101d2d">
+<title>تحكمات متشابهة | MANDO REMOTE</title>
+<style>
+:root{--gold:#f2d18a;--text:#fffaf0;--muted:#d1d9e4}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font-family:"Tajawal",Tahoma,Arial,sans-serif;background:radial-gradient(ellipse at 50% -10%,#526982 0%,#263b53 38%,#152438 78%,#101a29 100%);background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.11;background-image:linear-gradient(135deg,transparent 49.7%,#d9b66b 50%,transparent 50.3%);background-size:52px 52px;mask-image:linear-gradient(to bottom,black,transparent 65%)}
+header{position:relative;isolation:isolate;text-align:center;padding:32px 16px 28px;background:linear-gradient(120deg,#142338f7,#2a4059f5 55%,#17283df7);border-bottom:1px solid #98763d;box-shadow:0 18px 55px #0008}
+.logo{width:76px;height:76px;margin:auto;border:1px solid #e6c477;border-radius:24px;display:grid;place-items:center;font-size:39px;color:var(--gold);background:linear-gradient(145deg,#405773,#17283d);box-shadow:0 12px 35px #0009}
+h1{font-size:clamp(25px,5vw,38px);color:var(--gold);margin:13px 0 5px}.sub{font-size:13px;color:#d4deea;line-height:1.8}
+.wrap{max-width:1120px;margin:auto;padding:22px}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:3px 0 20px}
+button,.back{border:1px solid #b99455;border-radius:12px;padding:11px 16px;background:linear-gradient(145deg,#243b54,#14263a);color:var(--gold);font-weight:800;text-decoration:none;cursor:pointer}
+.intro{text-align:center;padding:24px 16px;margin:0 0 20px;border:1px solid #71869e;border-radius:20px;background:radial-gradient(ellipse at 50% 0%,#d5ac5420,transparent 60%),linear-gradient(145deg,#263d57,#182a40);box-shadow:0 14px 35px #0005}
+.intro h2{color:var(--gold);font-size:25px;margin:0 0 8px}.intro p{color:var(--muted);margin:0;line-height:1.8;font-size:14px}
+.count{color:var(--muted);font-size:13px;margin:16px 2px}.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+.item{min-width:0;padding:11px;border:1px solid #71869e;border-radius:17px;background:linear-gradient(155deg,#263d57,#182a40);box-shadow:0 12px 30px #0005;transition:transform .2s,border-color .2s;cursor:zoom-in}
+.item:hover{transform:translateY(-3px);border-color:var(--gold)}.photo{height:220px;border-radius:12px;background:#101d2c;display:grid;place-items:center;overflow:hidden}.photo img{width:100%;height:100%;object-fit:contain}
+.item h3{color:var(--gold);font-size:14px;margin:10px 3px 2px}.empty,.loading,.error{grid-column:1/-1;text-align:center;color:var(--muted);padding:38px 18px;border:1px dashed #71869e;border-radius:16px;background:#142338}
+footer{text-align:center;padding:30px 15px;color:var(--muted);border-top:1px solid #53677f;margin-top:35px;background:#0b1421}footer strong{color:var(--gold);font-size:18px}
+.lightbox{display:none;position:fixed;inset:0;z-index:10000;background:#03070def;padding:20px;align-items:center;justify-content:center}.lightbox.open{display:flex}.lightbox img{max-width:min(100%,1100px);max-height:86vh;object-fit:contain;border:1px solid #b99455;border-radius:14px;background:#101d2c}
+.close{position:absolute;top:16px;left:16px;width:44px;height:44px;padding:0;font-size:22px}
+@media(max-width:600px){.wrap{padding:14px}.gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.item{padding:8px}.photo{height:155px}.intro{padding:20px 12px}.intro h2{font-size:21px}}
+</style></head>
+<body>
+<header><div class="logo">🦅</div><h1>MANDO REMOTE</h1><div class="sub">شركة مندو التجارية</div><div class="sub">معرض التحكمات المتشابهة</div></header>
+<main class="wrap">
+<div class="toolbar"><a class="back" href="./customers.html">↩ العودة إلى القائمة الرئيسية</a><button type="button" onclick="loadGallery()">⟳ تحديث الصور</button></div>
+<section class="intro"><h2>🖼️ تحكمات متشابهة</h2><p>تصفّح صور التحكمات المتشابهة بسهولة، واضغط على أي صورة لعرضها بحجم كبير.</p></section>
+<div id="count" class="count">جارٍ تحميل الصور...</div><section id="gallery" class="gallery"><div class="loading">جارٍ تحميل الصور...</div></section>
+</main><footer><strong>🦅 MANDO REMOTE</strong><p>جميع الحقوق محفوظة لدى شركة مندو التجارية</p></footer>
+<div id="lightbox" class="lightbox" onclick="closeImage()"><button class="close" type="button" aria-label="إغلاق">✕</button><img id="largeImage" alt="صورة التحكم"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const SUPABASE_URL="https://lhghepwcvlqazmpouidu.supabase.co",SUPABASE_KEY="sb_publishable_EgAQZYow05AZT_pQqHkI2w_kxJff9B5";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage}});
+const el=id=>document.getElementById(id),safe=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function verifyAccess(){const {data:{session}}=await db.auth.getSession();if(!session){location.replace("./customers.html");return false;}const {data:admin}=await db.rpc("is_admin");if(admin===true)return true;const {data:p,error}=await db.from("customer_profiles").select("role,active,blocked,code_enabled").eq("id",session.user.id).maybeSingle();if(error||!p||p.role!=="customer"||!p.active||p.blocked||!p.code_enabled){await db.auth.signOut();location.replace("./customers.html");return false;}return true;}
+async function loadGallery(){const box=el("gallery");box.innerHTML='<div class="loading">جارٍ تحميل الصور...</div>';const {data,error}=await db.from("similar_remote_images").select("id,title,image_url,created_at").order("created_at",{ascending:false});if(error){box.innerHTML='<div class="error">تعذر تحميل الصور حالياً. تأكد من إعدادات قاعدة البيانات ثم حدّث الصفحة.</div>';el("count").textContent="";console.warn(error.message);return;}el("count").textContent="عدد الصور: "+(data?.length||0);if(!data?.length){box.innerHTML='<div class="empty">لا توجد صور مضافة حالياً. ستظهر الصور هنا عند إضافتها من لوحة الإدارة.</div>';return;}box.innerHTML=data.map(x=>'<article class="item" onclick="openImage(\''+safe(x.image_url)+'\')"><div class="photo"><img src="'+safe(x.image_url)+'" alt="'+safe(x.title||"تحكم متشابه")+'" loading="lazy"></div>'+(x.title?'<h3>'+safe(x.title)+'</h3>':'')+'</article>').join("");}
+function openImage(url){el("largeImage").src=url;el("lightbox").classList.add("open");}function closeImage(){el("lightbox").classList.remove("open");el("largeImage").src="";}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeImage();});document.addEventListener("DOMContentLoaded",async()=>{if(await verifyAccess())await loadGallery();});
+</script></body></html>
