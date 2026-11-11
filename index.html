@@ -214,7 +214,9 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 <div class="row" style="align-items:center"><h3>لوحة إدارة الريموتات</h3><button onclick="logout()">تسجيل الخروج</button></div>
 <div class="row"><button onclick="showCustomerPanel()">👥 إدارة الزبائن</button><button onclick="showAdsPanel()">📢 إدارة الإعلانات</button><button onclick="showSettingsPanel()">⚙️ معلومات الشركة</button><button onclick="showRemotesPanel()">📋 كل الإضافات</button></div><section class="panel" id="remotesAdminPanel"><h3>📋 كل الريموتات والأجهزة المضافة بالموقع</h3><p class="notice">تظهر هنا جميع الإضافات المحفوظة بالموقع، مع إمكانية التعديل والحذف.</p><div class="row"><button onclick="loadRemotes()">🔄 تحديث القائمة</button><span class="notice" id="adminRemotesCount"></span></div><div id="adminRemotesList" class="products"><div class="empty">اضغط على الزر لعرض الإضافات.</div></div></section><section class="panel" id="customerPanel">
 <h3>👥 إدارة الزبائن</h3>
-<p class="notice">إضافة الحسابات ومتابعة حالة الاتصال والصلاحيات.</p>
+<p class="notice">إضافة الحسابات ومتابعة حالة الاتصال والصلاحيات وإحصائيات الزيارات اليومية.</p>
+<div class="row" style="margin:12px 0"><label class="notice" for="customerStatsDate">📅 إحصائيات يوم:</label><input id="customerStatsDate" type="date" style="max-width:210px;margin:0" onchange="loadCustomers()"><button type="button" onclick="loadCustomers()">🔄 تحديث الإحصائيات</button></div>
+<div id="customerStatsSummary" class="row" style="margin:10px 0"></div>
 <input id="cName" placeholder="اسم الزبون">
 <input id="cCode" type="text" placeholder="كود يدوي (اتركه فارغاً لإنشاء كود تلقائي)">
 <button class="primary" onclick="createCustomer()">➕ إضافة زبون بالكود</button>
@@ -384,7 +386,7 @@ async function customerLogin(){
   if(error)throw error;
   showCustomerSession(result.display_name,code);
   el("customerLoginMsg").textContent="";
-  await loadRemotes();heartbeat();
+  await startCustomerVisit();await loadRemotes();heartbeat();
  }catch(e){el("customerLoginMsg").textContent="تعذر الدخول: "+e.message;}
 }
 function showCustomerSession(name,code){
@@ -396,6 +398,7 @@ function showCustomerSession(name,code){
  el("catalogArea").style.display="block";
 }
 async function customerLogout(){
+ await endCustomerVisit();
  await db.auth.signOut();
  document.body.classList.add("login-screen");
  el("customerProfile").style.display="none";
@@ -414,18 +417,39 @@ async function createCustomer(){
  }catch(e){el("customerMsg").textContent="تعذر الإضافة: "+e.message;}
 }
 async function copyCustomerCode(code){try{await navigator.clipboard.writeText(code);alert("تم نسخ الكود");}catch(_){prompt("انسخ الكود:",code);}}
+function localDay(value){const d=new Date(value);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function fmtDate(value){return value?new Date(value).toLocaleString("ar",{dateStyle:"short",timeStyle:"short"}):"—";}
+function fmtDuration(seconds){seconds=Math.max(0,Math.floor(seconds||0));const h=Math.floor(seconds/3600),m=Math.floor(seconds%3600/60),sec=seconds%60;return (h?h+" س ":"")+(m?m+" د ":"")+(h||m?"":sec+" ث");}
+function visitDuration(v){const end=v.exited_at||v.last_seen_at||v.entered_at;return v.duration_seconds!=null?Number(v.duration_seconds):Math.max(0,Math.floor((new Date(end)-new Date(v.entered_at))/1000));}
 async function loadCustomers(){
  if(!isAdmin)return;
- const box=el("customersList");box.textContent="جارٍ تحميل الزبائن...";
+ const box=el("customersList"),summary=el("customerStatsSummary");
+ box.textContent="جارٍ تحميل الزبائن والإحصائيات...";
  try{
- const {data,error}=await db.from("customer_profiles").select("id,display_name,active,role,last_seen_at,code_enabled,blocked").eq("role","customer").order("display_name");
- if(error)throw error;
- if(!data?.length){box.textContent="ما في زبائن مسجلين حالياً.";return;}
- box.innerHTML=data.map(u=>{
-  const online=u.last_seen_at && (Date.now()-new Date(u.last_seen_at).getTime()<90000);
-  return '<div class="card" style="margin:8px 0;text-align:right"><b>'+safe(u.display_name||"بدون اسم")+'</b><div>'+(u.active?"🟢 مفعّل":"⚪ موقوف")+' · '+(u.blocked?"🚫 محظور":"غير محظور")+' · '+(u.code_enabled?"الكود فعّال":"الكود معطّل")+' · '+(online?"🟢 متصل الآن":"⚪ غير متصل")+'</div><small>آخر ظهور: '+(u.last_seen_at?new Date(u.last_seen_at).toLocaleString("ar"):"غير معروف")+'</small><div class="admin-actions"><button onclick="editCustomer(\''+u.id+'\',\''+safe(u.display_name||"").replace(/'/g,"\\'")+'\')">تعديل الاسم/الكود</button><button onclick="customerAction(\''+u.id+'\',\'active\','+(!u.active)+')">'+(u.active?"إيقاف":"تفعيل")+'</button><button onclick="customerAction(\''+u.id+'\',\'blocked\','+(!u.blocked)+')">'+(u.blocked?"إلغاء الحظر":"حظر")+'</button><button onclick="customerAction(\''+u.id+'\',\'code_enabled\','+(!u.code_enabled)+')">'+(u.code_enabled?"تعطيل الكود":"تفعيل الكود")+'</button><button class="danger" onclick="deleteCustomer(\''+u.id+'\')">حذف</button></div></div>';
- }).join("");
- }catch(e){box.textContent="تعذر تحميل القائمة: "+e.message;}
+  const dateBox=el("customerStatsDate");
+  if(dateBox&&!dateBox.value)dateBox.value=localDay(new Date());
+  const selectedDay=dateBox?.value||localDay(new Date());
+  const since=new Date(Date.now()-90*86400000).toISOString();
+  const [{data,error},{data:visits,error:visitError}]=await Promise.all([
+   db.from("customer_profiles").select("id,display_name,active,role,last_seen_at,code_enabled,blocked").eq("role","customer").order("display_name"),
+   db.from("customer_visits").select("id,user_id,entered_at,last_seen_at,exited_at,duration_seconds").gte("entered_at",since).order("entered_at",{ascending:false}).limit(10000)
+  ]);
+  if(error)throw error;
+  if(visitError)throw new Error("تعذر تحميل سجل الزيارات: "+visitError.message);
+  const users=data||[],allVisits=visits||[];
+  const dayVisits=allVisits.filter(v=>localDay(v.entered_at)===selectedDay);
+  const dayUsers=new Set(dayVisits.map(v=>v.user_id));
+  const daySeconds=dayVisits.reduce((n,v)=>n+visitDuration(v),0);
+  const onlineUsers=new Set(allVisits.filter(v=>!v.exited_at&&Date.now()-new Date(v.last_seen_at).getTime()<90000).map(v=>v.user_id));
+  summary.innerHTML=[["زيارات اليوم",dayVisits.length],["زبائن زاروا اليوم",dayUsers.size],["وقت الاستخدام اليوم",fmtDuration(daySeconds)],["متصلون الآن",onlineUsers.size]].map(x=>'<div class="card" style="flex:1;min-width:130px;text-align:center;padding:12px"><small>'+x[0]+'</small><h3 style="margin:7px 0;color:#f1d18b">'+x[1]+'</h3></div>').join("");
+  if(!users.length){box.textContent="ما في زبائن مسجلين حالياً.";return;}
+  box.innerHTML=users.map(u=>{
+   const uv=allVisits.filter(v=>v.user_id===u.id),dv=uv.filter(v=>localDay(v.entered_at)===selectedDay);
+   const online=onlineUsers.has(u.id),latest=uv[0];
+   const history=dv.length?dv.map(v=>'<div style="padding:9px 0;border-bottom:1px solid #53677f"><b>دخول:</b> '+fmtDate(v.entered_at)+'<br><b>خروج / آخر ظهور:</b> '+(v.exited_at?fmtDate(v.exited_at):(online?"🟢 لا يزال متصلاً":fmtDate(v.last_seen_at)))+'<br><b>المدة:</b> '+fmtDuration(visitDuration(v))+'</div>').join(""):"لا توجد زيارات بهذا اليوم.";
+   return '<details class="card" style="margin:9px 0;text-align:right"><summary style="cursor:pointer;list-style-position:inside"><b>'+safe(u.display_name||"بدون اسم")+'</b> · '+(online?"🟢 متصل الآن":"⚪ غير متصل")+'<br><small>زيارات اليوم: '+dv.length+' · مدة اليوم: '+fmtDuration(dv.reduce((n,v)=>n+visitDuration(v),0))+' · آخر ظهور: '+fmtDate(latest?.last_seen_at||u.last_seen_at)+'</small></summary><div style="margin-top:12px;line-height:1.9">إجمالي الزيارات خلال آخر 90 يوم: <b>'+uv.length+'</b><br>حالة الحساب: '+(u.active?"🟢 مفعّل":"⚪ موقوف")+' · '+(u.blocked?"🚫 محظور":"غير محظور")+' · '+(u.code_enabled?"الكود فعّال":"الكود معطّل")+'<hr><b>سجل زيارات يوم '+selectedDay+'</b>'+history+'</div><div class="admin-actions"><button onclick="editCustomer(\''+u.id+'\',\''+safe(u.display_name||"").replace(/'/g,"\\'")+'\')">تعديل الاسم/الكود</button><button onclick="customerAction(\''+u.id+'\',\'active\','+(!u.active)+')">'+(u.active?"إيقاف":"تفعيل")+'</button><button onclick="customerAction(\''+u.id+'\',\'blocked\','+(!u.blocked)+')">'+(u.blocked?"إلغاء الحظر":"حظر")+'</button><button onclick="customerAction(\''+u.id+'\',\'code_enabled\','+(!u.code_enabled)+')">'+(u.code_enabled?"تعطيل الكود":"تفعيل الكود")+'</button><button class="danger" onclick="deleteCustomer(\''+u.id+'\')">حذف</button></div></details>';
+  }).join("");
+ }catch(e){box.textContent="تعذر تحميل الإحصائيات: "+e.message;summary.innerHTML="";}
 }
 async function editCustomer(id,currentName){
  const name=prompt("اسم الزبون:",currentName);if(name===null)return;
@@ -459,16 +483,32 @@ async function loadSettings(admin=false){const {data,error}=await db.from("site_
 function showSettingsPanel(){el("settingsPanel").style.display="block";loadSettings(true);}
 async function saveSettings(){const payload={id:1,company_address:el("setAddress").value.trim(),gps_url:el("setGps").value.trim(),whatsapp:el("setWhatsapp").value.trim(),facebook_url:el("setFacebook").value.trim(),instagram_url:el("setInstagram").value.trim(),updated_at:new Date().toISOString()};const {error}=await db.from("site_settings").upsert(payload,{onConflict:"id"});el("settingsMsg").textContent=error?"تعذر الحفظ: "+error.message:"تم حفظ معلومات الشركة";if(!error)await loadSettings(false);}
 
+let activeVisitId=sessionStorage.getItem("mando_active_visit")||null;
+async function startCustomerVisit(){
+ const {data:{session}}=await db.auth.getSession();if(!session)return;
+ const {data,error}=await db.rpc("start_customer_visit");
+ if(error){console.warn("تعذر بدء سجل الزيارة:",error.message);return;}
+ activeVisitId=data||null;if(activeVisitId)sessionStorage.setItem("mando_active_visit",activeVisitId);
+}
+async function endCustomerVisit(){
+ if(!activeVisitId)return;const id=activeVisitId;
+ try{const {error}=await db.rpc("end_customer_visit",{p_visit_id:id});if(error)console.warn(error.message);}catch(e){console.warn(e);}
+ activeVisitId=null;sessionStorage.removeItem("mando_active_visit");
+}
 async function heartbeat(){
  const {data:{session}}=await db.auth.getSession();if(!session)return;
  await db.rpc("touch_my_presence").catch(()=>{});
+ if(!activeVisitId)activeVisitId=sessionStorage.getItem("mando_active_visit")||null;
+ if(!activeVisitId)await startCustomerVisit();
+ if(activeVisitId)await db.rpc("heartbeat_customer_visit",{p_visit_id:activeVisitId}).catch(e=>console.warn(e));
 }
 setInterval(heartbeat,30000);
+setInterval(()=>{if(isAdmin&&el("customerPanel")?.style.display==="block")loadCustomers();},30000);
 
 document.addEventListener("DOMContentLoaded",async()=>{
  document.body.classList.add("login-screen");
  const {data}=await db.auth.getSession();
- if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){document.body.classList.remove("login-screen");isAdmin=true;el("adminPanel").style.display="block";loadCustomers();loadAds(true);loadSettings(true);}else{const {data:profile}=await db.from("customer_profiles").select("display_name,role,active,blocked,code_enabled").eq("id",data.session.user.id).maybeSingle();if(profile&&profile.role==="customer"&&profile.active&&!profile.blocked&&profile.code_enabled){showCustomerSession(profile.display_name,"••••••");await loadRemotes();heartbeat();}}}
+ if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){document.body.classList.remove("login-screen");isAdmin=true;el("adminPanel").style.display="block";loadCustomers();loadAds(true);loadSettings(true);}else{const {data:profile}=await db.from("customer_profiles").select("display_name,role,active,blocked,code_enabled").eq("id",data.session.user.id).maybeSingle();if(profile&&profile.role==="customer"&&profile.active&&!profile.blocked&&profile.code_enabled){showCustomerSession(profile.display_name,"••••••");await heartbeat();await loadRemotes();}}}
  await loadAds(false);await loadSettings(false);setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
 });
 </script>
