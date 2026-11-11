@@ -500,7 +500,33 @@ async function deleteMandoApp(id){if(!confirm("حذف هذا التطبيق من
 async function showSimilarGalleryPanel(){el("similarGalleryAdminPanel").style.display="block";await loadSimilarGalleryAdmin();}
 async function loadSimilarGalleryAdmin(){const box=el("similarGalleryAdminList");box.innerHTML="جارٍ تحميل الصور...";const {data,error}=await db.from("similar_remote_images").select("*").order("created_at",{ascending:false});if(error){box.innerHTML='<p class="notice">تعذر تحميل الصور: '+safe(error.message)+'</p>';return;}box.innerHTML=data?.length?data.map(x=>'<article class="card" style="display:flex;gap:12px;align-items:center;margin:9px 0;text-align:right"><img src="'+safe(x.image_url)+'" alt="" style="width:90px;height:90px;object-fit:contain;border-radius:10px;background:#101c2b"><div style="flex:1"><b>'+safe(x.title||"تحكم متشابه")+'</b><p class="notice">'+new Date(x.created_at).toLocaleString("ar")+'</p><button class="danger" onclick="deleteSimilarGalleryImage('+Number(x.id)+')">حذف الصورة</button></div></article>').join(""):'<p class="notice">لم تتم إضافة صور بعد.</p>';}
 async function uploadSimilarGalleryImages(){const files=[...(el("similarGalleryFiles").files||[])];if(!files.length){el("similarGalleryAdminMsg").textContent="اختر صورة واحدة على الأقل.";return;}const title=el("similarGalleryTitle").value.trim();el("similarGalleryAdminMsg").textContent="جارٍ رفع الصور...";let added=0;try{for(const file of files){if(!file.type.startsWith("image/"))throw new Error("يوجد ملف ليس صورة: "+file.name);if(file.size>7*1024*1024)throw new Error("حجم الصورة أكبر من 7 ميغابايت: "+file.name);const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"")||"jpg";const path="similar-remotes/"+(crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random().toString(36).slice(2))+"."+ext;const up=await db.storage.from("site-media").upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type});if(up.error)throw up.error;const imageUrl=db.storage.from("site-media").getPublicUrl(path).data.publicUrl;const saved=await db.from("similar_remote_images").insert({title,image_url:imageUrl,storage_path:path,created_by:(await db.auth.getUser()).data.user?.id||null});if(saved.error){await db.storage.from("site-media").remove([path]);throw saved.error;}added++;}el("similarGalleryAdminMsg").textContent="تم رفع وحفظ "+added+" صورة بنجاح، وستظهر للزبائن.";el("similarGalleryFiles").value="";el("similarGalleryTitle").value="";await loadSimilarGalleryAdmin();}catch(e){el("similarGalleryAdminMsg").textContent="تعذر إكمال الرفع بعد حفظ "+added+" صورة: "+e.message;await loadSimilarGalleryAdmin();}}
-async function deleteSimilarGalleryImage(id){if(!confirm("حذف هذه الصورة من المعرض؟"))return;const {data,error}=await db.from("similar_remote_images").select("storage_path").eq("id",id).maybeSingle();if(error||!data){alert("تعذر العثور على الصورة.");return;}const removed=await db.from("similar_remote_images").delete().eq("id",id);if(removed.error){alert("تعذر حذف الصورة: "+removed.error.message);return;}if(data.storage_path)await db.storage.from("site-media").remove([data.storage_path]);await loadSimilarGalleryAdmin();}
+async function deleteSimilarGalleryImage(id){
+ if(!confirm("هل تريد حذف هذه الصورة نهائياً من المعرض؟"))return;
+ const btns=[...document.querySelectorAll('button[onclick*="deleteSimilarGalleryImage"]')];
+ btns.forEach(b=>b.disabled=true);
+ try{
+  const {data:{session},error:sessionError}=await db.auth.getSession();
+  if(sessionError)throw sessionError;
+  if(!session)throw new Error("انتهت جلسة المدير. سجّل الدخول من جديد.");
+  const {data:isAdmin,error:adminError}=await db.rpc("is_admin");
+  if(adminError)throw new Error("تعذر التحقق من صلاحية المدير: "+adminError.message);
+  if(isAdmin!==true)throw new Error("الحذف متاح لحساب المدير فقط.");
+  const {data:row,error:readError}=await db.from("similar_remote_images").select("id,storage_path").eq("id",id).maybeSingle();
+  if(readError)throw new Error("تعذر قراءة بيانات الصورة: "+readError.message);
+  if(!row)throw new Error("الصورة غير موجودة أو حُذفت مسبقاً.");
+  const {data:deleted,error:deleteError}=await db.from("similar_remote_images").delete().eq("id",id).select("id");
+  if(deleteError)throw new Error("قاعدة البيانات رفضت الحذف: "+deleteError.message);
+  if(!deleted||!deleted.length)throw new Error("لم يتم حذف سجل الصورة. تحقق من سياسة الحذف في Supabase.");
+  if(row.storage_path){
+   const {error:storageError}=await db.storage.from("site-media").remove([row.storage_path]);
+   if(storageError){await loadSimilarGalleryAdmin();alert("تم حذف الصورة من المعرض، لكن تعذر حذف الملف من التخزين: "+storageError.message);return;}
+  }
+  await loadSimilarGalleryAdmin();
+  const msg=document.getElementById("similarGalleryAdminMsg");
+  if(msg)msg.textContent="تم حذف الصورة بنجاح.";
+ }catch(e){alert("تعذر حذف الصورة: "+(e.message||String(e)));console.error("deleteSimilarGalleryImage:",e);}
+ finally{btns.forEach(b=>b.disabled=false);}
+}
 async function loadAds(admin=false){const {data,error}=await db.from("site_ads").select("*").order("sort_order",{ascending:true}).order("created_at",{ascending:false});if(error){console.warn(error.message);siteAds=[];showAd();return;}siteAds=(data||[]).filter(a=>admin||a.enabled);adIndex=0;showAd();if(admin)renderAdsAdmin(data||[]);}
 function renderAdsAdmin(rows){const box=el("adsList");if(!box)return;box.innerHTML=rows.length?rows.map(a=>'<div class="card" style="margin:8px 0;text-align:right"><b>'+safe(a.title)+'</b><p>'+safe(a.description)+'</p><small>'+(a.enabled?'🟢 ظاهر':'⚪ مخفي')+' · الترتيب '+a.sort_order+'</small><div class="admin-actions"><button onclick="editAd('+a.id+')">تعديل</button><button onclick="toggleAd('+a.id+','+(!a.enabled)+')">'+(a.enabled?'إخفاء':'إظهار')+'</button><button class="danger" onclick="deleteAd('+a.id+')">حذف</button></div></div>').join(""):"ما في إعلانات مضافة.";}
 function showAdsPanel(){el("adsPanel").style.display="block";loadAds(true);}
