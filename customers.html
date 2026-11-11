@@ -562,7 +562,7 @@ async function customerLogin(){
   localStorage.setItem("mando_customer_name",display_name);
   showCustomerSession(display_name);
   el("customerLoginMsg").textContent="";
-  await loadRemotes();heartbeat();
+  await startCustomerVisit();await loadRemotes();await heartbeat();
  }catch(e){el("customerLoginMsg").textContent="تعذر الدخول: "+e.message;}
 }
 function showCustomerSession(name){
@@ -574,6 +574,7 @@ function showCustomerSession(name){
  el("mandoSideMenu").style.display="block";
 }
 async function customerLogout(){
+ await endCustomerVisit();
  await db.auth.signOut();
  localStorage.removeItem("mando_customer_name");
  document.body.classList.add("login-screen");
@@ -648,11 +649,35 @@ async function loadSettings(admin=false){const {data,error}=await db.from("site_
 function showSettingsPanel(){el("settingsPanel").style.display="block";loadSettings(true);}
 async function saveSettings(){const payload={id:1,company_address:el("setAddress").value.trim(),gps_url:el("setGps").value.trim(),whatsapp:el("setWhatsapp").value.trim(),facebook_url:el("setFacebook").value.trim(),instagram_url:el("setInstagram").value.trim(),updated_at:new Date().toISOString()};const {error}=await db.from("site_settings").upsert(payload,{onConflict:"id"});el("settingsMsg").textContent=error?"تعذر الحفظ: "+error.message:"تم حفظ معلومات الشركة";if(!error)await loadSettings(false);}
 
+let activeVisitId=sessionStorage.getItem("mando_active_visit")||null;
+async function startCustomerVisit(){
+ const {data:{session}}=await db.auth.getSession();if(!session)return;
+ const {data,error}=await db.rpc("start_customer_visit");
+ if(error){console.warn("تعذر بدء سجل الزيارة:",error.message);return;}
+ activeVisitId=data||null;
+ if(activeVisitId)sessionStorage.setItem("mando_active_visit",activeVisitId);
+}
+async function endCustomerVisit(){
+ if(!activeVisitId)return;
+ const id=activeVisitId;
+ try{
+  const {error}=await db.rpc("end_customer_visit",{p_visit_id:id});
+  if(error)console.warn("تعذر إنهاء سجل الزيارة:",error.message);
+ }catch(e){console.warn(e);}
+ activeVisitId=null;sessionStorage.removeItem("mando_active_visit");
+}
 async function heartbeat(){
  const {data:{session}}=await db.auth.getSession();if(!session)return;
- await db.rpc("touch_my_presence").catch(()=>{});
+ const {error:presenceError}=await db.rpc("touch_my_presence");
+ if(presenceError)console.warn("تعذر تحديث حالة الاتصال:",presenceError.message);
+ if(!activeVisitId)activeVisitId=sessionStorage.getItem("mando_active_visit")||null;
+ if(!activeVisitId)await startCustomerVisit();
+ if(activeVisitId){
+  const {error}=await db.rpc("heartbeat_customer_visit",{p_visit_id:activeVisitId});
+  if(error)console.warn("تعذر تحديث سجل الزيارة:",error.message);
+ }
 }
-setInterval(heartbeat,30000);
+setInterval(()=>{heartbeat();},30000);
 
 document.addEventListener("DOMContentLoaded",async()=>{
  document.body.classList.add("login-screen");
@@ -666,8 +691,9 @@ document.addEventListener("DOMContentLoaded",async()=>{
    const {data:isAdminUser,error:roleError}=await db.rpc("is_admin");
    if(!roleError && isAdminUser!==true){
     showCustomerSession(savedName);
+    await startCustomerVisit();
     await loadRemotes();
-    heartbeat();
+    await heartbeat();
    }
   }
  }catch(e){console.warn("تعذرت استعادة جلسة الزبون:",e);}
