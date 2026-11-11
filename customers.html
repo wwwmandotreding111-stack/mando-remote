@@ -551,9 +551,15 @@ async function adminRequest(action,body={}) {
 }
 function showCustomerPanel(){el("customerPanel").style.display="block";loadCustomers();}
 function getDeviceId(){let id=localStorage.getItem("mando_device_id");if(!id){id=(crypto.randomUUID?crypto.randomUUID()+crypto.randomUUID():"mando-"+Date.now()+"-"+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2));localStorage.setItem("mando_device_id",id);}return id;}
+function normalizeCustomerCode(value){
+ return String(value??"").normalize("NFKC")
+  .replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-1632))
+  .replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-1776))
+  .replace(/[\\u200e\\u200f\\u202a-\\u202e\\u2066-\\u2069]/g,"").trim();
+}
 async function customerLogin(){
  const display_name=el("customerLoginName").value.trim();
- const code=el("customerLoginCode").value.trim();
+ const code=normalizeCustomerCode(el("customerLoginCode").value);
  if(!display_name||!code){el("customerLoginMsg").textContent="اكتب اسم الزبون وكود الدخول.";return;}
  el("customerLoginMsg").textContent="جارٍ التحقق من الاسم والكود...";
  try{
