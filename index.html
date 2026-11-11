@@ -435,7 +435,7 @@ function localDay(value){const d=new Date(value);return d.getFullYear()+"-"+Stri
 function fmtDate(value){return value?new Date(value).toLocaleString("ar",{dateStyle:"short",timeStyle:"short"}):"—";}
 function fmtDuration(seconds){seconds=Math.max(0,Math.floor(seconds||0));const h=Math.floor(seconds/3600),m=Math.floor(seconds%3600/60),sec=seconds%60;return (h?h+" س ":"")+(m?m+" د ":"")+(h||m?"":sec+" ث");}
 function visitDuration(v){const end=v.exited_at||v.last_seen_at||v.entered_at;return v.duration_seconds!=null?Number(v.duration_seconds):Math.max(0,Math.floor((new Date(end)-new Date(v.entered_at))/1000));}
-function toggleTodayVisits(){const panel=el("todayVisitsPanel");if(!panel)return;const opening=panel.style.display==="none";panel.style.display=opening?"block":"none";if(opening)panel.scrollIntoView({behavior:"smooth",block:"start"});}
+function toggleTodayVisits(){const panel=el("todayVisitsPanel");if(!panel)return;const opening=panel.style.display==="none";panel.style.display=opening?"block":"none";if(opening){panel.style.position="fixed";panel.style.inset="12px";panel.style.zIndex="99999";panel.style.overflowY="auto";panel.style.maxHeight="calc(100vh - 24px)";panel.style.boxShadow="0 18px 60px #000b";panel.scrollTop=0;}else{panel.style.position="";panel.style.inset="";panel.style.zIndex="";panel.style.overflowY="";panel.style.maxHeight="";panel.style.boxShadow="";loadCustomers();}}
 async function loadCustomers(){
  if(!isAdmin)return;
  const box=el("customersList"),summary=el("customerStatsSummary");
@@ -567,7 +567,7 @@ async function heartbeat(){
  if(activeVisitId)await db.rpc("heartbeat_customer_visit",{p_visit_id:activeVisitId}).catch(e=>console.warn(e));
 }
 setInterval(heartbeat,30000);
-setInterval(()=>{if(isAdmin&&el("customerPanel")?.style.display==="block")loadCustomers();},5000);
+setInterval(()=>{if(isAdmin&&el("customerPanel")?.style.display==="block"&&el("todayVisitsPanel")?.style.display!=="block")loadCustomers();},5000);
 
 document.addEventListener("DOMContentLoaded",async()=>{
  document.body.classList.add("login-screen");
