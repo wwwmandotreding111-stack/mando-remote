@@ -375,6 +375,10 @@ body:not(.login-screen) footer>p:last-child{display:block!important;text-align:c
     </div>
     <div class="entry-form">
       <span class="entry-lock">♙</span>
+      <input id="customerLoginName" placeholder="اسم الزبون" autocomplete="username" aria-label="اسم الزبون">
+    </div>
+    <div class="entry-form">
+      <span class="entry-lock">♙</span>
       <input id="customerLoginCode" placeholder="كود الزبون" autocomplete="one-time-code" aria-label="كود الزبون">
     </div>
     <button id="customerLoginButton" type="button" class="primary" style="position:relative;z-index:20;pointer-events:auto;touch-action:manipulation" onclick="if(typeof window.customerLogin==='function'){window.customerLogin()}else{var m=document.getElementById('customerLoginMsg');m.textContent='عم نعيد تحميل نظام الدخول...';var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2';s.onload=function(){location.reload()};s.onerror=function(){m.textContent='تعذر تحميل مكتبة الدخول. جرّب تحديث الصفحة أو افتح الرابط بمتصفح Chrome.'};document.head.appendChild(s)}">دخول　↪</button>
