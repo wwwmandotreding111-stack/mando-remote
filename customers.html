@@ -377,7 +377,7 @@ body:not(.login-screen) footer>p:last-child{display:block!important;text-align:c
       <span class="entry-lock">♙</span>
       <input id="customerLoginCode" placeholder="كود الزبون" autocomplete="one-time-code" aria-label="كود الزبون">
     </div>
-    <button class="primary" onclick="customerLogin()">دخول　↪</button>
+    <button type="button" class="primary" onclick="customerLogin()">دخول　↪</button>
     <p class="notice" id="customerLoginMsg"></p>
   </div>
 </section>
@@ -442,6 +442,7 @@ body:not(.login-screen) footer>p:last-child{display:block!important;text-align:c
   </aside>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = "https://lhghepwcvlqazmpouidu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_EgAQZYow05AZT_pQqHkI2w_kxJff9B5";
