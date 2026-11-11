@@ -377,7 +377,7 @@ body:not(.login-screen) footer>p:last-child{display:block!important;text-align:c
       <span class="entry-lock">♙</span>
       <input id="customerLoginCode" placeholder="كود الزبون" autocomplete="one-time-code" aria-label="كود الزبون">
     </div>
-    <button id="customerLoginButton" type="button" class="primary" style="position:relative;z-index:20;pointer-events:auto;touch-action:manipulation" onclick="this.textContent='جارٍ فتح الدخول...';this.disabled=true;if(typeof window.customerLogin==='function'){window.customerLogin().finally(()=>{this.disabled=false;this.textContent='دخول　↪'})}else{var m=document.getElementById('customerLoginMsg');m.textContent='نظام الدخول لم يكتمل تحميله. حدّث الصفحة وحاول مرة ثانية.';this.disabled=false;this.textContent='دخول　↪'}">دخول　↪</button>
+    <button id="customerLoginButton" type="button" class="primary" style="position:relative;z-index:20;pointer-events:auto;touch-action:manipulation" onclick="this.textContent='جارٍ فتح الدخول...';this.disabled=true;if(typeof window.customerLogin==='function'){window.customerLogin().finally(()=>{this.disabled=false;this.textContent='دخول　↪'})}else{window.mandoRecoverCustomerLogin(this)}">دخول　↪</button>
     <p class="notice" id="customerLoginMsg"></p>
   </div>
 </section>
@@ -441,6 +441,26 @@ body:not(.login-screen) footer>p:last-child{display:block!important;text-align:c
     <div id="similarRemoteGalleryList" class="mando-apps-inline-list" hidden><p class="notice">جارٍ تحميل الصور...</p></div>
   </aside>
 </div>
+<script>
+window.mandoRecoverCustomerLogin=function(button){
+ const msg=document.getElementById("customerLoginMsg");
+ button.disabled=true;button.textContent="جارٍ تجهيز الدخول...";
+ const urls=["https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2","https://unpkg.com/@supabase/supabase-js@2"];
+ let index=0;
+ function loadNext(){
+  if(window.supabase&&typeof window.supabase.createClient==="function"){location.reload();return;}
+  if(index>=urls.length){msg.textContent="تعذر تحميل مكتبة الدخول من الإنترنت. جرّب تبديل الشبكة أو أوقف مانع المحتوى ثم حدّث الصفحة.";button.disabled=false;button.textContent="إعادة المحاولة";return;}
+  const s=document.createElement("script");s.src=urls[index++];
+  s.onload=function(){if(window.supabase&&typeof window.supabase.createClient==="function"){location.reload();}else loadNext();};
+  s.onerror=loadNext;document.head.appendChild(s);
+ }
+ loadNext();
+};
+window.addEventListener("error",function(e){
+ const msg=document.getElementById("customerLoginMsg");
+ if(msg&&!window.customerLogin)msg.textContent="تعذر تشغيل صفحة الدخول: "+(e.message||"خطأ بتحميل النظام");
+});
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script>
