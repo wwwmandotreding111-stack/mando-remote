@@ -43,3 +43,5 @@ $$;
 
 revoke all on function public.set_customer_admin_note(uuid, text) from public;
 grant execute on function public.set_customer_admin_note(uuid, text) to authenticated;
+
+notify pgrst, 'reload schema';
