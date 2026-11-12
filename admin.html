@@ -360,14 +360,22 @@ async function sendPasswordRecovery(){
  el("authMsg").textContent=error?"تعذر إرسال الرابط: "+error.message:"تم إرسال رابط الاستعادة إلى بريدك الإلكتروني. افحص الوارد والرسائل غير المرغوبة.";
 }
 async function login(){
- el("authMsg").textContent="جارٍ التحقق...";
- const loginValue=el("email").value.trim().toLowerCase();
- const loginEmail=loginValue.includes("@")?loginValue:`${loginValue}@users.mando.local`;
- const {error}=await db.auth.signInWithPassword({email:loginEmail,password:el("password").value});
- if(error){el("authMsg").textContent="تعذر تسجيل الدخول: "+error.message;return;}
- const {data,error:roleError}=await db.rpc("is_admin");
- if(roleError||data!==true){await db.auth.signOut();el("authMsg").textContent="هذا الحساب لا يملك صلاحية الإدارة.";return;}
- isAdmin=true;document.body.classList.add("admin-authenticated");el("authBox").style.display="none";el("adminPanel").style.setProperty("display","block","important");el("adminMsg").textContent="تم تسجيل الدخول بنجاح.";render();loadCustomers();loadAds(true);loadSettings(true);
+ const msg=el("authMsg");
+ try{
+  msg.textContent="جارٍ التحقق من بيانات الدخول...";
+  const loginValue=el("email").value.trim().toLowerCase();
+  if(!loginValue){msg.textContent="اكتب اسم المستخدم أو البريد الإلكتروني.";return;}
+  if(!el("password").value){msg.textContent="اكتب كلمة المرور.";return;}
+  const loginEmail=loginValue.includes("@")?loginValue:`${loginValue}@users.mando.local`;
+  const {error}=await db.auth.signInWithPassword({email:loginEmail,password:el("password").value});
+  if(error){msg.textContent="تعذر تسجيل الدخول: "+error.message;return;}
+  const {data,error:roleError}=await db.rpc("is_admin");
+  if(roleError){await db.auth.signOut();msg.textContent="تم التحقق من الحساب لكن تعذر فحص صلاحية الإدارة: "+roleError.message;return;}
+  if(data!==true){await db.auth.signOut();msg.textContent="هذا الحساب لا يملك صلاحية الإدارة.";return;}
+  isAdmin=true;document.body.classList.add("admin-authenticated");document.body.classList.remove("login-screen");
+  el("authBox").style.setProperty("display","none","important");el("adminPanel").style.setProperty("display","block","important");
+  el("adminMsg").textContent="تم تسجيل الدخول بنجاح.";render();loadCustomers();loadAds(true);loadSettings(true);
+ }catch(e){msg.textContent="حدث خطأ أثناء الدخول: "+(e?.message||String(e));}
 }
 async function logout(){await db.auth.signOut();isAdmin=false;document.body.classList.remove("admin-authenticated");el("adminPanel").style.display="none";el("customerPanel").style.display="none";render();}
 async function addRemote(){
@@ -631,7 +639,7 @@ document.addEventListener("DOMContentLoaded",async()=>{
   el("authBox").scrollIntoView({block:"start"});
  }
  const {data}=await db.auth.getSession();
- if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){document.body.classList.remove("login-screen");isAdmin=true;el("authBox").style.display="none";el("adminPanel").style.display="block";loadCustomers();loadAds(true);loadSettings(true);}else if(!ADMIN_MODE){const {data:profile}=await db.from("customer_profiles").select("display_name,role,active,blocked,code_enabled").eq("id",data.session.user.id).maybeSingle();if(profile&&profile.role==="customer"&&profile.active&&!profile.blocked&&profile.code_enabled){showCustomerSession(profile.display_name,"••••••");await heartbeat();await loadRemotes();}}}
+ if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){document.body.classList.remove("login-screen");document.body.classList.add("admin-authenticated");isAdmin=true;el("authBox").style.setProperty("display","none","important");el("adminPanel").style.setProperty("display","block","important");loadCustomers();loadAds(true);loadSettings(true);}else if(!ADMIN_MODE){const {data:profile}=await db.from("customer_profiles").select("display_name,role,active,blocked,code_enabled").eq("id",data.session.user.id).maybeSingle();if(profile&&profile.role==="customer"&&profile.active&&!profile.blocked&&profile.code_enabled){showCustomerSession(profile.display_name,"••••••");await heartbeat();await loadRemotes();}}}
  if(!ADMIN_MODE){await loadAds(false);await loadSettings(false);setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);}
 });
 </script>
