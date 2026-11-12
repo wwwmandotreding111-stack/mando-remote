@@ -644,7 +644,7 @@ async function heartbeat(){
  if(activeVisitId)await db.rpc("heartbeat_customer_visit",{p_visit_id:activeVisitId}).catch(e=>console.warn(e));
 }
 setInterval(heartbeat,30000);
-setInterval(()=>{if(isAdmin&&el("customerPanel")?.style.display==="block"&&el("todayVisitsPanel")?.style.display!=="block")refreshOnlineCustomers();},5000);
+setInterval(()=>{if(isAdmin&&el("onlineCustomersList"))refreshOnlineCustomers();},5000);
 
 document.addEventListener("DOMContentLoaded",async()=>{
  const adminLoginButton=document.getElementById("adminLoginBtn");
