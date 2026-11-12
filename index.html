@@ -286,7 +286,7 @@ const ADMIN_FUNCTION_URL = SUPABASE_URL + "/functions/v1/super-handler";
 const CUSTOMER_LOGIN_URL = SUPABASE_URL + "/functions/v1/customer-login";
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {auth:{storageKey:"sb-lhghepwcvlqazmpouidu-auth-token",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 let remotes=[], selected="الكل", isAdmin=false, adIndex=0, siteAds=[], siteSettings={};
-const ADMIN_MODE=new URLSearchParams(location.search).get("admin")==="1";
+const ADMIN_MODE=location.href.toLowerCase().includes("admin");
 function showAd(){if(!siteAds.length){el("adTitle").textContent="عروض شركة مندو التجارية";el("adText").textContent="أفضل الخيارات والريموتات البديلة لشاشتك";el("adImage").style.display="none";el("adDots").innerHTML="";el("adLink").href="#";return;}const a=siteAds[adIndex%siteAds.length];el("adTitle").textContent=a.title||"";el("adText").textContent=a.description||"";const im=el("adImage");if(a.image_url){im.src=a.image_url;im.style.display="block";}else im.style.display="none";el("adLink").href=a.target_url||"#";el("adDots").innerHTML=siteAds.map((_,i)=>'<span class="'+(i===adIndex?'active':'')+'"></span>').join("");}
 function openAd(e){if(!siteAds[adIndex]?.target_url){e.preventDefault();return false;}return true;}
 const el=id=>document.getElementById(id);
@@ -591,7 +591,12 @@ setInterval(()=>{if(isAdmin&&!String(document.activeElement?.id||"").startsWith(
 
 document.addEventListener("DOMContentLoaded",async()=>{
  document.body.classList.add("login-screen");
- if(ADMIN_MODE){document.body.classList.add("admin-mode");el("authBox").style.display="block";}
+ if(ADMIN_MODE){
+  document.body.classList.add("admin-mode");
+  ["header"," .ad-wrap","#customerGate","#customerProfile","footer",".whatsapp","#catalogArea"].forEach(sel=>{const node=document.querySelector(sel.trim());if(node)node.style.setProperty("display","none","important");});
+  el("authBox").style.setProperty("display","block","important");
+  el("authBox").scrollIntoView({block:"start"});
+ }
  const {data}=await db.auth.getSession();
  if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){document.body.classList.remove("login-screen");isAdmin=true;el("authBox").style.display="none";el("adminPanel").style.display="block";loadCustomers();loadAds(true);loadSettings(true);}else if(!ADMIN_MODE){const {data:profile}=await db.from("customer_profiles").select("display_name,role,active,blocked,code_enabled").eq("id",data.session.user.id).maybeSingle();if(profile&&profile.role==="customer"&&profile.active&&!profile.blocked&&profile.code_enabled){showCustomerSession(profile.display_name,"••••••");await heartbeat();await loadRemotes();}}}
  if(!ADMIN_MODE){await loadAds(false);await loadSettings(false);setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);}
