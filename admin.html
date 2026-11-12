@@ -220,7 +220,7 @@ html body.admin-mode #count,
 html body.admin-mode #products { display:none !important; }
 html body.admin-mode #authBox { display:block !important; }
 /* adminPanel visibility is controlled by authenticated login() only */
-</style>
+html body.admin-mode.admin-authenticated #adminPanel{display:block!important} html body.admin-mode:not(.admin-authenticated) #adminPanel{display:none!important}</style>
 </head>
 <body class="admin-mode login-screen">
 <header><div class="logo">🦅</div><h1>MANDO REMOTE</h1><div class="sub">شركة مندو التجارية</div><div class="sub">مكتبة الريموتات البديلة للشاشات</div></header>
@@ -367,9 +367,9 @@ async function login(){
  if(error){el("authMsg").textContent="تعذر تسجيل الدخول: "+error.message;return;}
  const {data,error:roleError}=await db.rpc("is_admin");
  if(roleError||data!==true){await db.auth.signOut();el("authMsg").textContent="هذا الحساب لا يملك صلاحية الإدارة.";return;}
- isAdmin=true;el("authBox").style.display="none";el("adminPanel").style.display="block";el("adminMsg").textContent="تم تسجيل الدخول بنجاح.";render();loadCustomers();loadAds(true);loadSettings(true);
+ isAdmin=true;document.body.classList.add("admin-authenticated");el("authBox").style.display="none";el("adminPanel").style.setProperty("display","block","important");el("adminMsg").textContent="تم تسجيل الدخول بنجاح.";render();loadCustomers();loadAds(true);loadSettings(true);
 }
-async function logout(){await db.auth.signOut();isAdmin=false;el("adminPanel").style.display="none";el("customerPanel").style.display="none";render();}
+async function logout(){await db.auth.signOut();isAdmin=false;document.body.classList.remove("admin-authenticated");el("adminPanel").style.display="none";el("customerPanel").style.display="none";render();}
 async function addRemote(){
  const name=el("rName").value.trim(), number=el("rNumber").value.trim();
  if(!name||!number){el("adminMsg").textContent="اكتب اسم الجهاز واسم البديل أولاً.";return;}
