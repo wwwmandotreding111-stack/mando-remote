@@ -26,7 +26,7 @@ button.secondary{background:#17263a;color:var(--gold)}button.danger{background:#
 <div class="grid" id="items"></div><p id="listMsg"></p></section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-const db=window.supabase.createClient("https://lhghepwcvlqazmpouidu.supabase.co","sb_publishable_EgAQZYow05AZT_pQqHkI2w_kxJff9B5");
+const db=window.supabase.createClient("https://lhghepwcvlqazmpouidu.supabase.co","sb_publishable_EgAQZYow05AZT_pQqHkI2w_kxJff9B5",{auth:{storageKey:"sb-lhghepwcvlqazmpouidu-auth-token",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 let remotes=[];
 const $=id=>document.getElementById(id);
 const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
