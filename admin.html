@@ -219,6 +219,7 @@ html body.admin-mode #filters,
 html body.admin-mode #count,
 html body.admin-mode #products { display:none !important; }
 html body.admin-mode #authBox { display:block !important; }
+html body.admin-mode #authBox { position:relative!important; z-index:99999!important; pointer-events:auto!important; isolation:isolate; } html body.admin-mode #authBox * { pointer-events:auto!important; } html body.admin-mode main.container { position:relative!important; z-index:99998!important; } html body.admin-mode #adminLoginBtn { position:relative!important; z-index:100000!important; display:inline-flex!important; align-items:center; justify-content:center; min-height:48px; cursor:pointer!important; touch-action:manipulation; }
 /* adminPanel visibility is controlled by authenticated login() only */
 html body.admin-mode.admin-authenticated #adminPanel{display:block!important} html body.admin-mode:not(.admin-authenticated) #adminPanel{display:none!important}</style>
 </head>
@@ -253,7 +254,7 @@ html body.admin-mode.admin-authenticated #adminPanel{display:block!important} ht
 <input id="search" placeholder="ابحث عن ماركة الشاشة أو رقم الريموت..." oninput="render()">
 <div class="filters" id="filters"><button class="active" onclick="choose('الكل',this)">الكل</button><button onclick="choose('Samsung',this)">Samsung</button><button onclick="choose('LG',this)">LG</button><button onclick="choose('TCL',this)">TCL</button><button onclick="choose('Hisense',this)">Hisense</button></div>
 <div class="count" id="count">سجّل الدخول لعرض المكتبة</div><div class="products" id="products"></div></section>
-<div id="authBox"><h3>دخول الإدارة</h3><input id="email" type="text" placeholder="اسم المستخدم أو بريد المدير"><input id="password" type="password" placeholder="كلمة المرور"><button class="primary" onclick="login()">تسجيل الدخول</button><button type="button" onclick="sendPasswordRecovery()">نسيت كلمة المرور؟ إرسال رابط استعادة</button><p class="notice" id="authMsg"></p></div>
+<div id="authBox"><h3>دخول الإدارة</h3><input id="email" type="text" placeholder="اسم المستخدم أو بريد المدير"><input id="password" type="password" placeholder="كلمة المرور"><button id="adminLoginBtn" type="button" class="primary" onclick="login()">تسجيل الدخول</button><button type="button" onclick="sendPasswordRecovery()">نسيت كلمة المرور؟ إرسال رابط استعادة</button><p class="notice" id="authMsg"></p></div>
 <section class="panel" id="adminPanel">
 <div class="row" style="align-items:center"><h3>لوحة إدارة الريموتات</h3><button onclick="logout()">تسجيل الخروج</button></div>
 <div class="row"><button onclick="showCustomerPanel()">👥 إدارة الزبائن</button><button onclick="showAdsPanel()">📢 إدارة الإعلانات</button><button onclick="showMandoAppsPanel()">📱 إدارة MANDO APK</button><button onclick="showSimilarGalleryPanel()">🖼️ إدارة التحكمات المتشابهة</button><button onclick="showSettingsPanel()">⚙️ معلومات الشركة</button><button onclick="showRemotesPanel()">📋 كل الإضافات</button></div><section class="panel" id="remotesAdminPanel"><h3>📋 كل الريموتات والأجهزة المضافة بالموقع</h3><p class="notice">تظهر هنا جميع الإضافات المحفوظة بالموقع، مع إمكانية التعديل والحذف.</p><div class="row"><button onclick="loadRemotes()">🔄 تحديث القائمة</button><span class="notice" id="adminRemotesCount"></span></div><div id="adminRemotesList" class="products"><div class="empty">اضغط على الزر لعرض الإضافات.</div></div></section><section class="panel" id="customerPanel">
@@ -631,6 +632,9 @@ setInterval(heartbeat,30000);
 setInterval(()=>{if(isAdmin&&!String(document.activeElement?.id||"").startsWith("adminNote_")&&el("customerPanel")?.style.display==="block"&&el("todayVisitsPanel")?.style.display!=="block")loadCustomers();},5000);
 
 document.addEventListener("DOMContentLoaded",async()=>{
+ const adminLoginButton=document.getElementById("adminLoginBtn");
+ if(adminLoginButton){adminLoginButton.addEventListener("click",function(event){event.preventDefault();login();},{passive:false});}
+
  document.body.classList.add("login-screen");
  if(ADMIN_MODE){
   document.body.classList.add("admin-mode");
