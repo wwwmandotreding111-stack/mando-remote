@@ -204,6 +204,22 @@ body.admin-mode #adminPanel{max-width:1120px;margin:22px auto}
 body.admin-mode #authBox h3{color:#f2d18a;font-size:25px}
 body.admin-mode #authBox button{margin:7px 4px}
 @media(max-width:600px){body.admin-mode .container{padding:14px}body.admin-mode #authBox{margin:28px auto;padding:22px!important}}
+
+/* Critical admin isolation: CSS-only fallback, stronger than customer entry styles */
+html body.admin-mode #customerGate,
+html body.admin-mode #customerGate.mando-entry,
+html body.admin-mode #customerProfile,
+html body.admin-mode header,
+html body.admin-mode .ad-wrap,
+html body.admin-mode footer,
+html body.admin-mode .whatsapp,
+html body.admin-mode #catalogArea,
+html body.admin-mode #search,
+html body.admin-mode #filters,
+html body.admin-mode #count,
+html body.admin-mode #products { display:none !important; }
+html body.admin-mode #authBox { display:block !important; }
+html body.admin-mode #adminPanel { display:none; }
 </style>
 </head>
 <body class="admin-mode login-screen">
