@@ -273,7 +273,7 @@ const SUPABASE_URL = "https://lhghepwcvlqazmpouidu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_EgAQZYow05AZT_pQqHkI2w_kxJff9B5";
 const ADMIN_FUNCTION_URL = SUPABASE_URL + "/functions/v1/super-handler";
 const CUSTOMER_LOGIN_URL = SUPABASE_URL + "/functions/v1/customer-login";
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {auth:{storageKey:"sb-lhghepwcvlqazmpouidu-auth-token",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 let remotes=[], selected="الكل", isAdmin=false, adIndex=0, siteAds=[], siteSettings={};
 function showAd(){if(!siteAds.length){el("adTitle").textContent="عروض شركة مندو التجارية";el("adText").textContent="أفضل الخيارات والريموتات البديلة لشاشتك";el("adImage").style.display="none";el("adDots").innerHTML="";el("adLink").href="#";return;}const a=siteAds[adIndex%siteAds.length];el("adTitle").textContent=a.title||"";el("adText").textContent=a.description||"";const im=el("adImage");if(a.image_url){im.src=a.image_url;im.style.display="block";}else im.style.display="none";el("adLink").href=a.target_url||"#";el("adDots").innerHTML=siteAds.map((_,i)=>'<span class="'+(i===adIndex?'active':'')+'"></span>').join("");}
 function openAd(e){if(!siteAds[adIndex]?.target_url){e.preventDefault();return false;}return true;}
