@@ -178,6 +178,19 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 
 
 /* Dedicated administrator entry: keep customer storefront out of admin view */
+/* Apply admin-only layout before scripts run, so storefront never flashes */
+body.admin-mode>header,
+body.admin-mode>.ad-wrap,
+body.admin-mode>#customerGate,
+body.admin-mode>#customerProfile,
+body.admin-mode>footer,
+body.admin-mode>.whatsapp,
+body.admin-mode>#catalogArea,
+body.admin-mode>.mando-entry,
+body.admin-mode>.catalog{display:none!important}
+body.admin-mode #authBox{display:block!important;max-width:460px;margin:7vh auto 24px;padding:28px!important;text-align:center;position:relative;z-index:20}
+body.admin-mode #adminPanel{max-width:1120px;margin:22px auto;position:relative;z-index:20}
+
 body.admin-mode>header,body.admin-mode>.ad-wrap,body.admin-mode>#customerGate,body.admin-mode>#customerProfile,body.admin-mode>footer,body.admin-mode>.whatsapp,body.admin-mode>#catalogArea,body.admin-mode>.mando-entry,body.admin-mode>.catalog,body.admin-mode>#search,body.admin-mode>#filters,body.admin-mode>#count,body.admin-mode>#products{display:none!important}
 body.admin-mode #authBox{display:block!important;position:relative;z-index:10}
 body.admin-mode #adminPanel{position:relative;z-index:10}
@@ -193,7 +206,7 @@ body.admin-mode #authBox button{margin:7px 4px}
 @media(max-width:600px){body.admin-mode .container{padding:14px}body.admin-mode #authBox{margin:28px auto;padding:22px!important}}
 </style>
 </head>
-<body>
+<body class="admin-mode login-screen">
 <header><div class="logo">🦅</div><h1>MANDO REMOTE</h1><div class="sub">شركة مندو التجارية</div><div class="sub">مكتبة الريموتات البديلة للشاشات</div></header>
 <div class="ad-wrap"><a id="adLink" href="#" style="text-decoration:none;color:inherit" onclick="return openAd(event)"><div class="ad-banner"><img id="adImage" alt="" style="display:none"><div class="ad-copy"><h2 id="adTitle">عروض شركة مندو التجارية</h2><p id="adText">أفضل الخيارات والريموتات البديلة لشاشتك</p></div></div></a><div class="ad-dots" id="adDots"></div></div>
 <section id="customerGate" class="mando-entry">
