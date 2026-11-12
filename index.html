@@ -176,6 +176,17 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
 #authBox input{width:100%;margin:8px 0;padding:14px;border:1px solid #71869b;border-radius:10px;background:#102237;color:#fff}
 #authBox button{margin:8px 4px;padding:12px 16px;border-radius:10px}
 
+
+/* Dedicated administrator entry: keep customer storefront out of admin view */
+body.admin-mode{background:radial-gradient(ellipse at 50% -10%,#354a63 0%,#17283d 55%,#080e18 100%)!important}
+body.admin-mode:before{display:none}
+body.admin-mode>header,body.admin-mode>.ad-wrap,body.admin-mode>#customerGate,body.admin-mode>#customerProfile,body.admin-mode>footer,body.admin-mode>.whatsapp,body.admin-mode #catalogArea{display:none!important}
+body.admin-mode .container{max-width:1120px;padding:22px}
+body.admin-mode #authBox{display:block!important;max-width:460px;margin:7vh auto 24px;padding:28px!important;text-align:center;box-shadow:0 20px 60px #0008}
+body.admin-mode #adminPanel{max-width:1120px;margin:22px auto}
+body.admin-mode #authBox h3{color:#f2d18a;font-size:25px}
+body.admin-mode #authBox button{margin:7px 4px}
+@media(max-width:600px){body.admin-mode .container{padding:14px}body.admin-mode #authBox{margin:28px auto;padding:22px!important}}
 </style>
 </head>
 <body>
@@ -200,7 +211,7 @@ input::placeholder,textarea::placeholder{color:#c3cfdd}
     </div>
     <button class="primary" onclick="customerLogin()">دخول　↪</button>
     <p class="notice" id="customerLoginMsg"></p>
-    <button type="button" class="admin-entry-link" onclick="location.href='./admin.html'">دخول الإدارة</button>
+    <button type="button" class="admin-entry-link" onclick="location.href='./?admin=1'">دخول الإدارة</button>
   </div>
 </section>
 <section id="customerProfile" style="display:none;max-width:760px;margin:18px auto;padding:16px;background:#142238;border:1px solid #a77a2b;border-radius:16px;text-align:center"><h3 style="color:var(--gold);margin:0 0 8px">مرحباً بك <span id="customerDisplayName"></span></h3><p class="notice">كود الدخول: <b id="customerDisplayCode" style="color:#f1d18b"></b></p><button onclick="customerLogout()">تسجيل الخروج</button></section>
@@ -275,6 +286,7 @@ const ADMIN_FUNCTION_URL = SUPABASE_URL + "/functions/v1/super-handler";
 const CUSTOMER_LOGIN_URL = SUPABASE_URL + "/functions/v1/customer-login";
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {auth:{storageKey:"sb-lhghepwcvlqazmpouidu-auth-token",persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 let remotes=[], selected="الكل", isAdmin=false, adIndex=0, siteAds=[], siteSettings={};
+const ADMIN_MODE=new URLSearchParams(location.search).get("admin")==="1";
 function showAd(){if(!siteAds.length){el("adTitle").textContent="عروض شركة مندو التجارية";el("adText").textContent="أفضل الخيارات والريموتات البديلة لشاشتك";el("adImage").style.display="none";el("adDots").innerHTML="";el("adLink").href="#";return;}const a=siteAds[adIndex%siteAds.length];el("adTitle").textContent=a.title||"";el("adText").textContent=a.description||"";const im=el("adImage");if(a.image_url){im.src=a.image_url;im.style.display="block";}else im.style.display="none";el("adLink").href=a.target_url||"#";el("adDots").innerHTML=siteAds.map((_,i)=>'<span class="'+(i===adIndex?'active':'')+'"></span>').join("");}
 function openAd(e){if(!siteAds[adIndex]?.target_url){e.preventDefault();return false;}return true;}
 const el=id=>document.getElementById(id);
@@ -579,9 +591,10 @@ setInterval(()=>{if(isAdmin&&!String(document.activeElement?.id||"").startsWith(
 
 document.addEventListener("DOMContentLoaded",async()=>{
  document.body.classList.add("login-screen");
+ if(ADMIN_MODE){document.body.classList.add("admin-mode");el("authBox").style.display="block";}
  const {data}=await db.auth.getSession();
- if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){document.body.classList.remove("login-screen");isAdmin=true;el("adminPanel").style.display="block";loadCustomers();loadAds(true);loadSettings(true);}else{const {data:profile}=await db.from("customer_profiles").select("display_name,role,active,blocked,code_enabled").eq("id",data.session.user.id).maybeSingle();if(profile&&profile.role==="customer"&&profile.active&&!profile.blocked&&profile.code_enabled){showCustomerSession(profile.display_name,"••••••");await heartbeat();await loadRemotes();}}}
- await loadAds(false);await loadSettings(false);setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);
+ if(data.session){const {data:role}=await db.rpc("is_admin");if(role===true){document.body.classList.remove("login-screen");isAdmin=true;el("authBox").style.display="none";el("adminPanel").style.display="block";loadCustomers();loadAds(true);loadSettings(true);}else if(!ADMIN_MODE){const {data:profile}=await db.from("customer_profiles").select("display_name,role,active,blocked,code_enabled").eq("id",data.session.user.id).maybeSingle();if(profile&&profile.role==="customer"&&profile.active&&!profile.blocked&&profile.code_enabled){showCustomerSession(profile.display_name,"••••••");await heartbeat();await loadRemotes();}}}
+ if(!ADMIN_MODE){await loadAds(false);await loadSettings(false);setInterval(()=>{if(siteAds.length>1){adIndex=(adIndex+1)%siteAds.length;showAd();}},6000);}
 });
 </script>
 
