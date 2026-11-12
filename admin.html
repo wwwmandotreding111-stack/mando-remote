@@ -360,7 +360,7 @@ async function sendPasswordRecovery(){
  const {error}=await db.auth.resetPasswordForEmail(raw,{redirectTo:"https://wwwmandotreding111-stack.github.io/mando-remote/reset-password.html"});
  el("authMsg").textContent=error?"تعذر إرسال الرابط: "+error.message:"تم إرسال رابط الاستعادة إلى بريدك الإلكتروني. افحص الوارد والرسائل غير المرغوبة.";
 }
-async function login(){
+window.login = async function login(){
  const msg=el("authMsg");
  try{
   msg.textContent="جارٍ التحقق من بيانات الدخول...";
