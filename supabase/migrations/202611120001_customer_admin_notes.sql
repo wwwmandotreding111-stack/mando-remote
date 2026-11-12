@@ -1,5 +1,17 @@
-alter table public.customer_profiles
-add column if not exists admin_note text;
+create table if not exists public.customer_admin_notes (
+  user_id uuid primary key references public.customer_profiles(id) on delete cascade,
+  note text not null default '',
+  updated_at timestamptz not null default now()
+);
+
+alter table public.customer_admin_notes enable row level security;
+
+drop policy if exists "Admins can read customer admin notes" on public.customer_admin_notes;
+create policy "Admins can read customer admin notes"
+on public.customer_admin_notes
+for select
+to authenticated
+using (public.is_admin());
 
 create or replace function public.set_customer_admin_note(
   p_user_id uuid,
@@ -15,14 +27,17 @@ begin
     raise exception 'غير مصرح';
   end if;
 
-  update public.customer_profiles
-  set admin_note = left(coalesce(p_note, ''), 500)
-  where id = p_user_id
-    and role = 'customer';
-
-  if not found then
+  if not exists (
+    select 1 from public.customer_profiles
+    where id = p_user_id and role = 'customer'
+  ) then
     raise exception 'الزبون غير موجود';
   end if;
+
+  insert into public.customer_admin_notes(user_id, note, updated_at)
+  values (p_user_id, left(coalesce(p_note, ''), 500), now())
+  on conflict (user_id)
+  do update set note = excluded.note, updated_at = now();
 end;
 $$;
 
