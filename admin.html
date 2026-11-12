@@ -629,7 +629,7 @@ async function heartbeat(){
  if(activeVisitId)await db.rpc("heartbeat_customer_visit",{p_visit_id:activeVisitId}).catch(e=>console.warn(e));
 }
 setInterval(heartbeat,30000);
-setInterval(()=>{if(isAdmin&&!String(document.activeElement?.id||"").startsWith("adminNote_")&&el("customerPanel")?.style.display==="block"&&el("todayVisitsPanel")?.style.display!=="block")loadCustomers();},5000);
+setInterval(()=>{const active=document.activeElement;const typingInCustomers=!!(active&&el("customerPanel")?.contains(active)&&(/^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName)));if(isAdmin&&!typingInCustomers&&el("customerPanel")?.style.display==="block"&&el("todayVisitsPanel")?.style.display!=="block")loadCustomers();},5000);
 
 document.addEventListener("DOMContentLoaded",async()=>{
  const adminLoginButton=document.getElementById("adminLoginBtn");
