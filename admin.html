@@ -501,7 +501,7 @@ async function loadCustomers(){
   const since=new Date(Date.now()-90*86400000).toISOString();
   const [{data,error},{data:visits,error:visitError},{data:notes,error:notesError}]=await Promise.all([
    db.from("customer_profiles").select("id,display_name,active,role,last_seen_at,code_enabled,blocked").eq("role","customer").order("display_name"),
-   db.from("customer_visits").select("id,user_id,entered_at,last_seen_at,exited_at,duration_seconds").gte("entered_at",since).order("entered_at",{ascending:false}).limit(10000)
+   db.from("customer_visits").select("id,user_id,entered_at,last_seen_at,exited_at,duration_seconds").gte("entered_at",since).order("entered_at",{ascending:false}).limit(10000),
     db.from("customer_admin_notes").select("user_id,note")
   ]);
   if(error)throw error;
