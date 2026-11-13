@@ -340,15 +340,9 @@ async function logout(){await db.auth.signOut();isAdmin=false;el("adminPanel").s
 async function addRemote(){
  const name=el("rName").value.trim(), number=el("rNumber").value.trim();
  if(!name||!number){el("adminMsg").textContent="اكتب اسم الجهاز واسم البديل أولاً.";return;}
- const normalizedNumber=number.toLocaleLowerCase("ar").replace(/\s+/g," ").trim();
- const duplicate=remotes.some(r=>String(r.model_number||"").toLocaleLowerCase("ar").replace(/\s+/g," ").trim()===normalizedNumber);
- if(duplicate){el("adminMsg").textContent="هذا الاسم مضاف";return;}
  const file=el("rImageFile").files[0];let imageUrl=null, uploadedPath=null;
  try{
-  el("adminMsg").textContent="جارٍ التحقق من اسم البديل...";
-  const {data:matches,error:checkError}=await db.from("remotes").select("id,model_number").ilike("model_number",number).limit(1);
-  if(checkError)throw checkError;
-  if(matches?.length){el("adminMsg").textContent="هذا الاسم مضاف";return;}
+  el("adminMsg").textContent="جارٍ رفع البيانات...";
   if(file){
    if(!file.type || !file.type.startsWith("image/")){el("adminMsg").textContent="اختر ملف صورة صالحاً.";return;}
    if(file.size>5*1024*1024){el("adminMsg").textContent="حجم الصورة كبير. اختر صورة أقل من 5 ميغابايت.";return;}
