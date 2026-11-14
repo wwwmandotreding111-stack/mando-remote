@@ -1,0 +1,21 @@
+{
+  "name": "MANDO REMOTE | شركة مندو التجارية",
+  "short_name": "MANDO REMOTE",
+  "description": "دليل الريموتات البديلة - شركة مندو التجارية",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#17283d",
+  "theme_color": "#17283d",
+  "icons": [
+    {
+      "src": "./mando-app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
