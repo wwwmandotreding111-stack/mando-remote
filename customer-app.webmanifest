@@ -13,10 +13,10 @@
   "theme_color": "#17283d",
   "icons": [
     {
-      "src": "./customer-app-icon.svg",
+      "src": "./customer-app-icon.svg?v=2",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
