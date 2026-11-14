@@ -1,0 +1,22 @@
+{
+  "id": "./customers.html",
+  "name": "MANDO REMOTE - بوابة الزبائن",
+  "short_name": "MANDO الزبائن",
+  "description": "دخول الزبائن إلى دليل الريموتات من شركة مندو التجارية",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./customers.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#17283d",
+  "theme_color": "#17283d",
+  "icons": [
+    {
+      "src": "./mando-app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
