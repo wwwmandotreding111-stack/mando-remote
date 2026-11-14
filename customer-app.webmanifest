@@ -13,9 +13,9 @@
   "theme_color": "#17283d",
   "icons": [
     {
-      "src": "./customer-app-icon.svg?v=2",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "./customer-app-icon.png?v=4",
+      "sizes": "192x192",
+      "type": "image/png",
       "purpose": "any"
     }
   ]
