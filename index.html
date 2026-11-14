@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#17283d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MANDO REMOTE">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./mando-app-icon.svg" type="image/svg+xml">
 <title>MANDO REMOTE | شركة مندو التجارية</title>
 <style>
 :root{--bg:#070b12;--panel:#101a29;--panel2:#17263a;--gold:#e8c477;--gold2:#a8782b;--text:#f7f4ed;--muted:#aeb8c7;--line:#34445a;--green:#83d7a5}
@@ -597,4 +603,12 @@ document.addEventListener("DOMContentLoaded",async()=>{
 });
 </script>
 
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch((error) => console.warn("PWA service worker:", error));
+  });
+}
+</script>
 </body></html>
