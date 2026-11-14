@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#17283d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MANDO للزبائن">
+<link rel="manifest" href="./customer-app.webmanifest">
+<link rel="icon" href="./mando-app-icon.svg" type="image/svg+xml">
 <title>الزبائن | MANDO REMOTE</title>
 <style>
 :root{--bg:#070b12;--panel:#101a29;--panel2:#17263a;--gold:#e8c477;--gold2:#a8782b;--text:#f7f4ed;--muted:#aeb8c7;--line:#34445a;--green:#83d7a5}
@@ -764,4 +770,12 @@ async function loadSimilarRemoteGallery(){const box=el("similarRemoteGalleryList
 async function loadMandoApps(){const box=el("mandoAppsInlineList");box.innerHTML="<p>جارٍ تحميل التطبيقات...</p>";const {data,error}=await db.from("mando_apps").select("name,version,description,icon_url,download_url,size_label").eq("is_active",true).order("created_at",{ascending:false});if(error){box.innerHTML='<p style="color:#e7c77d;line-height:1.8">قسم التطبيقات قيد الإعداد. سيتم عرض التطبيقات بعد تفعيل القسم.</p>';return;}if(!data?.length){box.innerHTML='<p style="color:#aab4c2">لا توجد تطبيقات مضافة حالياً.</p>';return;}box.innerHTML=data.map(a=>'<article class="mando-app-card"><div class="mando-app-icon">'+(a.icon_url?'<img src="'+safe(a.icon_url)+'" alt="">':'📦')+'</div><div class="mando-app-info"><b>'+safe(a.name)+'</b><small>الإصدار '+safe(a.version||"—")+' · '+safe(a.size_label||"APK")+'</small><div style="color:#c4cbd5;font-size:12px;margin-top:5px">'+safe(a.description||"")+'</div><a class="mando-app-download" href="'+safe(a.download_url)+'" download>تحميل التطبيق</a></div></article>').join("");}
 </script>
 
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch((error) => console.warn("PWA service worker:", error));
+  });
+}
+</script>
 </body></html>
