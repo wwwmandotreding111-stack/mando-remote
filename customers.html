@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MANDO للزبائن">
 <link rel="manifest" href="./customer-app.webmanifest">
-<link rel="icon" href="./customer-app-icon.svg?v=2" type="image/svg+xml">
+<link rel="icon" href="./customer-app-icon.png?v=4" type="image/png">
 <title>الزبائن | MANDO REMOTE</title>
 <style>
 :root{--bg:#070b12;--panel:#101a29;--panel2:#17263a;--gold:#e8c477;--gold2:#a8782b;--text:#f7f4ed;--muted:#aeb8c7;--line:#34445a;--green:#83d7a5}
@@ -364,7 +364,7 @@ body:not(.login-screen) footer{display:block!important}
 body:not(.login-screen) footer>p:last-child{display:block!important;text-align:center;color:#b9a57d;font-size:12px;margin:14px 0 0}
 
 </style>
-<link rel="apple-touch-icon" href="./customer-app-icon.svg?v=2">
+<link rel="apple-touch-icon" href="./customer-app-icon.png?v=4">
 </head>
 <body class="login-screen">
 <header><div class="logo">🦅</div><h1>MANDO REMOTE</h1><div class="sub">شركة مندو التجارية</div><div class="sub">مكتبة الريموتات البديلة للشاشات</div></header>
@@ -775,7 +775,7 @@ async function loadMandoApps(){const box=el("mandoAppsInlineList");box.innerHTML
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=3", { updateViaCache: "none" }).catch((error) => console.warn("PWA service worker:", error));
+    navigator.serviceWorker.register("./sw.js?v=4", { updateViaCache: "none" }).catch((error) => console.warn("PWA service worker:", error));
   });
 }
 </script>
