@@ -1,11 +1,12 @@
-const CACHE_NAME = "mando-remote-shell-v2";
+const CACHE_NAME = "mando-remote-shell-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./customers.html",
   "./manifest.webmanifest",
   "./customer-app.webmanifest",
-  "./mando-app-icon.svg"
+  "./mando-app-icon.svg",
+  "./customer-app-icon.svg"
 ];
 self.addEventListener("install", (event) => {
   event.waitUntil(
